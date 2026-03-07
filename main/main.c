@@ -164,7 +164,7 @@ volatile uint64_t lastPulseMs = 0;
 float rpmNow = 0.0f;
 float rpmFiltered = 0.0f;
 
-#define PERIOD_AVG_SAMPLES 4
+#define PERIOD_AVG_SAMPLES 6
 
 uint64_t periodBuffer[PERIOD_AVG_SAMPLES] = {0};
 int periodIndex = 0;
@@ -912,10 +912,7 @@ static void adc_task(void *arg) {
             bool fuelSettled =
                 (now_ms - boot_time_ms) > BOOT_SETTLE_MS;
 
-            bool fuelValid =
-                fuelSettled &&
-                (vFuel >= 0.01f) &&
-                (vFuel <= 3.29f);
+            bool fuelValid = fuelSettled && (vFuel <= 3.29f);
 
             if (fuelValid) {
 
