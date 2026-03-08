@@ -164,7 +164,7 @@ volatile uint64_t lastPulseMs = 0;
 float rpmNow = 0.0f;
 float rpmFiltered = 0.0f;
 
-#define PERIOD_AVG_SAMPLES 6
+#define PERIOD_AVG_SAMPLES 4
 
 uint64_t periodBuffer[PERIOD_AVG_SAMPLES] = {0};
 int periodIndex = 0;
@@ -476,7 +476,7 @@ static int detect_gear(float rpm, float mph, float dt)
     }
 
     // ---------- IDLE NEUTRAL ----------
-    if (rpm < 1250.0f && mph > 5.0f) {
+    if (rpm < 1350.0f && mph > 2.0f) {
         current_gear = -1;
         return -1;
     }
