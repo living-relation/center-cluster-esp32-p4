@@ -12,3 +12,7 @@ https://youtu.be/t7H6pevep40
 
 7. Flash
 
+**** 4in waveshare round screens ****
+
+For 4in round screens, the base tach image needs to be updated as the resolution is 720x720 and not 800x800 like the 3.4in screens.
+To do that, just replace the ui_img_1656279599.c file in main/tach_ui/images with the file found here: https://drive.google.com/file/d/1_PrP6jOna2s5Ua82ol2qqV2OZWf9c4_l/view?usp=sharing
