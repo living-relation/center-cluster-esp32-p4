@@ -1061,19 +1061,12 @@ static void uart_init(uart_port_t uart_num, int txPin, int rxPin, int bufSize, i
     ));
 }
 
-static void can_task(void *arg){
+static void can_mapping_task(void *arg){
     int64_t last_tx_ms  = 0;
     int64_t last_odo_ms = 0;
 
     while (1){
         int64_t now_ms = esp_timer_get_time() / 1000;
-
-        // ---------- Read CAN Frames ----------
-        twai_message_t msg;
-
-        while (twai_receive(&msg, 0) == ESP_OK){
-            process_can_frame(msg.identifier, msg.data);
-        }
 
         // ---------- Drivetrain ----------
         rpmNow = can_data.rpm;
@@ -1167,7 +1160,8 @@ void app_main(void) {
 
     if (SENSOR_SOURCE == SENSOR_SOURCE_CAN){
         canbus_init();
-        xTaskCreatePinnedToCore(can_task,"can_task",4096,NULL,10,NULL,0);
+        xTaskCreatePinnedToCore(canbus_task,"can_rx",4096,NULL,10,NULL,0);
+        xTaskCreatePinnedToCore(can_mapping_task,"can_mapping_task",4096,NULL,10,NULL,1);
     } else {
         xTaskCreatePinnedToCore(tach_task, "tach_task", 4096, NULL, 10, NULL, 0);
         xTaskCreatePinnedToCore(gps_task, "gps_task", 4096, NULL, 5, NULL, 0);

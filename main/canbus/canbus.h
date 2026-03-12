@@ -21,7 +21,7 @@ typedef struct{
 
 
 // global decoded data
-extern can_dash_data_t can_data;
+extern volatile can_dash_data_t can_data;
 
 
 
@@ -30,6 +30,7 @@ extern can_dash_data_t can_data;
 // =======================================================
 
 void canbus_init(void);
+void canbus_task(void *arg);
 void process_can_frame(uint32_t id, uint8_t *data);
 
 #endif

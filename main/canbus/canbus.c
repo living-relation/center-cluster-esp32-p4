@@ -8,6 +8,8 @@
 
 #include <string.h>
 
+#include "esp_spiffs.h"
+
 static const char *TAG = "CANBUS";
 
 
@@ -23,47 +25,57 @@ static const char *TAG = "CANBUS";
 // GLOBAL DATA
 // =======================================================
 
-can_dash_data_t can_data = {0};
+volatile can_dash_data_t can_data = {0};
 
 
 // =======================================================
 // CAN FRAME PROCESSOR
 // =======================================================
 
-void process_can_frame(uint32_t id, uint8_t *data)
-{
+void process_can_frame(uint32_t id, uint8_t *data){
     protocol_detect(id);
 
-    if (!active_protocol)
+    if(!active_protocol)
         return;
 
-    can_frame_def_t *frame = NULL;
-
-    if (id < CAN_ID_MAX)
-        frame = frame_lookup[id];
-
-    if (!frame)
+    if(id >= CAN_ID_MAX)
         return;
 
-    for (int s = 0; s < frame->signal_count; s++){
+    can_frame_def_t *frame = frame_lookup[id];
+
+    if(!frame)
+        return;
+
+    for(int s=0;s<frame->signal_count;s++){
         can_signal_t *sig = &frame->signals[s];
 
         uint32_t raw = 0;
 
-        if (sig->len == 2){
-            if (sig->endian == ENDIAN_BIG)
-                raw = (data[sig->offset] << 8) | data[sig->offset+1];
+        if(sig->len==2){
+            if(sig->endian==ENDIAN_BIG)
+                raw=(data[sig->offset]<<8)|data[sig->offset+1];
             else
-                raw = (data[sig->offset+1] << 8) | data[sig->offset];
+                raw=(data[sig->offset+1]<<8)|data[sig->offset];
         }
-        else if (sig->len == 1){
-            raw = data[sig->offset];
+        else{
+            raw=data[sig->offset];
         }
 
-        if (sig->target){
-            *sig->target = raw * sig->scale + sig->offset_val;
-        }
+        if(sig->target)
+            *sig->target = raw*sig->scale + sig->offset_val;
     }
+}
+
+
+void mount_fs() {
+    esp_vfs_spiffs_conf_t conf = {
+        .base_path = "/spiffs",
+        .partition_label = NULL,
+        .max_files = 10,
+        .format_if_mount_failed = true
+    };
+
+    ESP_ERROR_CHECK(esp_vfs_spiffs_register(&conf));
 }
 
 
@@ -85,15 +97,17 @@ void canbus_init(void){
     #error Unsupported CAN bitrate
     #endif
 
-        twai_filter_config_t f_config =
-            TWAI_FILTER_CONFIG_ACCEPT_ALL();
+    twai_filter_config_t f_config =
+        TWAI_FILTER_CONFIG_ACCEPT_ALL();
 
-        ESP_ERROR_CHECK(twai_driver_install(&g_config, &t_config, &f_config));
-        ESP_ERROR_CHECK(twai_start());
+    ESP_ERROR_CHECK(twai_driver_install(&g_config, &t_config, &f_config));
+    ESP_ERROR_CHECK(twai_start());
 
-        protocol_loader_init();
+    mount_fs();
 
-        ESP_LOGI(TAG, "CAN initialized");
+    protocol_loader_init();
+
+    ESP_LOGI(TAG, "CAN initialized");
 }
 
 
@@ -101,14 +115,12 @@ void canbus_init(void){
 // CAN RECEIVE TASK
 // =======================================================
 
-void canbus_task(void *arg)
-{
+void canbus_task(void *arg){
     twai_message_t message;
 
-    while (1)
-    {
-        if (twai_receive(&message, pdMS_TO_TICKS(10)) == ESP_OK)
-        {
+    while (1){
+        if (twai_receive(&message, pdMS_TO_TICKS(10)) == ESP_OK){
+            if (!message.extd && !message.rtr)
             process_can_frame(message.identifier, message.data);
         }
     }
