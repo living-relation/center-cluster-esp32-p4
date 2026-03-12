@@ -12,12 +12,14 @@ idf_component_register(
         "odometer/odometer.c"
         "lap_timer/lap_timer.c"
         "gps_wrap/gps_wrapper.cpp"
+        "canbus/canbus.c"
 
     INCLUDE_DIRS 
         "./tach_ui"
         "./lap_timer"
         "./odometer"
         "./gps_wrap"
+        "./canbus"
         "."
     
 )

@@ -24,7 +24,18 @@
 #include "gps_wrapper.h"
 #include "odometer/odometer.h"
 #include "lap_timer.h"
+#include "canbus.h"
 
+
+// =======================================================
+// SENSOR SOURCE CONFIG
+// =======================================================
+// for switching between analog or canbus reading
+#define SENSOR_SOURCE_ANALOG 0
+#define SENSOR_SOURCE_CAN    1
+
+#define SENSOR_SOURCE SENSOR_SOURCE_ANALOG
+// =======================================================
 //-----Pin Assignment---------//
 
 //GPS RX - GPIO 35
@@ -570,6 +581,20 @@ void gauge_timer(lv_timer_t * t) {
         last_displayed = gear;
     }
 
+    if (SENSOR_SOURCE == SENSOR_SOURCE_CAN){
+        float speed_mph = g_speed_mph;
+
+        if (speed_mph < GPS_MIN_VALID_MPH)
+            speed_mph = 0.0f;
+
+        int speed = (int)speed_mph;
+        static char buf[8];
+        snprintf(buf, sizeof(buf), "%d", speed);
+        lv_label_set_text(ui_label_mph_value, buf);
+    
+    }
+
+
 }
 
 //------------------------------------------------------------------------//
@@ -1036,6 +1061,83 @@ static void uart_init(uart_port_t uart_num, int txPin, int rxPin, int bufSize, i
     ));
 }
 
+static void can_task(void *arg){
+    int64_t last_tx_ms  = 0;
+    int64_t last_odo_ms = 0;
+
+    while (1){
+        int64_t now_ms = esp_timer_get_time() / 1000;
+
+        // ---------- Read CAN Frames ----------
+        twai_message_t msg;
+
+        while (twai_receive(&msg, 0) == ESP_OK){
+            process_can_frame(msg.identifier, msg.data);
+        }
+
+        // ---------- Drivetrain ----------
+        rpmNow = can_data.rpm;
+
+        // CAN speed usually in KPH
+        g_speed_mph = can_data.speed * 0.621371f;
+
+        // ---------- Odometer ----------
+        if (now_ms - last_odo_ms >= 1000){
+            last_odo_ms = now_ms;
+
+            float speed_kph = can_data.speed;
+
+            // meters per second
+            float meters_per_sec = speed_kph / 3.6f;
+
+            uint32_t whole = (uint32_t)meters_per_sec;
+
+            if (whole > 0)
+                odometer_add_meters(whole);
+        }
+
+        // ---------- Gauge data ----------
+        g_gauge_data.water_temp_f     = can_data.coolant_temp;
+        g_gauge_data.oil_pressure_psi = can_data.oil_pressure;
+
+        // ---------- UART TX ----------
+        if (now_ms - last_tx_ms >= 20){
+            last_tx_ms = now_ms;
+
+            static uint8_t seq = 0;
+            uint8_t buf[GAUGE_PKT_LEN];
+
+            buf[0] = GAUGE_PKT_SOF;
+            buf[1] = seq++;
+
+            gauge_payload_t *p = (gauge_payload_t *)&buf[2];
+
+            p->oil_temp      = (uint16_t)(g_gauge_data.oil_temp_f * 10.0f);
+            p->water_temp    = (uint16_t)(g_gauge_data.water_temp_f * 10.0f);
+            p->oil_pressure  = (uint16_t)(g_gauge_data.oil_pressure_psi * 10.0f);
+            p->fuel_pressure = (uint16_t)(g_gauge_data.fuel_pressure_psi * 10.0f);
+            p->fuel_level    = (uint16_t)(g_gauge_data.fuel_level_pct * 10.0f);
+            p->afr           = (uint16_t)(g_gauge_data.afr * 10.0f);
+            p->boost         = (int16_t)(g_gauge_data.boost_psi * 10.0f);
+
+            uint64_t lap_us = lap_timer_get_current_us();
+            int32_t  delta_us = lap_timer_get_delta_us();
+
+            p->lap_time_ms  = (uint32_t)(lap_us / 1000);
+            p->lap_delta_ms = (int32_t)(delta_us / 1000);
+
+            uint16_t crc = crc16_ccitt(&buf[1], GAUGE_PKT_LEN - 3);
+            memcpy(&buf[GAUGE_PKT_LEN - 2], &crc, 2);
+
+            uart_write_bytes(UART_PORT, buf, GAUGE_PKT_LEN);
+            uart_write_bytes(UART1_PORT, buf, GAUGE_PKT_LEN);
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
+}
+
+
 //------------------------------------------------------------------------//
 
 void app_main(void) {
@@ -1063,9 +1165,15 @@ void app_main(void) {
     uart_init(UART1_PORT, UART1_TX_PIN, UART_PIN_NO_CHANGE, UART_TX_BUF_SIZE, UART_BAUD_RATE); 
     uart_init(GPS_UART_NUM, UART_PIN_NO_CHANGE, GPS_RX_PIN, (GPS_BUF_SIZE*2), GPS_BAUD_RATE); 
 
-    xTaskCreatePinnedToCore(tach_task, "tach_task", 4096, NULL, 10, NULL, 0);
-    xTaskCreatePinnedToCore(gps_task, "gps_task", 4096, NULL, 5, NULL, 0);
-    xTaskCreatePinnedToCore(adc_task, "adc_uart_task", 4096, NULL, 5, NULL, 0);
+    if (SENSOR_SOURCE == SENSOR_SOURCE_CAN){
+        canbus_init();
+        xTaskCreatePinnedToCore(can_task,"can_task",4096,NULL,10,NULL,0);
+    } else {
+        xTaskCreatePinnedToCore(tach_task, "tach_task", 4096, NULL, 10, NULL, 0);
+        xTaskCreatePinnedToCore(gps_task, "gps_task", 4096, NULL, 5, NULL, 0);
+        xTaskCreatePinnedToCore(adc_task, "adc_uart_task", 4096, NULL, 5, NULL, 0);
+    }
+
     xTaskCreatePinnedToCore(save_miles_task, "save_miles_task", 4096, NULL, 4, NULL, 0);
 
     bsp_display_backlight_off();
