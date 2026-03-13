@@ -12,12 +12,20 @@
 
 static const char *TAG = "CANBUS";
 
+static const int can_rates[] = {
+    1000000,
+    500000,
+    250000,
+    125000
+};
+
+#define NUM_RATES (sizeof(can_rates)/sizeof(can_rates[0]))
+
 
 // =======================================================
 // GPIO CONFIG
 // =======================================================
 
-#define CAN_DEFAULT_BITRATE 1000000
 #define CAN_TX GPIO_NUM_5
 #define CAN_RX GPIO_NUM_4
 
@@ -78,24 +86,102 @@ void mount_fs() {
     ESP_ERROR_CHECK(esp_vfs_spiffs_register(&conf));
 }
 
+static twai_timing_config_t get_timing(int bitrate){
+    twai_timing_config_t t;
+
+    switch (bitrate){
+        case 1000000:
+            t = (twai_timing_config_t)TWAI_TIMING_CONFIG_1MBITS();
+            break;
+
+        case 500000:
+            t = (twai_timing_config_t)TWAI_TIMING_CONFIG_500KBITS();
+            break;
+
+        case 250000:
+            t = (twai_timing_config_t)TWAI_TIMING_CONFIG_250KBITS();
+            break;
+
+        case 125000:
+            t = (twai_timing_config_t)TWAI_TIMING_CONFIG_125KBITS();
+            break;
+
+        default:
+            t = (twai_timing_config_t)TWAI_TIMING_CONFIG_500KBITS();
+            break;
+    }
+
+    return t;
+}
+
+
+int detect_can_bitrate()
+{
+    twai_general_config_t g_config =
+        TWAI_GENERAL_CONFIG_DEFAULT(CAN_TX, CAN_RX, TWAI_MODE_NORMAL);
+
+    twai_filter_config_t f_config =
+        TWAI_FILTER_CONFIG_ACCEPT_ALL();
+
+    twai_message_t msg;
+
+    for (int i = 0; i < NUM_RATES; i++){
+        int rate = can_rates[i];
+
+        twai_timing_config_t t_config = get_timing(rate);
+
+        ESP_LOGI(TAG, "Trying CAN bitrate %d", rate);
+
+        ESP_ERROR_CHECK(twai_driver_install(&g_config, &t_config, &f_config));
+        ESP_ERROR_CHECK(twai_start());
+
+        int frames = 0;
+        int timeout = 20;
+
+        while (timeout--){
+            if (twai_receive(&msg, pdMS_TO_TICKS(10)) == ESP_OK){
+                if (msg.extd || msg.rtr)
+                    continue;
+
+                frames++;
+
+                if (frames >= 3){
+                    ESP_LOGI(TAG, "Detected CAN bitrate %d", rate);
+
+                    twai_stop();
+                    twai_driver_uninstall();
+
+                    return rate;
+                }
+            }
+        }
+
+        twai_stop();
+        twai_driver_uninstall();
+    }
+
+    ESP_LOGW(TAG, "CAN bitrate detection failed, defaulting to 500k");
+
+    return 500000;
+}
+
 
 // =======================================================
 // CAN INIT
 // =======================================================
 
-void canbus_init(void){
+void canbus_init(void)
+{
+    mount_fs();
+
+    protocol_loader_init();
+
+    int bitrate = detect_can_bitrate();
+
     twai_general_config_t g_config =
         TWAI_GENERAL_CONFIG_DEFAULT(CAN_TX, CAN_RX, TWAI_MODE_NORMAL);
 
-    #if CAN_DEFAULT_BITRATE == 1000000
-        twai_timing_config_t t_config = TWAI_TIMING_CONFIG_1MBITS();
-    #elif CAN_DEFAULT_BITRATE == 500000
-        twai_timing_config_t t_config = TWAI_TIMING_CONFIG_500KBITS();
-    #elif CAN_DEFAULT_BITRATE == 250000
-        twai_timing_config_t t_config = TWAI_TIMING_CONFIG_250KBITS();
-    #else
-    #error Unsupported CAN bitrate
-    #endif
+    twai_timing_config_t t_config = get_timing(bitrate);
 
     twai_filter_config_t f_config =
         TWAI_FILTER_CONFIG_ACCEPT_ALL();
@@ -103,11 +189,7 @@ void canbus_init(void){
     ESP_ERROR_CHECK(twai_driver_install(&g_config, &t_config, &f_config));
     ESP_ERROR_CHECK(twai_start());
 
-    mount_fs();
-
-    protocol_loader_init();
-
-    ESP_LOGI(TAG, "CAN initialized");
+    ESP_LOGI(TAG, "CAN initialized at %d", bitrate);
 }
 
 

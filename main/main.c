@@ -34,7 +34,7 @@
 #define SENSOR_SOURCE_ANALOG 0
 #define SENSOR_SOURCE_CAN    1
 
-#define SENSOR_SOURCE SENSOR_SOURCE_ANALOG
+#define SENSOR_SOURCE SENSOR_SOURCE_CAN
 // =======================================================
 //-----Pin Assignment---------//
 

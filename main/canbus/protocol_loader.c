@@ -1,5 +1,6 @@
 #include "protocol_loader.h"
 #include "protocol_list.h"
+#include "canbus.h"
 
 #include "esp_log.h"
 #include "esp_timer.h"
@@ -15,11 +16,14 @@ can_frame_def_t *frame_lookup[CAN_ID_MAX];
 static void (*decode_table[CAN_ID_MAX])(uint8_t *data);
 
 can_protocol_t protocols[MAX_PROTOCOLS];
+static int protocol_hits[MAX_PROTOCOLS];
+
 int protocol_count = 0;
 
 can_protocol_t *active_protocol = NULL;
 
-extern can_dash_data_t can_data;
+extern volatile can_dash_data_t can_data;
+
 
 static uint32_t seen_ids[64];
 static int seen_count = 0;
@@ -180,6 +184,7 @@ void protocol_loader_init(void){
     }
 
     ESP_LOGI(TAG,"Loaded %d CAN protocols",protocol_count);
+    
 }
 
 void protocol_detect(uint32_t id)
