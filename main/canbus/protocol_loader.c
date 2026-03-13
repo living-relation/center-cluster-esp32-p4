@@ -182,39 +182,26 @@ void protocol_loader_init(void){
     ESP_LOGI(TAG,"Loaded %d CAN protocols",protocol_count);
 }
 
-void protocol_detect(uint32_t id){
-    if(active_protocol)
+void protocol_detect(uint32_t id)
+{
+    if (detection_done)
         return;
 
-    record_id(id);
+    for (int p = 0; p < protocol_count; p++){
+        can_protocol_t *proto = &protocols[p];
 
-    if(detect_start==0)
-        detect_start = esp_timer_get_time();
+        for (int f = 0; f < proto->frame_count; f++){
+            if (proto->frames[f].id == id){
+                protocol_hits[p]++;
 
-    int64_t now = esp_timer_get_time();
+                if (protocol_hits[p] >= 2){
+                    active_protocol = proto;
+                    detection_done = true;
 
-    if((now-detect_start) < 200000)
-        return;
+                    ESP_LOGI(TAG, "Detected CAN protocol: %s", proto->name);
 
-    for(int p=0;p<protocol_count;p++){
-        int matches=0;
-
-        for(int f=0;f<protocols[p].frame_count;f++){
-            uint32_t frame_id = protocols[p].frames[f].id;
-
-            for(int s=0;s<seen_count;s++){
-                if(frame_id==seen_ids[s]){
-                    matches++;
-                    break;
+                    return;
                 }
-            }
-
-            if(matches>=2){
-                active_protocol=&protocols[p];
-                detection_done=true;
-
-                ESP_LOGI(TAG,"Detected CAN protocol: %s",active_protocol->name);
-                return;
             }
         }
     }
