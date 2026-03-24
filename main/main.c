@@ -34,7 +34,7 @@
 #define SENSOR_SOURCE_ANALOG 0
 #define SENSOR_SOURCE_CAN    1
 
-#define SENSOR_SOURCE SENSOR_SOURCE_CAN
+#define SENSOR_SOURCE SENSOR_SOURCE_ANALOG
 // =======================================================
 //-----Pin Assignment---------//
 
@@ -156,6 +156,7 @@ const float oil_fuel_pressure_alpha = 0.18f;
 //--------------------------------------//
 
 //-------------RPM-------------//
+#define MAX_PERIOD_CHANGE 0.12f   // 15% allowed change
 #define PULSES_PER_REV 2
 #define MIN_PULSE_COUNT 2       // minimum pulses before computing RPM
 #define MAX_RPM 9000.0f
@@ -172,6 +173,7 @@ volatile uint64_t lastTachUs = 0;
 volatile uint64_t tachPeriodUs = 0;
 volatile uint64_t lastPulseMs = 0;
 
+float rpmLastRaw = 0.0f;
 float rpmNow = 0.0f;
 float rpmFiltered = 0.0f;
 
@@ -364,11 +366,10 @@ static inline float alphaForRPM(float rpmRaw) {
     // Base alpha depending on RPM range (smoother at low RPM, faster at high RPM)
     float base;
     if (rpmRaw < 1200.0f) base = 0.04f;      // idle, very smooth
-    else if (rpmRaw < 3000.0f) base = 0.10f; // mid RPM
-    else base = 0.18f; 
-    return base;                       // high RPM, faster updates
+    else if (rpmRaw < 3000.0f) base = 0.12f; // mid RPM
+    else base = 0.20f;                      // high RPM, faster updates
+    return base;                       
 }
-
 
 void IRAM_ATTR tachISR(void* arg) {
     uint64_t now = esp_timer_get_time();
@@ -398,58 +399,83 @@ void tach_init() {
 void tach_task(void *arg) {
     const TickType_t delay = pdMS_TO_TICKS(TACH_UPDATE_DELAY);
 
-    static int log_counter = 0;
+    static int rejectStreak = 0;
 
     while (true) {
-
         float rpmRaw = 0.0f;
         int count = 0;
 
-        // ----- Average RPM instead of period -----
+        float lastValid = (rpmLastRaw > 500.0f) ? rpmLastRaw :
+                          (rpmFiltered > 500.0f ? rpmFiltered : 1000.0f);
+
         portENTER_CRITICAL(&tachMux);
+
         for (int i = 0; i < PERIOD_AVG_SAMPLES; i++) {
+
             if (periodBuffer[i] > 0) {
-                float rpm = 60000000.0f /
-                            (periodBuffer[i] * PULSES_PER_REV);
-                rpmRaw += rpm;
-                count++;
+
+                float rpm =
+                    60000000.0f /
+                    (periodBuffer[i] * PULSES_PER_REV);
+
+                float tolerance;
+
+                if (lastValid < 1500.0f)
+                    tolerance = 0.40f;
+                else if (lastValid < 4000.0f)
+                    tolerance = 0.25f;
+                else
+                    tolerance = 0.18f;
+
+                // If we've rejected too long, relax the filter
+                if (rejectStreak > 40)
+                    tolerance *= 2.0f;
+
+                if (fabsf(rpm - lastValid) < lastValid * tolerance) {
+                    rpmRaw += rpm;
+                    count++;
+                }
             }
         }
+
         portEXIT_CRITICAL(&tachMux);
 
         if (count > 0) {
             rpmRaw /= count;
+            rejectStreak = 0;
+        } else {
+            rejectStreak++;
+            rpmRaw = rpmFiltered;
         }
+
+        rpmLastRaw = rpmRaw;
 
         uint64_t nowMs = esp_timer_get_time() / 1000;
 
-        // ----- Timeout → RPM = 0 -----
         if (nowMs - lastPulseMs > RPM_TIMEOUT_MS) {
             rpmFiltered = 0.0f;
-            rpmNow = 0.0f;
         }
-        else if (count > 0) {
+        else {
 
-            float alpha = alphaForRPM(rpmRaw);
+            float alpha;
+
+            if (rpmRaw < 1200.0f)       alpha = 0.05f;
+            else if (rpmRaw < 3000.0f)  alpha = 0.12f;
+            else if (rpmRaw < 6000.0f)  alpha = 0.20f;
+            else                        alpha = 0.30f;
 
             if (rpmFiltered == 0.0f)
                 rpmFiltered = rpmRaw;
             else
                 rpmFiltered += alpha * (rpmRaw - rpmFiltered);
-
-            rpmNow = rpmFiltered;
         }
 
-        #if ENABLE_LOGS
-            if (++log_counter >= 50) {
-                ESP_LOGI(TAG_TACH, "RPM Now: %.1f, Filtered: %.1f", rpmNow, rpmFiltered);
-                log_counter = 0;
-            }
-        #endif
+        rpmNow = rpmFiltered;
 
         vTaskDelay(delay);
     }
 }
+
 
 static int detect_gear(float rpm, float mph, float dt)
 {
