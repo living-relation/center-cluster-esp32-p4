@@ -1,6 +1,9 @@
 # Esp32 Round Display for a digital gauge cluster
 
-Please do not use these files to sell this to others. I made these so that those wanting to modify their dash/cluster dont have to spend an arm and a leg to do so.
+This project is source-available and free for personal and educational use.
+Commercial use is NOT permitted.
+
+### *****Please do not use these files to sell this to others.  I made these so that those wanting to modify their dash/cluster dont have to spend an arm and a leg to do so.***** ###
 
 Youtube Tutorial/playlist: https://youtu.be/t7H6pevep40
 
