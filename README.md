@@ -19,6 +19,14 @@ Youtube Tutorial/playlist: https://youtu.be/t7H6pevep40
 7. Flash
 <br>
 
+
+# CANBUS
+For canbus integration, I have added a few CAN protocols(haltech, hondata, etc).  If you would like more added please join the discord and provide the can protocol and I can add it quickly
+<br>
+<br>
+Also, the sensor source on line 37 of the main.c file needs to be updated to 
+```SENSOR_SOURCE_CAN``` as the default for this code is the analog/non-canbus sensors
+
 ## Issues/bug fixes
 
 ### 4in waveshare round screens
