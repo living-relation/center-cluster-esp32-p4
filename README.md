@@ -24,6 +24,9 @@ Youtube Tutorial/playlist: https://youtu.be/t7H6pevep40
 For canbus integration, I have added a few CAN protocols(haltech, hondata, etc).  If you would like more added please join the discord and provide the can protocol and I can add it quickly
 <br>
 <br>
+You will need to purchase a [small can transciever](https://a.co/d/09CiRq2o) for 9$.  With it, you can ignore any other sensor wiring.  If you need help with wiring those two wires, again join the discord.
+
+<br>
 Also, the sensor source on line 37 of the main.c file needs to be updated to 
 ```SENSOR_SOURCE_CAN``` as the default for this code is the analog/non-canbus sensors
 
