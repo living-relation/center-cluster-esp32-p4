@@ -63,6 +63,12 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 
+if [ "$BUILD_ONLY" != "1" ] && [ -n "$PORT" ] && [ ! -e "$PORT" ]; then
+  echo "Error: specified serial port '$PORT' does not exist." >&2
+  echo "Connect your board or provide a valid --port value." >&2
+  exit 1
+fi
+
 if [ ! -f "$IDF_HELPER" ]; then
   echo "Error: ESP-IDF helper script not found at '$IDF_HELPER'." >&2
   echo "Run VM setup first or set IDF_HELPER to a valid script path." >&2
