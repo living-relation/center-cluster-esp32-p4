@@ -279,13 +279,14 @@ static inline int constrain_int(int x, int low, int high) {
 }
 
 static void init_label_styles(void){
+    ui_theme_set(UI_THEME_DEFAULT);
 
-    green_color = lv_color_hex(0x28FF00);
-    red_color = lv_palette_main(LV_PALETTE_RED);
-    orange_color = lv_palette_main(LV_PALETTE_ORANGE);
-    purple_color = lv_palette_main(LV_PALETTE_PURPLE);
-    pink_color = lv_palette_main(LV_PALETTE_PINK);
-    blue_color = lv_palette_main(LV_PALETTE_CYAN);
+    green_color = ui_theme_rpm_color_low();
+    red_color = ui_theme_rpm_color_high();
+    orange_color = ui_theme_rpm_color_mid();
+    purple_color = ui_theme_gear_value_color();
+    pink_color = ui_theme_label_color();
+    blue_color = ui_theme_mph_value_color();
 }
 
 static void update_label_if_needed(lv_obj_t *label, char *new_value, lv_color_t new_color) { 
@@ -546,12 +547,7 @@ void tach_set_rpm(int rpm){
 
     lv_color_t new_color;
 
-    if (rpm >= 7000)
-        new_color = red_color;
-    else if (rpm >= 5000)
-        new_color = orange_color;
-    else
-        new_color = green_color;
+    new_color = ui_theme_rpm_color_for_value(rpm);
 
     // Only change color if needed
     if (new_color.full != current_color.full) {
@@ -575,7 +571,11 @@ void gauge_timer(lv_timer_t * t) {
     double miles = odometer_get_miles();
     char odo_buf[16];
     snprintf(odo_buf, sizeof(odo_buf), "%06.1f", miles);
-    update_label_if_needed(ui_label_odometer_value, odo_buf, green_color);
+    update_label_if_needed(
+        ui_label_odometer_value,
+        odo_buf,
+        ui_theme_odometer_color()
+    );
 
 
     // -------- GEAR DETECTION -------- //
@@ -597,11 +597,19 @@ void gauge_timer(lv_timer_t * t) {
     if (gear != last_displayed) {
 
         if(gear == -1) {
-            update_label_if_needed(ui_label_gear_value, "N", purple_color);
+            update_label_if_needed(
+                ui_label_gear_value,
+                "N",
+                ui_theme_gear_value_color()
+            );
         } else {
             char buf[2];
             snprintf(buf, sizeof(buf), "%d", gear);
-            update_label_if_needed(ui_label_gear_value, buf, purple_color);
+            update_label_if_needed(
+                ui_label_gear_value,
+                buf,
+                ui_theme_gear_value_color()
+            );
         }
 
         last_displayed = gear;

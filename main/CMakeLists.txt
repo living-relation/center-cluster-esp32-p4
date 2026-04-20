@@ -59,6 +59,7 @@ file(APPEND ${PROTOCOL_LIST_FILE}
 idf_component_register(
     SRCS 
         "main.c"
+        "tach_ui/ui_theme.c"
         "tach_ui/ui.c"
         "tach_ui/screens/ui_Screen1.c"
         "tach_ui/images/ui_img_1656279599.c"
