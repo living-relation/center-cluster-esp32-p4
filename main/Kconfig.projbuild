@@ -1,0 +1,142 @@
+menu "TrackCluster — Center cluster pin map (Waveshare ESP32-P4-WIFI6-Touch-LCD-XC)"
+
+   # Pin assignments verified against the ESP32-P4-WIFI6-Touch-LCD-XC schematic
+   # and the TrackCluster design-system pinout.
+   #
+   # Board-reserved GPIOs (do NOT reassign):
+   #   GPIO 6/7  → on-board I²C bus (SDA/SCL for GT911 touch + other peripherals)
+   #   GPIO 27   → LCD RESET
+   #   GPIO 37/38 → in-package PSRAM (SPI2 8-line) — NEVER use
+   #   GPIO 39–44 → MicroSD (SDIO 4-bit)
+   #   DSI pads  → MIPI display (dedicated pads, not GPIO-numbered)
+   #
+   # SILICON-RESERVED (ESP32-P4 datasheet §3 Boot Configuration):
+   #   GPIO 34,35,36,37,38 → STRAPPING pins (boot mode / JTAG / UART-print).
+   #     Avoid for general I/O; 35/36/37/38 set boot mode at reset, 34 = JTAG sel.
+   #
+   # Available GPIOs on J8 40-pin header, clear of all of the above (schematic-verified):
+   #   2, 3, 4, 5, 17, 18, 19, 20, 21, 22, 24, 25, 28, 29, 30, 31, 32, 46, 47, 48, 49, 50, 51, 52
+
+    config TC_CAN_TX_GPIO
+        int "TWAI (CAN) TX GPIO → transceiver TXD"
+        range 0 54
+        default 5
+        help
+            Connect to an isolated CAN transceiver (SN65HVD230 / ISO1050 / TJA1051T).
+            Firmware runs TWAI_MODE_NORMAL — receives ECU frames and transmits encoder
+            selection frames to the ECU on explicit button press.
+            GPIO5 is on J8 header and clear of all board peripherals.
+
+    config TC_CAN_RX_GPIO
+        int "TWAI (CAN) RX GPIO ← transceiver RXD"
+        range 0 54
+        default 4
+        help
+            ECU bus rate: 1 Mbit/s (Link G4X). GPIO4 is on J8 header and free.
+
+    config TC_UART1_TX_GPIO
+        int "UART1 TX → LEFT cluster (connect to LEFT board GPIO18/RX)"
+        range 0 54
+        default 20
+
+    config TC_UART1_RX_GPIO
+        int "UART1 RX ← LEFT cluster (reserved for future telemetry)"
+        range -1 54
+        default 18
+
+    config TC_UART2_TX_GPIO
+        int "UART2 TX → RIGHT cluster (connect to RIGHT board GPIO18/RX)"
+        range 0 54
+        default 21
+
+    config TC_UART2_RX_GPIO
+        int "UART2 RX ← RIGHT cluster (reserved for future telemetry)"
+        range -1 54
+        default 19
+
+    config TC_BUTTON_ODO_GPIO
+        int "Push-button 1 — ODO / Trip cycle (active-low; -1 disables)"
+        range -1 54
+        default 29
+        help
+            The cluster's single push-button. Momentary normally-open switch to GND.
+            Short press cycles ODO → TRIP A → TRIP B. Long press (≥1 s) on a TRIP mode
+            resets that trip counter.
+
+    comment "── Encoder 1: Boost Map selector ──────────────────────────────────────"
+    comment "Turning opens a popup on the RIGHT display. Pressing confirms selection"
+    comment "and broadcasts the chosen map index to the ECU over CAN."
+
+    config TC_ENC1_A_GPIO
+        int "Encoder 1 (Boost) — A / CLK pin"
+        range 0 54
+        default 30
+
+    config TC_ENC1_B_GPIO
+        int "Encoder 1 (Boost) — B / DT pin"
+        range 0 54
+        default 31
+
+    config TC_ENC1_SW_GPIO
+        int "Encoder 1 (Boost) — push-button"
+        range 0 54
+        default 32
+
+    comment "── Encoder 2: TC Slip Angle selector ──────────────────────────────────"
+    comment "Turning opens a popup on the RIGHT display. Pressing confirms selection"
+    comment "and broadcasts the chosen angle index to the ECU over CAN."
+
+    config TC_ENC2_A_GPIO
+        int "Encoder 2 (TC) — A / CLK pin"
+        range 0 54
+        default 49
+
+    config TC_ENC2_B_GPIO
+        int "Encoder 2 (TC) — B / DT pin"
+        range 0 54
+        default 50
+
+    config TC_ENC2_SW_GPIO
+        int "Encoder 2 (TC) — push-button"
+        range 0 54
+        default 51
+
+    config TC_ENC_DEBOUNCE_MS
+        int "Encoder / button debounce period (ms)"
+        range 5 100
+        default 20
+
+    config TC_MENU_TIMEOUT_MS
+        int "Popup auto-close timeout (ms, 0 = never)"
+        range 0 30000
+        default 4000
+        help
+            If the encoder is not touched for this many ms the popup closes
+            without making a new selection.
+
+    comment "── CAN TX IDs for encoder selections ─────────────────────────────────"
+
+    config TC_CAN_TX_BOOST_ID
+        hex "CAN frame ID for boost map selection"
+        default 0x3EC
+        help
+            Center transmits a 1-byte frame (byte 0 = map index) on this ID when the
+            boost encoder is pressed. IDs 0x3E8-0x3EB are the ECU broadcast range;
+            0x3EC-0x3ED are the next available IDs for dashboard-to-ECU TX.
+            Confirm the ECU is configured to receive on this ID.
+
+    config TC_CAN_TX_TC_ID
+        hex "CAN frame ID for TC slip-angle selection"
+        default 0x3ED
+
+    config TC_BENCH_MODE
+        bool "Bench mode — standalone demo sweep (no ECU connected)"
+        default n
+        help
+            When enabled, the center ignores CAN/UART/inputs and slowly sweeps the
+            tach / gear / odometer channels so every widget can be verified on the
+            bench. OFF = normal operation (real ECU data; gauges sit at 0 until CAN
+            frames arrive). Toggle via idf.py menuconfig → TrackCluster, or
+            CONFIG_TC_BENCH_MODE=y in sdkconfig.defaults.
+
+endmenu

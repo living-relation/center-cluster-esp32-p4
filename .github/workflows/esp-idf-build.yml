@@ -1,0 +1,29 @@
+name: ESP-IDF Build
+
+on:
+  push:
+    branches:
+      - main
+      - feature/Run_2
+      - feature/Run_2_center_espidf_ci
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-center-firmware:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build ESP32-P4 firmware
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v5.5
+          target: esp32p4
+          path: .

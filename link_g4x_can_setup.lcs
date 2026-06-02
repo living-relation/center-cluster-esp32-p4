@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: confirm against PCLink G4X firmware ≥ 6.20 .lcs schema before importing.
+     A slightly-wrong .lcs is fixable in PCLink; the JSON twin is the canonical source.
+     Import via: PCLink → CAN → Setup → File → Open (.lcs) -->
+<LinkCANSetup Version="1">
+  <CANModule Index="2">
+    <!-- Use whichever CAN module is wired to the dashboard transceiver -->
+    <BitRate>1000000</BitRate>
+    <!-- ═══════════════════════════════════════════════════════════════════
+         STREAM 0x3E8 — Engine Fast (10 ms cycle)
+         ═══════════════════════════════════════════════════════════════════ -->
+    <Channel ID="0x3E8" Name="Engine Fast" CycleTime="10" Type="Custom">
+      <Parameter Name="Engine Speed"  StartBit="0"  Length="16" Scale="1"    Offset="0"   ByteOrder="BigEndian" />
+      <Parameter Name="MGP"           StartBit="16" Length="16" Scale="1"    Offset="0"   ByteOrder="BigEndian" />
+      <Parameter Name="ECT"           StartBit="32" Length="8"  Scale="1"    Offset="-50" ByteOrder="BigEndian" />
+      <Parameter Name="IAT"           StartBit="40" Length="8"  Scale="1"    Offset="-50" ByteOrder="BigEndian" />
+      <Parameter Name="Oil Temp"      StartBit="48" Length="8"  Scale="1"    Offset="-50" ByteOrder="BigEndian" />
+      <!-- Byte 7: unassigned — leave empty -->
+    </Channel>
+    <!-- ═══════════════════════════════════════════════════════════════════
+         STREAM 0x3E9 — Speed / Pressure / Ign (10 ms cycle)
+         ═══════════════════════════════════════════════════════════════════ -->
+    <Channel ID="0x3E9" Name="Speed Press Ign" CycleTime="10" Type="Custom">
+      <Parameter Name="Ign Angle"     StartBit="0"  Length="16" Scale="0.1"  Offset="-100" ByteOrder="BigEndian" />
+      <Parameter Name="Vehicle Speed" StartBit="16" Length="8"  Scale="1"    Offset="0"    ByteOrder="BigEndian" />
+      <Parameter Name="Oil Pressure"  StartBit="24" Length="8"  Scale="1"    Offset="0"    ByteOrder="BigEndian" />
+      <Parameter Name="Fuel Pressure" StartBit="32" Length="8"  Scale="1"    Offset="0"    ByteOrder="BigEndian" />
+      <!-- Bytes 5-7: unassigned — leave empty -->
+    </Channel>
+    <!-- ═══════════════════════════════════════════════════════════════════
+         STREAM 0x3EA — Lambda (10 ms cycle)
+         ═══════════════════════════════════════════════════════════════════ -->
+    <Channel ID="0x3EA" Name="Lambda" CycleTime="10" Type="Custom">
+      <Parameter Name="Lambda 1"      StartBit="0"  Length="16" Scale="0.001" Offset="0"  ByteOrder="BigEndian" />
+      <!-- Bytes 2-7: unassigned — leave empty -->
+    </Channel>
+    <!-- ═══════════════════════════════════════════════════════════════════
+         STREAM 0x3EB — Gear / Fuel Level (50 ms cycle)
+         ═══════════════════════════════════════════════════════════════════ -->
+    <Channel ID="0x3EB" Name="Gear Fuel" CycleTime="50" Type="Custom">
+      <Parameter Name="Gear Position" StartBit="0"  Length="8"  Scale="1"    Offset="0"   ByteOrder="BigEndian" />
+      <Parameter Name="Fuel Level"    StartBit="8"  Length="8"  Scale="1"    Offset="0"   ByteOrder="BigEndian" />
+      <!-- Bytes 2-7: unassigned — leave empty -->
+    </Channel>
+    <!-- ═══════════════════════════════════════════════════════════════════
+         STREAM 0x3EE — Engine Protection Status (50 ms cycle)
+         One byte per alarm: 0=OK, nonzero=active. Map each to a Link limit /
+         protection flag (Link broadcasts limit flags as a bit field — route the
+         relevant bit/level to each byte). Do NOT duplicate gauge-shown
+         conditions (oil pressure, fuel level, coolant/oil/IAT temps).
+         Drives the RIGHT cluster warning overlay (up to 3, highest priority).
+         ═══════════════════════════════════════════════════════════════════ -->
+    <Channel ID="0x3EE" Name="Engine Protect" CycleTime="50" Type="Custom">
+      <Parameter Name="Knock"          StartBit="0"  Length="8" Scale="1" Offset="0" ByteOrder="BigEndian" />
+      <Parameter Name="Ign Cut"        StartBit="8"  Length="8" Scale="1" Offset="0" ByteOrder="BigEndian" />
+      <Parameter Name="Fuel Cut"       StartBit="16" Length="8" Scale="1" Offset="0" ByteOrder="BigEndian" />
+      <Parameter Name="Boost Cut"      StartBit="24" Length="8" Scale="1" Offset="0" ByteOrder="BigEndian" />
+      <Parameter Name="Sensor Error"   StartBit="32" Length="8" Scale="1" Offset="0" ByteOrder="BigEndian" />
+      <Parameter Name="Throttle Error" StartBit="40" Length="8" Scale="1" Offset="0" ByteOrder="BigEndian" />
+      <!-- Bytes 6-7: unassigned — leave empty -->
+    </Channel>
+  </CANModule>
+</LinkCANSetup>

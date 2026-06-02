@@ -1,0 +1,6 @@
+/build/
+/managed_components/
+.vs/
+out/
+sdkconfig
+sdkconfig.old

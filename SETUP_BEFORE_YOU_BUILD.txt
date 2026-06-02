@@ -1,0 +1,179 @@
+===============================================================================
+ TrackCluster — BEFORE YOU BUILD (read me first)
+ A plain-language setup checklist for flashing the three cluster boards from
+ VS Code with the Espressif ESP-IDF extension. Written for a first-timer.
+===============================================================================
+
+There are THREE separate projects (each is its own folder you open in VS Code):
+    REPO_FINAL/center-cluster-esp32-p4      -> the big 800x800 round screen (P4)
+    REPO_FINAL/left-side-cluster-esp32s3    -> left 480x480 screen (S3)
+    REPO_FINAL/right-side-cluster-esp32s3   -> right 480x480 screen (S3)
+
+You build/flash each ONE AT A TIME. Open one folder, flash it, then open the
+next. They do not depend on each other at build time.
+
+These projects are already set to start in BENCH MODE -- meaning each screen
+runs a self-test demo with NOTHING else wired up, so you can confirm the display
+works on the bench. (How to turn that off later is at the bottom.)
+
+
+-------------------------------------------------------------------------------
+ 0. ONE-TIME: make sure the ESP-IDF extension is set up
+-------------------------------------------------------------------------------
+- Install "Espressif IDF" extension in VS Code (Extensions sidebar, search
+  "ESP-IDF", install the official Espressif one).
+- Press F1 (or Ctrl+Shift+P) to open the Command Palette, type:
+      ESP-IDF: Configure ESP-IDF Extension
+  Choose EXPRESS, and pick version 5.5.4 (already what these projects expect).
+  Let it finish downloading the toolchain. This also sets up Python for you --
+  you do NOT need to install or configure Python yourself.
+- If VS Code ever complains it can't find Python or the compiler, just run that
+  "Configure ESP-IDF Extension" command again -- it fixes the paths.
+
+IMPORTANT about IDF version: use 5.5.4 (or any 5.4+). Do NOT use 5.3.x -- the
+center P4 board needs the newer version for its display to work. The two S3
+boards are fine on 5.5.4 too, so everything stays on one version.
+
+
+-------------------------------------------------------------------------------
+ 1. OPEN A PROJECT
+-------------------------------------------------------------------------------
+File -> Open Folder -> pick ONE of the three folders listed above.
+Wait a few seconds for the ESP-IDF extension to wake up (bottom blue bar shows
+icons once it's ready).
+
+The row of little icons along the BOTTOM blue bar is your control panel. From
+left to right the ones you care about:
+    [plug/chip]  = choose the chip target (esp32p4 or esp32s3)
+    [wrench]     = Build
+    [lightning]  = Flash (send firmware to the board)
+    [monitor/TV] = Monitor (open the serial log from the board)
+    [flame]      = Build + Flash + Monitor all at once
+    [COM...]     = which USB port the board is on (see step 3)
+
+
+-------------------------------------------------------------------------------
+ 2. SET THE CHIP TARGET (first time per project only)
+-------------------------------------------------------------------------------
+Click the chip-target icon on the bottom bar (or run command
+"ESP-IDF: Set Espressif Device Target") and choose:
+    - center folder -> esp32p4
+    - left/right    -> esp32s3
+This reads our sdkconfig.defaults (PSRAM, flash size, bench mode) and prepares
+the build. Do this once per project; it remembers afterward.
+
+
+-------------------------------------------------------------------------------
+ 3. PLUG IN THE BOARD AND PICK THE PORT
+-------------------------------------------------------------------------------
+- Connect the board to your PC with a USB-C cable. Use the port that is the
+  USB / "UART" port on the board (the boards flash over USB).
+- Click the COM port icon on the bottom bar (or run
+  "ESP-IDF: Select Port to Use"). Pick the COM port that appeared when you
+  plugged the board in (e.g. COM3, COM5...). If unsure, unplug/replug and see
+  which COM number comes and goes.
+- We deliberately did NOT hard-code a port, because it changes per PC and per
+  board. You set it here each time you work on a board.
+
+
+-------------------------------------------------------------------------------
+ 4. CONFIRM THE BOARD SETTINGS (flash size, PSRAM)  -- the important check
+-------------------------------------------------------------------------------
+Open the settings menu: F1 -> "ESP-IDF: SDK Configuration Editor (menuconfig)".
+A search box appears at the top. These are already set by our defaults, but
+here is where you confirm them:
+
+a) FLASH SIZE
+   - Search:  flash size
+   - Under "Serial flasher config" -> "Flash size".
+   - CENTER (P4): should be 32 MB. (The board's flash chip is a GD25Q256 =
+     256 Mbit = 32 MB -- confirmed from the schematic.)
+   - LEFT/RIGHT (S3): set to 16 MB. If your board turns out to be 8 MB, choose
+     8 MB here instead. (If the flash size is set LARGER than the actual chip,
+     flashing fails with a "size" error -- that's the symptom to watch for.)
+   - Not sure of the real size? Run command "ESP-IDF: Flash ID" (or in a
+     terminal: esptool flash_id) -- it prints the true chip size.
+
+b) PSRAM (this is what makes the screen actually light up)
+   - Search:  spiram   (PSRAM is called "SPIRAM" in the menu)
+   - Under "Component config -> ESP PSRAM": "Support for external SPI RAM"
+     must be ON (checked).
+   - CENTER (P4): mode = Hex/16-line, speed = 200 MHz (that's what we set --
+     it's the chip's rated speed).
+   - LEFT/RIGHT (S3): mode = Octal, speed = 80 MHz.
+   - If the center screen is BLACK after flashing, come back here and lower the
+     PSRAM speed one step (200 -> 120 MHz), save, rebuild, reflash.
+
+   ABOUT PSRAM SPEED (your question): we set the P4 to 200 MHz, which is the
+   maximum the module is rated for. If you had left it blank, ESP-IDF picks its
+   own menuconfig default (which is conservative and can be slower); we set it
+   explicitly to 200 MHz for best display performance. 120 MHz is the safe
+   fallback if you ever see flicker or boot instability.
+
+After confirming, click SAVE in the editor, then close it.
+
+
+-------------------------------------------------------------------------------
+ 5. DO I NEED TO SET A BAUD RATE? (your question)
+-------------------------------------------------------------------------------
+Short answer: NO, you don't need to change anything to match the code.
+
+There are two different "speeds" and neither needs to match our CPU/PSRAM
+performance settings:
+
+- FLASH (download) baud = how fast your PC pushes firmware to the board while
+  flashing. Default is fine. If flashing feels slow you can raise it (e.g. to
+  921600) via "ESP-IDF: Select Flash Method / Baud" -- purely convenience, it
+  does not affect how the firmware runs.
+
+- MONITOR baud = the speed the log window reads at. Our firmware uses the
+  standard 115200, which is also the extension's default. So just open Monitor;
+  if you ever see garbage characters in the log, set the monitor baud to 115200.
+
+The CPU speed (240/360 MHz) and PSRAM speed (80/200 MHz) are internal to the
+chip and have nothing to do with the USB baud rate. Leave baud at defaults.
+
+
+-------------------------------------------------------------------------------
+ 6. BUILD, FLASH, MONITOR
+-------------------------------------------------------------------------------
+Easiest: click the [flame] icon on the bottom bar = "Build, Flash and Monitor".
+First build takes several minutes (it downloads LVGL and panel drivers and
+compiles everything); later builds are much faster.
+
+What you should see on the screen after it flashes:
+    - A short Toyota logo splash, then
+    - The live gauges animating through their range (bench mode demo sweep).
+The serial Monitor window will print boot messages; look for a line like
+"BENCH MODE" confirming the demo is running. Press Ctrl+] to close Monitor.
+
+If the build complains about timestamps / "clock skew" / loops: your PC clock
+vs the files' dates. Just rebuild, or run "ESP-IDF: Full Clean" then build.
+
+
+-------------------------------------------------------------------------------
+ 7. WHEN BENCH TESTING IS DONE -> GO LIVE
+-------------------------------------------------------------------------------
+Ask me to switch bench mode off, OR do it yourself:
+    - Open menuconfig (step 4), search:  bench
+    - Under "TrackCluster", turn OFF "Bench mode". Save.
+    - Rebuild + reflash.
+That switches the board to real operation: the center reads the ECU over CAN
+and feeds the side screens over UART; with nothing connected the gauges simply
+sit at 0 (no error, no blank screen).
+
+
+-------------------------------------------------------------------------------
+ QUICK REFERENCE
+-------------------------------------------------------------------------------
+ Target:   center=esp32p4   left/right=esp32s3
+ Flash:    center=32 MB     left/right=16 MB (confirm; 8 MB if smaller board)
+ PSRAM:    center=Hex 200MHz left/right=Octal 80MHz   (MUST be ON)
+ Baud:     leave default (monitor 115200)
+ Port:     pick it on the bottom bar each session
+ Bench:    ON now (self-test). Turn OFF in menuconfig -> TrackCluster for live.
+ IDF:      5.5.4 (do not use 5.3.x for the P4)
+
+ Wiring for the real install is in:  ECU_SETUP/WIRING.md
+ ECU (Link G4X) CAN setup is in:     ECU_SETUP/  (the .lcs / .json + guides)
+===============================================================================

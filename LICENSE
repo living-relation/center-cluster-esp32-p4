@@ -1,0 +1,48 @@
+Center-Cluster-ESP32-P4 – Source-Available Non-Commercial License
+Version 1.0
+
+Copyright (c) 2025 Travis Way
+
+Permission is hereby granted to any person obtaining a copy of this
+software and associated documentation files (the "Software") to use,
+copy, modify, and distribute the Software for PERSONAL, EDUCATIONAL,
+or NON-COMMERCIAL purposes only, provided that any distribution is
+without charge or commercial advantage, subject to the following
+conditions:
+
+1. Non-Commercial Use Only
+   The Software may NOT be used, in whole or in part, for any
+   commercial purpose. Commercial purposes include, but are not
+   limited to:
+   - Selling the Software or derivative works
+   - Including the Software in a product or service that is sold
+   - Using the Software to provide paid services
+   - Distributing the Software as part of a commercial offering
+   - Shipping the Software in hardware or kits for sale
+
+2. Attribution
+   Any redistribution must retain the original copyright notice,
+   this license text, and attribution to the original author.
+
+3. No Warranty
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+   OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+4. Termination
+   This License is automatically terminated if you fail to comply
+   with any of its terms or conditions. Upon termination, you must
+   immediately cease all use, copying, modification, and distribution
+   of the Software.
+
+This License shall be governed by the laws of the State of Washington, USA.
+
+Any use of the Software outside the scope of this License constitutes
+copyright infringement.
+
+END OF LICENSE

@@ -1,0 +1,52 @@
+{
+  "name": "Link G4X",
+  "comment": "Custom CAN page for Link G4X FuryX. Apply via PCLink → CAN → Custom Setup. See center-CANBUS-LINK-G4X-CONFIG.md for screenshots.",
+  "bitrate": 1000000,
+  "byte_order": "big",
+  "frames": [
+    {
+      "id": "0x3E8", "period_ms": 10,
+      "channels": [
+        {"name": "rpm",           "byte": 0, "len": 2, "type": "u16", "scale": 1.0,      "offset_val": 0},
+        {"name": "map",           "byte": 2, "len": 2, "type": "u16", "scale": 1.0,      "offset_val": -100, "unit": "kPa_gauge"},
+        {"name": "coolant_temp",  "byte": 4, "len": 1, "type": "u8",  "scale": 1.0,      "offset_val": -50,  "unit": "C", "convert": "C_to_F"},
+        {"name": "air_temp",      "byte": 5, "len": 1, "type": "u8",  "scale": 1.0,      "offset_val": -50,  "unit": "C", "convert": "C_to_F"},
+        {"name": "oil_temp",      "byte": 6, "len": 1, "type": "u8",  "scale": 1.0,      "offset_val": -50,  "unit": "C", "convert": "C_to_F"}
+      ]
+    },
+    {
+      "id": "0x3E9", "period_ms": 10,
+      "channels": [
+        {"name": "ign_angle",     "byte": 0, "len": 2, "type": "u16", "scale": 0.1,      "offset_val": -100, "unit": "deg"},
+        {"name": "speed",         "byte": 2, "len": 1, "type": "u8",  "scale": 0.621371, "offset_val": 0,    "unit": "mph"},
+        {"name": "oil_pressure",  "byte": 3, "len": 1, "type": "u8",  "scale": 0.145038, "offset_val": 0,    "unit": "psi"},
+        {"name": "fuel_pressure", "byte": 4, "len": 1, "type": "u8",  "scale": 0.145038, "offset_val": 0,    "unit": "psi"}
+      ]
+    },
+    {
+      "id": "0x3EA", "period_ms": 10,
+      "channels": [
+        {"name": "lambda_a",      "byte": 0, "len": 2, "type": "u16", "scale": 0.001,    "offset_val": 0}
+      ]
+    },
+    {
+      "id": "0x3EB", "period_ms": 50,
+      "channels": [
+        {"name": "gear",          "byte": 0, "len": 1, "type": "u8",  "scale": 1.0,      "offset_val": 0, "remap": {"7": -1}},
+        {"name": "fuel_level",    "byte": 1, "len": 1, "type": "u8",  "scale": 1.0,      "offset_val": 0, "unit": "%"}
+      ]
+    },
+    {
+      "id": "0x3EE", "period_ms": 50,
+      "comment": "Engine-protection status. One byte per alarm: 0=OK, nonzero=active. Firmware ORs each nonzero byte into the matching g_dash.warn bit, which drives the RIGHT-cluster full-screen warning overlay. Do NOT include conditions already shown on gauges (oil pressure, fuel level, coolant/oil/IAT temps).",
+      "channels": [
+        {"name": "warn_knock",     "byte": 0, "len": 1, "type": "u8"},
+        {"name": "warn_ign_cut",   "byte": 1, "len": 1, "type": "u8"},
+        {"name": "warn_fuel_cut",  "byte": 2, "len": 1, "type": "u8"},
+        {"name": "warn_boost_cut", "byte": 3, "len": 1, "type": "u8"},
+        {"name": "warn_sensor",    "byte": 4, "len": 1, "type": "u8"},
+        {"name": "warn_throttle",  "byte": 5, "len": 1, "type": "u8"}
+      ]
+    }
+  ]
+}

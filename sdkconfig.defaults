@@ -1,0 +1,29 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# TrackCluster CENTER — ESP32-P4-WIFI6-Touch-LCD-XC — build defaults
+# Applied automatically on `idf.py set-target esp32p4` / first build.
+# ─────────────────────────────────────────────────────────────────────────────
+CONFIG_IDF_TARGET="esp32p4"
+
+# ── PSRAM (REQUIRED) ─────────────────────────────────────────────────────────
+# The two 800×800 LVGL canvases (RPM arc + main screen) are allocated from PSRAM
+# via heap_caps_malloc(MALLOC_CAP_SPIRAM) — roughly 2.5 MB, far more than the P4's
+# internal SRAM. WITHOUT PSRAM ENABLED THE BUFFERS FAIL AND THE SCREEN STAYS BLACK.
+# The ESP32-P4-WIFI6 module uses 16-line (HEX) PSRAM.
+#   → If the panel is black on boot, this section is the first thing to verify in
+#     `idf.py menuconfig` → Component config → ESP PSRAM. If unstable, drop the
+#     speed to 120M.
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_MODE_HEX=y
+CONFIG_SPIRAM_SPEED_200M=y
+
+# ── Flash ── the P4-WIFI6 board uses a GD25Q256 = 256 Mbit = 32 MB chip.
+CONFIG_ESPTOOLPY_FLASHSIZE_32MB=y
+
+# ── Custom partition table (nvs + factory app + spiffs storage) ──────────────
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
+
+# ── BENCH MODE: ON ───────────────────────────────────────────────────────────
+# Standalone demo sweep — the cluster runs with NOTHING wired (no ECU/CAN/UART).
+# Flip to =n (or toggle in menuconfig → TrackCluster) for real ECU operation.
+CONFIG_TC_BENCH_MODE=y
