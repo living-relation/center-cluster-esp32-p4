@@ -1,10 +1,9 @@
 /**
  * bsp.h — board support for Waveshare ESP32-P4-WIFI6-Touch-LCD-XC.
  *
- * Backlight note: NOT controlled by firmware. The BL_PWM brightness pin and
- * the BL_EN boost-converter enable are both handled in hardware (external PWM
- * controller; BL_EN tied high via R66 on the board). No backlight-enable or
- * dimming code in this BSP.
+ * Backlight: controlled by firmware on GPIO 26 via LEDC PWM with
+ * output_invert=1 (matches Waveshare's official BSP). Without this the
+ * boost converter never enables and the LCD stays dark.
  */
 #ifndef BSP_H
 #define BSP_H

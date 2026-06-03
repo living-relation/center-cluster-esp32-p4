@@ -2,9 +2,9 @@ idf_component_manager_version: 2
 
 dependencies:
   idf:
-    # ESP32-P4 needs a recent core IDF for stable MIPI-DSI + HEX-PSRAM support.
-    # Use 5.4 or newer (your VS Code is set up on 5.5.4). Do NOT use 5.3.x for the P4.
-    version: ">=5.4"
+    # ESP32-P4 needs IDF 5.4.x: 5.3.x lacks stable MIPI-DSI; 5.5+ dropped support for
+    # early P4 v1.x silicon (this board). Tested on 5.4.2.
+    version: ">=5.4,<5.5"
 
   # LVGL 9.x — the UI library
   lvgl/lvgl:
@@ -14,10 +14,12 @@ dependencies:
   espressif/esp_lvgl_port:
     version: "~2.4"
 
-  # Round-LCD panel driver (the Waveshare ESP32-P4 round-LCD SKUs use
-  # GC9503-class DSI panels; swap this line if your board ships with a
-  # different controller — see firmware/README.md).
-  # NOTE: This is configured by `bsp.c`; if the managed component is not
-  # available in your IDF registry mirror, comment it out and the GC9503
-  # init in bsp.c will fall back to direct register writes.
-  # espressif/esp_lcd_gc9503: "~3.0.1"   # Only available for esp32s3; bsp.c falls back to generic DPI driver on esp32p4
+  # JD9365 MIPI-DSI panel driver — the controller on the integrated Waveshare
+  # ESP32-P4-WIFI6-Touch-LCD-3.4C (800×800 round). This is the same driver the
+  # official Espressif/Waveshare BSP for this board uses. We previously tried
+  # `waveshare/esp_lcd_dsi`, but that driver is for Waveshare's *standalone*
+  # DSI displays (separate adapter PCB with an I2C bias chip at 0x45) and sends
+  # only sleep-out/display-on — not the panel-specific gamma/timing init that
+  # the bare JD9365 needs, leaving the screen blank.
+  espressif/esp_lcd_jd9365:
+    version: "~2.0"

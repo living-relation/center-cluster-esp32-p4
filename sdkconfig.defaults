@@ -4,6 +4,11 @@
 # ─────────────────────────────────────────────────────────────────────────────
 CONFIG_IDF_TARGET="esp32p4"
 
+# ── Chip revision floor: require ESP32-P4 Rev v1.0 or newer ─────────────────
+CONFIG_ESP32P4_REV_MIN_100=y
+CONFIG_ESP32P4_REV_MIN_FULL=100
+CONFIG_ESP_REV_MIN_FULL=100
+
 # ── PSRAM (REQUIRED) ─────────────────────────────────────────────────────────
 # The two 800×800 LVGL canvases (RPM arc + main screen) are allocated from PSRAM
 # via heap_caps_malloc(MALLOC_CAP_SPIRAM) — roughly 2.5 MB, far more than the P4's
@@ -14,14 +19,51 @@ CONFIG_IDF_TARGET="esp32p4"
 #     speed to 120M.
 CONFIG_SPIRAM=y
 CONFIG_SPIRAM_MODE_HEX=y
+# 200 MHz hex PSRAM is required so the DPI panel fetcher can keep up with the
+# 800×800 RGB565 stream (at 20 MHz the lcd.dsi.dpi driver constantly reports
+# "can't fetch data from external memory fast enough, underrun happens" and the
+# screen tears/blanks). 200M is gated behind IDF_EXPERIMENTAL_FEATURES in
+# IDF v5.4.2.  Also push large .bss into PSRAM so the linker's
+# --enable-non-contiguous-regions flag (forced on for ESP32-P4) does not have
+# to fit big static buffers into fragmented internal SRAM.
+CONFIG_IDF_EXPERIMENTAL_FEATURES=y
 CONFIG_SPIRAM_SPEED_200M=y
+CONFIG_SPIRAM_ALLOW_BSS_SEG_EXTERNAL_MEMORY=y
 
-# ── Flash ── the P4-WIFI6 board uses a GD25Q256 = 256 Mbit = 32 MB chip.
-CONFIG_ESPTOOLPY_FLASHSIZE_32MB=y
+# ── Flash ── cap to 16MB because current ROM flash model support warns above 16MB.
+CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
+CONFIG_SPI_FLASH_SIZE_OVERRIDE=y
 
 # ── Custom partition table (nvs + factory app + spiffs storage) ──────────────
 CONFIG_PARTITION_TABLE_CUSTOM=y
 CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
+
+# ── LVGL heap pool ───────────────────────────────────────────────────────────
+# The RPM arc widget enqueues ~512 triangle draw tasks per repaint, each one
+# allocated from LVGL's pool via lv_malloc_zeroed(). LVGL's builtin pool is a
+# STATIC array in .bss — bumping it large enough to survive a repaint (≥256 KB)
+# overflows the 768 KB internal SRAM at link time. Switch LVGL to libc malloc,
+# which on ESP-IDF goes through the FreeRTOS heap (internal + PSRAM via
+# heap_caps), so the pool is dynamic and as large as PSRAM allows.
+CONFIG_LV_USE_BUILTIN_MALLOC=n
+CONFIG_LV_USE_CLIB_MALLOC=y
+
+# ── LVGL font decoder ───────────────────────────────────────────────────────
+# The custom fonts in main/ui/fonts/*.c are exported with bitmap_format = 1
+# (LV_FONT_FMT_TXT_COMPRESSED). Without this flag LVGL has no decoder for them
+# and renders every glyph as the placeholder "tofu" box.
+CONFIG_LV_USE_FONT_COMPRESSED=y
+
+# ── FreeRTOS tick rate ──────────────────────────────────────────────────────
+# Default 100 Hz (10 ms tick) is too coarse for LVGL's 33 ms refresh period:
+# vTaskDelay(pdMS_TO_TICKS(33)) rounds to 3 ticks = 30 ms, and the lvgl_port
+# task's animation cadence collapses to visibly choppy multi-tick steps on a
+# 60 Hz panel. 1000 Hz gives 1 ms tick granularity so 30 fps animation is
+# smooth and uniform.
+CONFIG_FREERTOS_HZ=1000
+
+# Run LVGL refresh at high cadence for low-latency, sensor-true display updates.
+CONFIG_LV_DEF_REFR_PERIOD=8
 
 # ── BENCH MODE: ON ───────────────────────────────────────────────────────────
 # Standalone demo sweep — the cluster runs with NOTHING wired (no ECU/CAN/UART).

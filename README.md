@@ -19,8 +19,9 @@ read that first if you're new to VS Code / ESP-IDF.
 
 Short version:
 1. Install **VS Code** + the official **Espressif IDF** extension; run
-   *Command Palette → “ESP-IDF: Configure ESP-IDF Extension” → Express → 5.5.4*.
-   (Use **ESP-IDF 5.4 or newer** — the P4 needs it. Do **not** use 5.3.x.)
+   *Command Palette → “ESP-IDF: Configure ESP-IDF Extension” → Express → 5.4.2*.
+   (Use **ESP-IDF 5.4.x**. Do **not** use 5.3.x, and do **not** use 5.5+ — 5.5 dropped support
+   for early ESP32-P4 **v1.x** silicon, which is what this board has. 5.4.2 is the tested version.)
 2. **File → Open Folder →** this repo.
 3. Set target = **esp32p4** (chip icon on the bottom bar).
 4. Plug the board in via USB-C and pick the **COM port** on the bottom bar.
@@ -37,7 +38,7 @@ can confirm the display works on the bench. Turn it off later via
 | Flash size | **32 MB** (board chip = GD25Q256) |
 | PSRAM | Hex, 200 MHz (**required** — the display buffers live here) |
 | Bench mode | ON (self-test) |
-| ESP-IDF | 5.5.4 (≥5.4) |
+| ESP-IDF | **5.4.2** (use 5.4.x — not 5.3.x, not 5.5+ for v1.x P4 silicon) |
 
 You don’t need to set any baud rate — see the setup guide for why.
 

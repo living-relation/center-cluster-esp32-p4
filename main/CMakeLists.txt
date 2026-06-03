@@ -31,7 +31,6 @@ idf_component_register(
         esp_lcd
         esp_driver_gpio
         esp_driver_uart
-        esp_driver_twai
         esp_psram
         nvs_flash
         spi_flash

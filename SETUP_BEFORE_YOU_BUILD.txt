@@ -24,15 +24,17 @@ works on the bench. (How to turn that off later is at the bottom.)
   "ESP-IDF", install the official Espressif one).
 - Press F1 (or Ctrl+Shift+P) to open the Command Palette, type:
       ESP-IDF: Configure ESP-IDF Extension
-  Choose EXPRESS, and pick version 5.5.4 (already what these projects expect).
+  Choose EXPRESS, and pick version 5.4.2 (the tested version these projects expect).
   Let it finish downloading the toolchain. This also sets up Python for you --
   you do NOT need to install or configure Python yourself.
 - If VS Code ever complains it can't find Python or the compiler, just run that
   "Configure ESP-IDF Extension" command again -- it fixes the paths.
 
-IMPORTANT about IDF version: use 5.5.4 (or any 5.4+). Do NOT use 5.3.x -- the
-center P4 board needs the newer version for its display to work. The two S3
-boards are fine on 5.5.4 too, so everything stays on one version.
+IMPORTANT about IDF version: use 5.4.x (5.4.2 is the tested version). Do NOT use 5.3.x
+(it lacks stable P4 display support), and do NOT use 5.5 or newer on the CENTER board --
+ESP-IDF 5.5 dropped support for the early ESP32-P4 "v1.x" silicon this board uses, and it
+will refuse to flash. The two S3 side boards work on either 5.4 or 5.5, so staying on
+5.4.2 for all three keeps one consistent toolchain.
 
 
 -------------------------------------------------------------------------------
@@ -172,7 +174,7 @@ sit at 0 (no error, no blank screen).
  Baud:     leave default (monitor 115200)
  Port:     pick it on the bottom bar each session
  Bench:    ON now (self-test). Turn OFF in menuconfig -> TrackCluster for live.
- IDF:      5.5.4 (do not use 5.3.x for the P4)
+ IDF:      5.4.2 (use 5.4.x; not 5.3.x; not 5.5+ on the P4 v1.x silicon)
 
  Wiring for the real install is in:  ECU_SETUP/WIRING.md
  ECU (Link G4X) CAN setup is in:     ECU_SETUP/  (the .lcs / .json + guides)

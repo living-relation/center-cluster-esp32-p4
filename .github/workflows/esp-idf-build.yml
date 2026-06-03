@@ -24,6 +24,6 @@ jobs:
       - name: Build ESP32-P4 firmware
         uses: espressif/esp-idf-ci-action@v1
         with:
-          esp_idf_version: v5.5
+          esp_idf_version: v5.4
           target: esp32p4
           path: .

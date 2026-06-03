@@ -24,6 +24,8 @@
 static const char *TAG = "ui";
 extern portMUX_TYPE g_dash_mux;
 
+#define UI_PAINT_TICK_MS 8   /* 125 Hz UI update cadence, no display-side lag */
+
 static lv_obj_t *s_screen  = NULL;
 static bool      s_live    = false;   /* false during boot splash */
 
@@ -48,7 +50,7 @@ void ui_on_boot_complete(void)
 {
     ESP_LOGI(TAG, "Boot splash done — going live");
     s_live = true;
-    lv_timer_create(ui_paint_tick, 33, NULL);   /* 30 Hz paint tick */
+    lv_timer_create(ui_paint_tick, UI_PAINT_TICK_MS, NULL);
 }
 
 /* ── Init ────────────────────────────────────────────────────────────── */

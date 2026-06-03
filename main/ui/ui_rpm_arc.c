@@ -38,6 +38,7 @@ LV_FONT_DECLARE(racehead_24);
 
 static lv_obj_t   *s_canvas = NULL;
 static lv_color_t *s_buf    = NULL;
+static float       s_seg_fill_prev[N_SEGS];
 
 /* Pre-computed polygon point arrays — computed once at create time. */
 #define PTS_PER_WEDGE ((WEDGE_STEPS + 1) * 2)
@@ -91,15 +92,18 @@ static lv_color_t seg_color(int i, bool lit)
     return COLOR_RED_HOT;
 }
 
-static void draw_segment(lv_layer_t *layer, int i, bool lit)
+static void draw_segment(lv_layer_t *layer, int i, float intensity)
 {
     const lv_point_precise_t *pts = s_wedge_pts[i];
     int n = s_wedge_n[i];
 
+    lv_color_t c_off = seg_color(i, false);
+    lv_color_t c_on  = seg_color(i, true);
+
     lv_draw_triangle_dsc_t dsc;
     lv_draw_triangle_dsc_init(&dsc);
     dsc.bg_opa   = LV_OPA_COVER;
-    dsc.bg_color = seg_color(i, lit);
+    dsc.bg_color = c_off;
 
     /* Fan triangulation: pts[0] is the hub */
     for (int k = 1; k < n - 1; k++) {
@@ -109,12 +113,26 @@ static void draw_segment(lv_layer_t *layer, int i, bool lit)
         lv_draw_triangle(layer, &dsc);
     }
 
+    /* Overlay lit color with fractional opacity for smooth per-segment fill. */
+    if (intensity > 0.0f) {
+        lv_draw_triangle_dsc_t lit;
+        lv_draw_triangle_dsc_init(&lit);
+        lit.bg_color = c_on;
+        lit.bg_opa   = (lv_opa_t)(intensity * 255.0f);
+        for (int k = 1; k < n - 1; k++) {
+            lit.p[0] = pts[0];
+            lit.p[1] = pts[k];
+            lit.p[2] = pts[k + 1];
+            lv_draw_triangle(layer, &lit);
+        }
+    }
+
     /* Glow overlay for red-zone segments when lit */
-    if (lit && i >= 27) {
+    if (intensity > 0.0f && i >= 27) {
         lv_draw_triangle_dsc_t glow;
         lv_draw_triangle_dsc_init(&glow);
         glow.bg_color = COLOR_RED_HOT;
-        glow.bg_opa   = (lv_opa_t)(0.50f * 255);
+        glow.bg_opa   = (lv_opa_t)(intensity * 0.50f * 255);
         for (int k = 1; k < n - 1; k++) {
             glow.p[0] = pts[0];
             glow.p[1] = pts[k];
@@ -137,6 +155,10 @@ void ui_rpm_arc_create(lv_obj_t *parent)
     lv_obj_center(s_canvas);
     lv_canvas_fill_bg(s_canvas, COLOR_BG_PRIMARY, LV_OPA_COVER);
 
+    for (int i = 0; i < N_SEGS; i++) {
+        s_seg_fill_prev[i] = -1.0f;   /* force first update to paint all segments */
+    }
+
     /* RPM scale labels 1–8 at radius 291 (just inside RI, moved 10 px inward),
      * RaceHead 24 px, white @ 40 %%. Placed at each 1000-RPM segment boundary. */
     for (int k = 1; k <= 8; k++) {
@@ -157,16 +179,23 @@ void ui_rpm_arc_update(const dash_data_t *d)
 {
     if (!s_canvas) return;
 
-    int lit = (int)(d->rpm / (RPM_MAX / N_SEGS));
-    if (lit > N_SEGS) lit = N_SEGS;
-    if (lit < 0)      lit = 0;
-
-    lv_canvas_fill_bg(s_canvas, COLOR_BG_PRIMARY, LV_OPA_COVER);
+    float rpm = d->rpm;
+    if (rpm < 0.0f) rpm = 0.0f;
+    if (rpm > RPM_MAX) rpm = RPM_MAX;
+    const float lit_f = rpm / (RPM_MAX / N_SEGS);  /* 0..32 float */
 
     lv_layer_t layer;
     lv_canvas_init_layer(s_canvas, &layer);
     for (int i = 0; i < N_SEGS; i++) {
-        draw_segment(&layer, i, i < lit);
+        float seg_fill = lit_f - (float)i;
+        if (seg_fill < 0.0f) seg_fill = 0.0f;
+        if (seg_fill > 1.0f) seg_fill = 1.0f;
+
+        /* Redraw only segments whose fractional fill changed enough to be visible. */
+        if (fabsf(seg_fill - s_seg_fill_prev[i]) >= (1.0f / 255.0f)) {
+            draw_segment(&layer, i, seg_fill);
+            s_seg_fill_prev[i] = seg_fill;
+        }
     }
     lv_canvas_finish_layer(s_canvas, &layer);
 }
