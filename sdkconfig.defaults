@@ -65,7 +65,7 @@ CONFIG_FREERTOS_HZ=1000
 # Run LVGL refresh at high cadence for low-latency, sensor-true display updates.
 CONFIG_LV_DEF_REFR_PERIOD=8
 
-# ── BENCH MODE: ON ───────────────────────────────────────────────────────────
-# Standalone demo sweep — the cluster runs with NOTHING wired (no ECU/CAN/UART).
-# Flip to =n (or toggle in menuconfig → TrackCluster) for real ECU operation.
-CONFIG_TC_BENCH_MODE=y
+# ── BENCH MODE: OFF ──────────────────────────────────────────────────────────
+# Normal operation (real ECU/CAN/UART/inputs).
+# Enable only for standalone demo sweep.
+# CONFIG_TC_BENCH_MODE is not set
