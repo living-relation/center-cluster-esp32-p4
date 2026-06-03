@@ -94,6 +94,10 @@ All inputs use internal pull-ups; wire the common side to **GND**. 44 kΩ… use
 |---|---:|---|
 | CAN TX → transceiver | 5 | TWAI |
 | CAN RX ← transceiver | 4 | TWAI, 1 Mbit/s |
+| LCD backlight PWM | 26 | firmware-driven LEDC |
+| LCD reset | 27 | panel reset line |
+| Shared board I²C SDA | 6 | touch/peripheral bus |
+| Shared board I²C SCL | 7 | touch/peripheral bus |
 | UART1 TX → Left | 20 | → Left GPIO44 |
 | UART1 RX ← Left (reserved) | 18 | |
 | UART2 TX → Right | 21 | → Right GPIO44 |
@@ -101,7 +105,7 @@ All inputs use internal pull-ups; wire the common side to **GND**. 44 kΩ… use
 | Button (ODO/Trip) | 29 | active-low |
 | Encoder 1 A/B/SW | 30 / 31 / 32 | |
 | Encoder 2 A/B/SW | 49 / 50 / 51 | |
-| **Reserved — do not use** | 6,7 (I²C) · 27 (LCD RST) · 37,38 (PSRAM) · 39–44 (microSD) · 34,35,36 (strapping) · DSI pads | |
+| **Reserved — do not use** | 37,38 (PSRAM) · 39–44 (microSD) · 34,35,36 (strapping) · DSI pads | |
 
 ### Left & Right — ESP32-S3 (identical)
 | Function | GPIO | Notes |

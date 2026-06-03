@@ -19,8 +19,7 @@ idf_component_register(
         "ui/fonts/racehead_14.c"
         "ui/fonts/racehead_22.c"
         "ui/fonts/racehead_24.c"
-        "ui/assets/toyota_mark.c"
-        "ui/assets/toyota_wordmark.c"
+        "ui/assets/toyota-logo.c"
 
     INCLUDE_DIRS
         "."
