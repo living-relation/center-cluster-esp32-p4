@@ -12,6 +12,23 @@ them drift. **Assign only the channels below** — extra channels just waste bus
 
 ---
 
+## Verified system topology (this repo)
+
+This CAN setup assumes the exact hardware topology used by the center-cluster firmware:
+
+- **Center cluster (ESP32-P4)** is the **only** board on ECU CAN.
+- Center TWAI pins come from `sdkconfig` / `Kconfig.projbuild`:
+   - `CONFIG_TC_CAN_TX_GPIO=5` (center GPIO5 -> transceiver TXD)
+   - `CONFIG_TC_CAN_RX_GPIO=4` (center GPIO4 <- transceiver RXD)
+- **Left and right displays are not on CAN**. They receive data from center over UART:
+   - Center `UART1 TX GPIO20` -> Left board `GPIO44 RX`
+   - Center `UART2 TX GPIO21` -> Right board `GPIO44 RX`
+
+So the ECU must transmit only to the center transceiver path; side displays follow whatever
+the center forwards in its UART bridge frames.
+
+---
+
 ## Global CAN settings (PCLink → CAN → Custom Setup)
 
 | Setting | Value |
@@ -21,7 +38,7 @@ them drift. **Assign only the channels below** — extra channels just waste bus
 | Stream type | **Custom** |
 | Byte order | **Big endian** |
 | Transmit | streams 0x3E8–0x3EB and 0x3EE (below) |
-| Receive (optional) | 0x3EC / 0x3ED — only if you want the dash encoders to change ECU boost-map / traction |
+| Receive (optional) | 0x3EC / 0x3ED — only if you want center encoder selections to change ECU boost-map / traction |
 
 ---
 
@@ -93,3 +110,8 @@ To remove a sensor, strip it from the UI/data model and from PCLink in the same 
 2. Cross-check each value against the live runtime page (should match within rounding).
 3. Power the dashboard; gauges should track within ~2 s, and an engine-protection flag should
    raise the right-cluster warning overlay.
+
+## Validate (full vehicle wiring)
+1. Confirm CAN transceiver is wired only to the center board (GPIO5 TX, GPIO4 RX) and ECU CANH/CANL.
+2. Confirm side displays have UART wiring from center GPIO20/21 TX lines to each side GPIO44 RX, plus common GND.
+3. With ECU live, center should update from CAN and both side displays should mirror updates over UART even though they have no direct CAN connection.

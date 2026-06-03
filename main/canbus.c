@@ -2,15 +2,15 @@
  * canbus.c — TWAI CAN bus driver, center cluster.
  *
  * Pins are configured in Kconfig.projbuild (TC_CAN_RX_GPIO / TC_CAN_TX_GPIO).
- * Default: RX=GPIO13, TX=GPIO14 — connect to an isolated CAN transceiver
+ * Default: RX=GPIO4, TX=GPIO5 — connect to an isolated CAN transceiver
  * (SN65HVD230 / ISO1050) whose CANH/CANL wires join the ECU CAN bus.
  *
  * Center runs TWAI_MODE_NORMAL — it receives ECU broadcast frames AND
  * transmits encoder selection frames (boost map, TC slip angle) to the ECU
  * on explicit button press. TX is never triggered by a timer.
  *
- * Link G4X PCLink custom-stream configuration: see protocols/link_g4x.json
- * and center-CANBUS-LINK-G4X-CONFIG.md for the exact channel assignments the
+ * Link G4X PCLink custom-stream configuration: see main/protocols/link_g4x.json
+ * and CANBUS-LINK-G4X-CONFIG.md for the exact channel assignments the
  * car owner must apply in PCLink before this firmware can decode anything.
  */
 

@@ -35,7 +35,7 @@ menu "TrackCluster — Center cluster pin map (Waveshare ESP32-P4-WIFI6-Touch-LC
             ECU bus rate: 1 Mbit/s (Link G4X). GPIO4 is on J8 header and free.
 
     config TC_UART1_TX_GPIO
-        int "UART1 TX → LEFT cluster (connect to LEFT board GPIO18/RX)"
+        int "UART1 TX → LEFT cluster (connect to LEFT board GPIO44/RX)"
         range 0 54
         default 20
 
@@ -45,7 +45,7 @@ menu "TrackCluster — Center cluster pin map (Waveshare ESP32-P4-WIFI6-Touch-LC
         default 18
 
     config TC_UART2_TX_GPIO
-        int "UART2 TX → RIGHT cluster (connect to RIGHT board GPIO18/RX)"
+        int "UART2 TX → RIGHT cluster (connect to RIGHT board GPIO44/RX)"
         range 0 54
         default 21
 

@@ -22,8 +22,8 @@ extern "C" {
 void canbus_task(void *arg);
 
 /**
- * Transmit a 1-byte selection frame. id = CAN frame ID (e.g. 0x400 for
- * boost map, 0x401 for TC slip angle). index = selected item (0-based).
+ * Transmit a 1-byte selection frame. id = CAN frame ID (e.g. 0x3EC for
+ * boost map, 0x3ED for TC slip angle). index = selected item (0-based).
  * Call only from inputs.c on confirmed button press — never from a timer.
  */
 void canbus_tx_selection(uint32_t id, uint8_t index);
