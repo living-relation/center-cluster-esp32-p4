@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TrackCluster — Harness Wiring Diagram</title>
+<style>
+  :root{
+    --ink:#1a1d21; --line:#2b2f36; --paper:#f7f5f0; --panel:#ffffff;
+    --pwr:#d22f27; --gnd:#3a3f47; --can:#1f8a4c; --uartL:#2a6fdb; --uartR:#b8761f;
+    --ctrl:#7a3db8; --muted:#6b7178; --grid:#e7e3da;
+    --mono:"SFMono-Regular",ui-monospace,"Cascadia Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+        -webkit-font-smoothing:antialiased;padding:28px;}
+  .sheet{max-width:1480px;margin:0 auto;background:var(--panel);
+         border:1.5px solid var(--line);box-shadow:0 1px 0 #0001;}
+  /* Title block */
+  header{display:flex;justify-content:space-between;align-items:stretch;
+         border-bottom:1.5px solid var(--line);}
+  .title{padding:16px 22px;}
+  .title h1{font-size:21px;letter-spacing:.02em;font-weight:700;}
+  .title .sub{font-size:12.5px;color:var(--muted);margin-top:3px;letter-spacing:.04em;}
+  .meta{display:grid;grid-template-columns:auto auto;font-family:var(--mono);
+        font-size:11px;border-left:1.5px solid var(--line);}
+  .meta div{padding:7px 14px;border-bottom:1px solid var(--grid);}
+  .meta .k{color:var(--muted);border-right:1px solid var(--grid);}
+  /* Legend */
+  .legend{display:flex;gap:20px;flex-wrap:wrap;align-items:center;
+          padding:10px 22px;border-bottom:1.5px solid var(--line);font-size:11.5px;
+          font-family:var(--mono);background:#fcfbf8;}
+  .legend b{font-family:var(--sans);text-transform:uppercase;letter-spacing:.08em;
+            font-size:10px;color:var(--muted);margin-right:2px;}
+  .sw{display:inline-flex;align-items:center;gap:7px;}
+  .sw i{width:22px;height:3px;border-radius:2px;display:inline-block;}
+  svg{display:block;width:100%;height:auto;background:
+      repeating-linear-gradient(0deg,transparent 0 23px,#0000000a 23px 24px),
+      repeating-linear-gradient(90deg,transparent 0 23px,#0000000a 23px 24px);}
+  .cap{font-family:var(--mono);font-size:11px;color:var(--muted);
+       padding:8px 22px 0;letter-spacing:.03em;}
+  /* tables */
+  .tables{padding:18px 22px 26px;}
+  .tables h2{font-size:13px;letter-spacing:.09em;text-transform:uppercase;
+             color:var(--ink);margin:22px 0 9px;padding-bottom:6px;
+             border-bottom:1.5px solid var(--line);}
+  .tables h2:first-child{margin-top:4px;}
+  table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:4px;}
+  th,td{border:1px solid var(--grid);padding:6px 9px;text-align:left;vertical-align:top;}
+  th{background:#f1efe9;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+     color:#4a4f56;font-weight:600;}
+  td.mono,th.mono{font-family:var(--mono);}
+  td .pn{font-family:var(--mono);font-size:11.5px;}
+  tr:nth-child(even) td{background:#fcfbf8;}
+  .pill{display:inline-block;font-family:var(--mono);font-size:10px;padding:1px 7px;
+        border-radius:10px;color:#fff;letter-spacing:.04em;}
+  .p-pwr{background:var(--pwr);} .p-gnd{background:var(--gnd);}
+  .p-can{background:var(--can);} .p-ul{background:var(--uartL);}
+  .p-ur{background:var(--uartR);} .p-ctrl{background:var(--ctrl);}
+  .foot{padding:14px 22px 22px;border-top:1.5px solid var(--line);
+        font-size:11px;color:var(--muted);line-height:1.55;}
+  .foot b{color:var(--ink);}
+  @media print{ body{background:#fff;padding:0;} .sheet{border:none;box-shadow:none;max-width:none;} }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <div class="title">
+      <h1>TrackCluster — ECU Cluster Harness Wiring Diagram</h1>
+      <div class="sub">Center P4 + Left / Right S3 · Deutsch DT vehicle side · JST GH/VH board-local · J8 interposer</div>
+    </div>
+    <div class="meta">
+      <div class="k">SHEET</div><div>1 / 1 — HARNESS</div>
+      <div class="k">SOURCE</div><div>WIRING.md · CONNECTOR_BOM_AND_HARNESS.md</div>
+      <div class="k">BUS</div><div>CAN 1 Mbit/s · UART 921600 8N1</div>
+      <div class="k">REV</div><div>P4 v1.x · matches sdkconfig / Kconfig</div>
+    </div>
+  </header>
+
+  <div class="legend">
+    <b>Nets</b>
+    <span class="sw"><i style="background:var(--pwr)"></i>+5V / +12V</span>
+    <span class="sw"><i style="background:var(--gnd)"></i>GND (star)</span>
+    <span class="sw"><i style="background:var(--can)"></i>CAN (twisted)</span>
+    <span class="sw"><i style="background:var(--uartL)"></i>UART → Left</span>
+    <span class="sw"><i style="background:var(--uartR)"></i>UART → Right</span>
+    <span class="sw"><i style="background:var(--ctrl)"></i>Buttons / Encoders</span>
+  </div>
+
+  <!-- ===================== SCHEMATIC ===================== -->
+  <svg viewBox="0 0 1480 920" role="img" aria-label="Harness wiring diagram">
+    <defs>
+      <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="#2b2f36"/>
+      </marker>
+      <marker id="arrowR" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="#b8761f"/>
+      </marker>
+      <marker id="arrowL" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 z" fill="#2a6fdb"/>
+      </marker>
+      <style>
+        .node{fill:#fff;stroke:#1a1d21;stroke-width:1.6;}
+        .node.dim{fill:#fbfaf6;}
+        .nt{font:600 13px var(--sans,sans-serif);fill:#1a1d21;}
+        .ns{font:11px "SFMono-Regular",monospace;fill:#6b7178;}
+        .pin{font:10.5px "SFMono-Regular",monospace;fill:#1a1d21;}
+        .conn{fill:#fff;stroke:#2b2f36;stroke-width:1.3;}
+        .clab{font:10px "SFMono-Regular",monospace;fill:#1a1d21;}
+        .cnum{font:700 11px "SFMono-Regular",monospace;}
+        .w{fill:none;stroke-width:2.4;}
+        .wlab{font:10px "SFMono-Regular",monospace;}
+      </style>
+    </defs>
+
+    <!-- ============ POWER COLUMN (left) ============ -->
+    <rect class="node" x="34" y="60" width="150" height="70" rx="4"/>
+    <text class="nt" x="109" y="90" text-anchor="middle">12 V Vehicle</text>
+    <text class="ns" x="109" y="108" text-anchor="middle">switched ign</text>
+
+    <rect class="node" x="34" y="175" width="150" height="84" rx="4"/>
+    <text class="nt" x="109" y="205" text-anchor="middle">12→5 V Buck</text>
+    <text class="ns" x="109" y="223" text-anchor="middle">≥3 A · star-GND</text>
+    <text class="ns" x="109" y="240" text-anchor="middle">5V rail + GND</text>
+
+    <!-- 12->buck -->
+    <path class="w" style="stroke:var(--pwr)" d="M109,130 L109,175" marker-end="url(#arrow)"/>
+
+    <!-- 5V bus node -->
+    <circle cx="109" cy="300" r="5" fill="var(--pwr)"/>
+    <path class="w" style="stroke:var(--pwr)" d="M109,259 L109,300"/>
+    <path class="w" style="stroke:var(--pwr)" d="M109,300 L109,820"/>
+    <text class="wlab" x="118" y="318" fill="var(--pwr)">+5V rail</text>
+
+    <!-- ============ CENTER P4 (middle) ============ -->
+    <rect class="node" x="560" y="250" width="300" height="260" rx="6"/>
+    <text class="nt" x="710" y="284" text-anchor="middle">CENTER — ESP32-P4</text>
+    <text class="ns" x="710" y="302" text-anchor="middle">800×800 · CAN owner · UART hub</text>
+    <line x1="560" y1="314" x2="860" y2="314" stroke="#e7e3da"/>
+    <!-- interposer note -->
+    <rect class="conn" x="582" y="328" width="256" height="30" rx="3" fill="#fcfbf8"/>
+    <text class="clab" x="710" y="347" text-anchor="middle">J8 2×20 interposer — Samtec SSW-120-02-G-D</text>
+
+    <!-- center pin stubs (left = power/can, right = uart, bottom = ctrl) -->
+    <text class="pin" x="572" y="382">GPIO4 CAN_RX</text>
+    <text class="pin" x="572" y="400">GPIO5 CAN_TX</text>
+    <text class="pin" x="572" y="430">+5V IN</text>
+    <text class="pin" x="572" y="448">GND</text>
+
+    <text class="pin" x="848" y="382" text-anchor="end">GPIO20 UART1_TX →L</text>
+    <text class="pin" x="848" y="400" text-anchor="end">GPIO18 UART1_RX</text>
+    <text class="pin" x="848" y="430" text-anchor="end">GPIO21 UART2_TX →R</text>
+    <text class="pin" x="848" y="448" text-anchor="end">GPIO19 UART2_RX</text>
+
+    <text class="pin" x="710" y="486" text-anchor="middle">GPIO29 ODO · ENC1 30/31/32 · ENC2 49/50/51</text>
+
+    <!-- 5V into center -->
+    <path class="w" style="stroke:var(--pwr)" d="M109,432 L556,432" marker-end="url(#arrow)"/>
+    <!-- C4 power conn on center feed -->
+    <rect class="conn" x="300" y="420" width="58" height="24" rx="3"/>
+    <text class="cnum" x="329" y="436" text-anchor="middle" fill="var(--pwr)">C4</text>
+
+    <!-- ============ CAN TRANSCEIVER + ECU (top middle) ============ -->
+    <rect class="node" x="560" y="70" width="180" height="84" rx="5"/>
+    <text class="nt" x="650" y="100" text-anchor="middle">CAN Transceiver</text>
+    <text class="ns" x="650" y="118" text-anchor="middle">SN65HVD230 /</text>
+    <text class="ns" x="650" y="134" text-anchor="middle">ISO1050 · 120Ω term</text>
+
+    <rect class="node dim" x="900" y="70" width="150" height="84" rx="5"/>
+    <text class="nt" x="975" y="100" text-anchor="middle">Link G4X ECU</text>
+    <text class="ns" x="975" y="118" text-anchor="middle">CANH / CANL</text>
+    <text class="ns" x="975" y="134" text-anchor="middle">1 Mbit/s trunk</text>
+
+    <!-- ECU <-> transceiver, C1 -->
+    <path class="w" style="stroke:var(--can)" d="M900,112 L744,112"/>
+    <rect class="conn" x="800" y="100" width="58" height="24" rx="3"/>
+    <text class="cnum" x="829" y="116" text-anchor="middle" fill="var(--can)">C1</text>
+    <text class="wlab" x="772" y="96" fill="var(--can)">CANH/CANL/GND</text>
+
+    <!-- transceiver <-> center logic -->
+    <path class="w" style="stroke:var(--can)" d="M640,154 L640,250" marker-end="url(#arrow)"/>
+    <text class="wlab" x="648" y="200" fill="var(--can)">TXD/RXD/3V3/GND</text>
+    <text class="wlab" x="648" y="216" fill="var(--muted)">JST GH4 BM04B-GHS-TBT</text>
+
+    <!-- ============ LEFT S3 ============ -->
+    <rect class="node" x="1140" y="250" width="300" height="92" rx="6"/>
+    <text class="nt" x="1290" y="282" text-anchor="middle">LEFT — ESP32-S3</text>
+    <text class="ns" x="1290" y="300" text-anchor="middle">480×480 · speedo + mini-arcs</text>
+    <text class="pin" x="1152" y="326">GPIO44 RX ← center · GPIO43 TX · GND · +5V</text>
+
+    <!-- ============ RIGHT S3 ============ -->
+    <rect class="node" x="1140" y="418" width="300" height="92" rx="6"/>
+    <text class="nt" x="1290" y="450" text-anchor="middle">RIGHT — ESP32-S3</text>
+    <text class="ns" x="1290" y="468" text-anchor="middle">480×480 · lambda + bars + warn</text>
+    <text class="pin" x="1152" y="494">GPIO44 RX ← center · GPIO43 TX · GND · +5V</text>
+
+    <!-- UART center -> left (C2) -->
+    <path class="w" style="stroke:var(--uartL)" d="M860,388 L1010,388 L1010,286 L1136,286" marker-end="url(#arrowL)"/>
+    <rect class="conn" x="1040" y="274" width="58" height="24" rx="3"/>
+    <text class="cnum" x="1069" y="290" text-anchor="middle" fill="var(--uartL)">C2</text>
+    <text class="wlab" x="900" y="380" fill="var(--uartL)">TX_L → GPIO44</text>
+
+    <!-- UART center -> right (C3) -->
+    <path class="w" style="stroke:var(--uartR)" d="M860,436 L980,436 L980,454 L1136,454" marker-end="url(#arrowR)"/>
+    <rect class="conn" x="1040" y="442" width="58" height="24" rx="3"/>
+    <text class="cnum" x="1069" y="458" text-anchor="middle" fill="var(--uartR)">C3</text>
+    <text class="wlab" x="900" y="428" fill="var(--uartR)">TX_R → GPIO44</text>
+
+    <!-- 5V to left + right (branch from rail, C4 each) -->
+    <path class="w" style="stroke:var(--pwr)" d="M109,820 L1290,820 L1290,510"/>
+    <path class="w" style="stroke:var(--pwr)" d="M1090,820 L1090,560 L1290,560" opacity="0"/>
+    <path class="w" style="stroke:var(--pwr)" d="M760,820 L760,820"/>
+    <!-- left 5V tap -->
+    <path class="w" style="stroke:var(--pwr)" d="M1180,820 L1180,342" marker-end="url(#arrow)"/>
+    <rect class="conn" x="1151" y="640" width="58" height="24" rx="3"/>
+    <text class="cnum" x="1180" y="656" text-anchor="middle" fill="var(--pwr)">C4</text>
+    <!-- right 5V tap -->
+    <path class="w" style="stroke:var(--pwr)" d="M1290,820 L1290,510" marker-end="url(#arrow)"/>
+    <rect class="conn" x="1261" y="665" width="58" height="24" rx="3"/>
+    <text class="cnum" x="1290" y="681" text-anchor="middle" fill="var(--pwr)">C4</text>
+    <text class="wlab" x="1196" y="812" fill="var(--pwr)">+5V star feed — one DT2 per node</text>
+
+    <!-- GND star symbol -->
+    <path class="w" style="stroke:var(--gnd)" d="M109,560 L150,560"/>
+    <line x1="150" y1="548" x2="150" y2="572" stroke="var(--gnd)" stroke-width="2.4"/>
+    <line x1="156" y1="552" x2="156" y2="568" stroke="var(--gnd)" stroke-width="2.4"/>
+    <line x1="162" y1="556" x2="162" y2="564" stroke="var(--gnd)" stroke-width="2.4"/>
+    <text class="wlab" x="92" y="552" fill="var(--gnd)" text-anchor="end">star GND</text>
+
+    <!-- ============ CONTROLS — ODO Button · Encoder 1 (Boost) · Encoder 2 (TC Slip) ============ -->
+    <!-- exit stubs from center P4 bottom edge (y=510) -->
+    <path class="w" style="stroke:var(--ctrl)" d="M570,510 L570,520"/>
+    <path class="w" style="stroke:var(--ctrl)" d="M704,510 L704,520"/>
+    <path class="w" style="stroke:var(--ctrl)" d="M856,510 L856,520"/>
+    <!-- panel connectors C5 / C6 / C7 -->
+    <rect class="conn" x="541" y="520" width="58" height="22" rx="3"/>
+    <text class="cnum" x="570" y="535" text-anchor="middle" fill="var(--ctrl)">C5</text>
+    <rect class="conn" x="675" y="520" width="58" height="22" rx="3"/>
+    <text class="cnum" x="704" y="535" text-anchor="middle" fill="var(--ctrl)">C6</text>
+    <rect class="conn" x="827" y="520" width="58" height="22" rx="3"/>
+    <text class="cnum" x="856" y="535" text-anchor="middle" fill="var(--ctrl)">C7</text>
+    <!-- short wires connector bottom → control nodes -->
+    <path class="w" style="stroke:var(--ctrl)" d="M570,542 L570,553"/>
+    <path class="w" style="stroke:var(--ctrl)" d="M704,542 L704,553"/>
+    <path class="w" style="stroke:var(--ctrl)" d="M856,542 L856,553"/>
+    <!-- ODO Button node -->
+    <rect class="node" x="512" y="553" width="116" height="68" rx="4"/>
+    <text class="nt" x="570" y="576" text-anchor="middle">ODO Button</text>
+    <text class="ns" x="570" y="593" text-anchor="middle">momentary NO</text>
+    <text class="pin" x="570" y="613" text-anchor="middle">G29 · active-low → GND</text>
+    <!-- ENC1 — Boost Map encoder -->
+    <rect class="node" x="629" y="553" width="150" height="84" rx="4"/>
+    <text class="nt" x="704" y="576" text-anchor="middle">Encoder 1</text>
+    <text class="ns" x="704" y="593" text-anchor="middle">Boost Map</text>
+    <text class="pin" x="637" y="613">A/CLK G30 · B/DT G31</text>
+    <text class="pin" x="637" y="628">SW G32 · common → GND</text>
+    <!-- ENC2 — TC Slip encoder -->
+    <rect class="node" x="781" y="553" width="150" height="84" rx="4"/>
+    <text class="nt" x="856" y="576" text-anchor="middle">Encoder 2</text>
+    <text class="ns" x="856" y="593" text-anchor="middle">TC Slip</text>
+    <text class="pin" x="789" y="613">A/CLK G49 · B/DT G50</text>
+    <text class="pin" x="789" y="628">SW G51 · common → GND</text>
+    <!-- GND drops from each control to shared bus -->
+    <path class="w" style="stroke:var(--gnd)" d="M570,621 L570,660"/>
+    <path class="w" style="stroke:var(--gnd)" d="M704,637 L704,660"/>
+    <path class="w" style="stroke:var(--gnd)" d="M856,637 L856,660"/>
+    <!-- shared GND bus for controls (dashed) -->
+    <path style="fill:none;stroke:var(--gnd);stroke-width:1.8;stroke-dasharray:5 3" d="M570,660 L856,660"/>
+    <!-- earth symbol at midpoint -->
+    <path class="w" style="stroke:var(--gnd)" d="M713,660 L713,670"/>
+    <line x1="701" y1="670" x2="725" y2="670" stroke="var(--gnd)" stroke-width="2.2"/>
+    <line x1="705" y1="675" x2="721" y2="675" stroke="var(--gnd)" stroke-width="2.2"/>
+    <line x1="709" y1="680" x2="717" y2="680" stroke="var(--gnd)" stroke-width="2.2"/>
+    <text class="wlab" x="730" y="678" fill="var(--gnd)">star GND</text>
+    <text class="wlab" x="713" y="698" text-anchor="middle" fill="var(--muted)">100 nF ceramic per signal → GND · debounce</text>
+  </svg>
+  <div class="cap">Figure 1 — Signal-flow harness. Connector ref-designators C1–C7 (sealed Deutsch DT; C5–C7 = panel controls). Board-local JST pigtails terminate on the J8 interposer. GND is a single star point at the buck output.</div>
+
+  <!-- ===================== TABLES ===================== -->
+  <div class="tables">
+
+    <h2>Connector schedule (vehicle side · Deutsch DT)</h2>
+    <table>
+      <thead><tr><th>Ref</th><th>Net group</th><th>Receptacle</th><th>Plug</th><th>Wedgelocks</th><th>Pin map</th><th>Wire</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill p-can">C1</span></td><td>ECU CAN ↔ transceiver</td>
+            <td class="pn">DT04-3P</td><td class="pn">DT06-3S</td><td class="pn">W3P / W3S</td>
+            <td class="mono">1 CANH · 2 CANL · 3 GND</td><td>22 AWG TP + GND</td></tr>
+        <tr><td><span class="pill p-ul">C2</span></td><td>Center → Left serial</td>
+            <td class="pn">DT04-3P</td><td class="pn">DT06-3S</td><td class="pn">W3P / W3S</td>
+            <td class="mono">1 TX_L(G20→G44) · 2 RX_L(G18←G43) · 3 GND</td><td>24 AWG TP + GND</td></tr>
+        <tr><td><span class="pill p-ur">C3</span></td><td>Center → Right serial</td>
+            <td class="pn">DT04-3P</td><td class="pn">DT06-3S</td><td class="pn">W3P / W3S</td>
+            <td class="mono">1 TX_R(G21→G44) · 2 RX_R(G19←G43) · 3 GND</td><td>24 AWG TP + GND</td></tr>
+        <tr><td><span class="pill p-pwr">C4</span></td><td>5 V feed (one per board ×3)</td>
+            <td class="pn">DT04-2P</td><td class="pn">DT06-2S</td><td class="pn">W2P / W2S</td>
+            <td class="mono">1 +5V · 2 GND</td><td>20 AWG (18 long)</td></tr>
+        <tr><td><span class="pill p-ctrl">C5</span></td><td>ODO button panel → center GPIO29</td>
+            <td class="pn">DT04-2P</td><td class="pn">DT06-2S</td><td class="pn">W2P / W2S</td>
+            <td class="mono">1 SW (G29) · 2 GND</td><td>24 AWG</td></tr>
+        <tr><td><span class="pill p-ctrl">C6</span></td><td>Encoder 1 (Boost Map) panel → center</td>
+            <td class="pn">DT04-4P</td><td class="pn">DT06-4S</td><td class="pn">W4P / W4S</td>
+            <td class="mono">1 A/CLK (G30) · 2 B/DT (G31) · 3 SW (G32) · 4 GND</td><td>24 AWG</td></tr>
+        <tr><td><span class="pill p-ctrl">C7</span></td><td>Encoder 2 (TC Slip) panel → center</td>
+            <td class="pn">DT04-4P</td><td class="pn">DT06-4S</td><td class="pn">W4P / W4S</td>
+            <td class="mono">1 A/CLK (G49) · 2 B/DT (G50) · 3 SW (G51) · 4 GND</td><td>24 AWG</td></tr>
+      </tbody>
+    </table>
+    <div class="cap" style="padding-left:0">DT crimp contacts (all C1–C4): pin <span class="pn">0460-202-16141</span> · socket <span class="pn">0462-201-16141</span> (20–16 AWG).</div>
+
+    <h2>Board-local pigtails (inside enclosure · JST)</h2>
+    <table>
+      <thead><tr><th>Signal group</th><th>Header (on interposer)</th><th>Mating housing</th><th>Crimp contact</th><th>Pitch</th></tr></thead>
+      <tbody>
+        <tr><td>CAN logic — TXD/RXD/3V3/GND</td><td class="pn">BM04B-GHS-TBT</td><td class="pn">GHR-04V-S</td><td class="pn">SSHL-002T-P0.2</td><td>GH 1.25 mm</td></tr>
+        <tr><td>Left UART — TX/RX/GND</td><td class="pn">BM03B-GHS-TBT</td><td class="pn">GHR-03V-S</td><td class="pn">SSHL-002T-P0.2</td><td>GH 1.25 mm</td></tr>
+        <tr><td>Right UART — TX/RX/GND</td><td class="pn">BM03B-GHS-TBT</td><td class="pn">GHR-03V-S</td><td class="pn">SSHL-002T-P0.2</td><td>GH 1.25 mm</td></tr>
+        <tr><td>5 V input → interposer</td><td class="pn">B2B-VH</td><td class="pn">VHR-2N</td><td class="pn">SVH-21T-P1.1</td><td>VH 3.96 mm</td></tr>
+        <tr><td>J8 interposer mate (no crimp)</td><td class="pn">center J8 2×20 male</td><td class="pn">SSW-120-02-G-D</td><td>— board-to-board</td><td>2.54 mm</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Center GPIO → net map (authoritative · mirrors Kconfig)</h2>
+    <table>
+      <thead><tr><th>Net</th><th>GPIO</th><th>Conn</th><th>Destination</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill p-can">CAN_TXD</span></td><td class="mono">5</td><td>C1</td><td>transceiver TXD → CANH/CANL → ECU</td></tr>
+        <tr><td><span class="pill p-can">CAN_RXD</span></td><td class="mono">4</td><td>C1</td><td>transceiver RXD</td></tr>
+        <tr><td><span class="pill p-ul">UART1_TX_LEFT</span></td><td class="mono">20</td><td>C2</td><td>Left GPIO44 (RX)</td></tr>
+        <tr><td><span class="pill p-ul">UART1_RX_LEFT</span></td><td class="mono">18</td><td>C2</td><td>Left GPIO43 (TX, reserved)</td></tr>
+        <tr><td><span class="pill p-ur">UART2_TX_RIGHT</span></td><td class="mono">21</td><td>C3</td><td>Right GPIO44 (RX)</td></tr>
+        <tr><td><span class="pill p-ur">UART2_RX_RIGHT</span></td><td class="mono">19</td><td>C3</td><td>Right GPIO43 (TX, reserved)</td></tr>
+        <tr><td><span class="pill p-ctrl">ODO_BUTTON</span></td><td class="mono">29</td><td><span class="pill p-ctrl">C5</span></td><td>momentary → GND</td></tr>
+        <tr><td><span class="pill p-ctrl">ENC1 A/B/SW</span></td><td class="mono">30 / 31 / 32</td><td><span class="pill p-ctrl">C6</span></td><td>Boost-map encoder</td></tr>
+        <tr><td><span class="pill p-ctrl">ENC2 A/B/SW</span></td><td class="mono">49 / 50 / 51</td><td><span class="pill p-ctrl">C7</span></td><td>TC-slip encoder</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Purchasing checklist — single vehicle set</h2>
+    <table>
+      <thead><tr><th>Qty</th><th>Part number</th><th>Use</th></tr></thead>
+      <tbody>
+        <tr><td>3</td><td class="pn">DT04-3P</td><td>CAN + two UART receptacles</td></tr>
+        <tr><td>3</td><td class="pn">DT06-3S</td><td>CAN + two UART plugs</td></tr>
+        <tr><td>3 / 3</td><td class="pn">W3P / W3S</td><td>DT 3-way wedgelocks</td></tr>
+        <tr><td>3</td><td class="pn">DT04-2P</td><td>5 V feed receptacles</td></tr>
+        <tr><td>3</td><td class="pn">DT06-2S</td><td>5 V feed plugs</td></tr>
+        <tr><td>3 / 3</td><td class="pn">W2P / W2S</td><td>DT 2-way wedgelocks</td></tr>
+        <tr><td>30</td><td class="pn">0460-202-16141</td><td>DT pin contacts (male)</td></tr>
+        <tr><td>30</td><td class="pn">0462-201-16141</td><td>DT socket contacts (female)</td></tr>
+        <tr><td>1</td><td class="pn">SSW-120-02-G-D</td><td>Center J8 interposer socket (2×20)</td></tr>
+        <tr><td>1</td><td class="pn">BM04B-GHS-TBT</td><td>CAN board-local header (GH4)</td></tr>
+        <tr><td>2</td><td class="pn">BM03B-GHS-TBT</td><td>UART board-local headers (GH3)</td></tr>
+        <tr><td>1</td><td class="pn">B2B-VH</td><td>Interposer 5 V header (VH2)</td></tr>
+        <tr><td>2 / 6</td><td class="pn">GHR-04V-S / GHR-03V-S</td><td>GH housings (4-pin / 3-pin)</td></tr>
+        <tr><td>4</td><td class="pn">VHR-2N</td><td>VH 2-pin housings</td></tr>
+        <tr><td>40</td><td class="pn">SSHL-002T-P0.2</td><td>GH crimp contacts</td></tr>
+        <tr><td>10</td><td class="pn">SVH-21T-P1.1</td><td>VH crimp contacts</td></tr>
+        <tr><td>1</td><td class="pn">DT04-2P</td><td>ODO button receptacle (C5)</td></tr>
+        <tr><td>1</td><td class="pn">DT06-2S</td><td>ODO button plug (C5)</td></tr>
+        <tr><td>1 / 1</td><td class="pn">W2P / W2S</td><td>DT 2-way wedgelocks for C5</td></tr>
+        <tr><td>2</td><td class="pn">DT04-4P</td><td>Encoder receptacles (C6, C7)</td></tr>
+        <tr><td>2</td><td class="pn">DT06-4S</td><td>Encoder plugs (C6, C7)</td></tr>
+        <tr><td>2 / 2</td><td class="pn">W4P / W4S</td><td>DT 4-way wedgelocks for C6, C7</td></tr>
+        <tr><td>10</td><td class="pn">0460-202-16141</td><td>DT pin contacts for C5–C7 (same family)</td></tr>
+        <tr><td>10</td><td class="pn">0462-201-16141</td><td>DT socket contacts for C5–C7</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="foot">
+    <b>Build notes.</b> Keep the CAN pair twisted from the ECU branch to the transceiver; 120 Ω termination at both bus ends.
+    Keep each UART TX/RX twisted with a ground reference. <b>Star-ground</b> all three displays and the transceiver back to the
+    buck output ground. Flash side displays over USB-C — do not share a UART console on GPIO43/44 at runtime.
+    <b>Controls (C5–C7):</b> wire directly from J8 header pins to the panel-mounted DT connectors — no board-local JST intermediate needed. Keep each encoder's A/B/SW + GND within its own single connector (C6 or C7). Add a 100 nF ceramic cap per signal to GND at the J8 header end to debounce mechanical contacts on all three devices.
+    <b>Verify before ordering:</b> confirm center J8 is standard 2×20 / 2.54 mm / 0.64 mm square posts, and confirm each side board's
+    UART connector pitch on your exact PCB revision — keep the net map above and substitute only the local connector family if it differs.
+    Source: <span class="pn">WIRING.md</span> · <span class="pn">CONNECTOR_BOM_AND_HARNESS.md</span> (this repo, not flashed).
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+section,ref,net_group,receptacle,plug,wedgelocks,pin,net,center_side,far_side,wire,contacts
+Connector,C1,ECU CAN <-> transceiver,DT04-3P,DT06-3S,W3P / W3S,1,CANH,transceiver CANH,ECU CANH,22 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
+Connector,C1,ECU CAN <-> transceiver,DT04-3P,DT06-3S,W3P / W3S,2,CANL,transceiver CANL,ECU CANL,22 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
+Connector,C1,ECU CAN <-> transceiver,DT04-3P,DT06-3S,W3P / W3S,3,GND,reference GND,bus GND,22 AWG,pin 0460-202-16141 / socket 0462-201-16141
+Connector,C2,Center -> Left serial,DT04-3P,DT06-3S,W3P / W3S,1,TX_L,GPIO20 (UART1 TX),Left GPIO44 (RX),24 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
+Connector,C2,Center -> Left serial,DT04-3P,DT06-3S,W3P / W3S,2,RX_L (opt),GPIO18 (UART1 RX),Left GPIO43 (TX),24 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
+Connector,C2,Center -> Left serial,DT04-3P,DT06-3S,W3P / W3S,3,GND,GND,GND,24 AWG,pin 0460-202-16141 / socket 0462-201-16141
+Connector,C3,Center -> Right serial,DT04-3P,DT06-3S,W3P / W3S,1,TX_R,GPIO21 (UART2 TX),Right GPIO44 (RX),24 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
+Connector,C3,Center -> Right serial,DT04-3P,DT06-3S,W3P / W3S,2,RX_R (opt),GPIO19 (UART2 RX),Right GPIO43 (TX),24 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
+Connector,C3,Center -> Right serial,DT04-3P,DT06-3S,W3P / W3S,3,GND,GND,GND,24 AWG,pin 0460-202-16141 / socket 0462-201-16141
+Connector,C4,5V feed (one per board x3),DT04-2P,DT06-2S,W2P / W2S,1,+5V,buck +5V,board VIN,20 AWG (18 long),pin 0460-202-16141 / socket 0462-201-16141
+Connector,C4,5V feed (one per board x3),DT04-2P,DT06-2S,W2P / W2S,2,GND,buck GND,board GND,20 AWG (18 long),pin 0460-202-16141 / socket 0462-201-16141
+Pigtail,,CAN logic TXD/RXD/3V3/GND,BM04B-GHS-TBT,GHR-04V-S,,,,,JST GH 1.25mm,SSHL-002T-P0.2
+Pigtail,,Left UART TX/RX/GND,BM03B-GHS-TBT,GHR-03V-S,,,,,JST GH 1.25mm,SSHL-002T-P0.2
+Pigtail,,Right UART TX/RX/GND,BM03B-GHS-TBT,GHR-03V-S,,,,,JST GH 1.25mm,SSHL-002T-P0.2
+Pigtail,,5V input to interposer,B2B-VH,VHR-2N,,,,,JST VH 3.96mm,SVH-21T-P1.1
+Pigtail,,J8 interposer mate (no crimp),center J8 2x20 male,SSW-120-02-G-D,,,,,2.54mm board-to-board,n/a
+GPIO map,,CAN_TXD,,,,,GPIO5,C1,transceiver TXD,,
+GPIO map,,CAN_RXD,,,,,GPIO4,C1,transceiver RXD,,
+GPIO map,,UART1_TX_LEFT,,,,,GPIO20,C2,Left GPIO44 RX,,
+GPIO map,,UART1_RX_LEFT,,,,,GPIO18,C2,Left GPIO43 TX (reserved),,
+GPIO map,,UART2_TX_RIGHT,,,,,GPIO21,C3,Right GPIO44 RX,,
+GPIO map,,UART2_RX_RIGHT,,,,,GPIO19,C3,Right GPIO43 TX (reserved),,
+GPIO map,,ODO_BUTTON,,,,,GPIO29,local,momentary to GND,,
+GPIO map,,ENC1_A/B/SW,,,,,GPIO30 / 31 / 32,local,Boost-map encoder,,
+GPIO map,,ENC2_A/B/SW,,,,,GPIO49 / 50 / 51,local,TC-slip encoder,,
+Purchase,,qty 3,DT04-3P,,,,,,,CAN + two UART receptacles,
+Purchase,,qty 3,DT06-3S,,,,,,,CAN + two UART plugs,
+Purchase,,qty 3/3,W3P / W3S,,,,,,,DT 3-way wedgelocks,
+Purchase,,qty 3,DT04-2P,,,,,,,5V feed receptacles,
+Purchase,,qty 3,DT06-2S,,,,,,,5V feed plugs,
+Purchase,,qty 3/3,W2P / W2S,,,,,,,DT 2-way wedgelocks,
+Purchase,,qty 30,0460-202-16141,,,,,,,DT pin contacts (male),
+Purchase,,qty 30,0462-201-16141,,,,,,,DT socket contacts (female),
+Purchase,,qty 1,SSW-120-02-G-D,,,,,,,Center J8 interposer socket,
+Purchase,,qty 1,BM04B-GHS-TBT,,,,,,,CAN board-local header GH4,
+Purchase,,qty 2,BM03B-GHS-TBT,,,,,,,UART board-local headers GH3,
+Purchase,,qty 1,B2B-VH,,,,,,,Interposer 5V header VH2,
+Purchase,,qty 2/6,GHR-04V-S / GHR-03V-S,,,,,,,GH housings 4-pin / 3-pin,
+Purchase,,qty 4,VHR-2N,,,,,,,VH 2-pin housings,
+Purchase,,qty 40,SSHL-002T-P0.2,,,,,,,GH crimp contacts,
+Purchase,,qty 10,SVH-21T-P1.1,,,,,,,VH crimp contacts,
