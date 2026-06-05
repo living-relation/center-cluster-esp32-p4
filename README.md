@@ -31,6 +31,12 @@ It ships in **BENCH MODE** — the screen runs a self-test demo with nothing els
 can confirm the display works on the bench. Turn it off later via
 *menuconfig → TrackCluster → Bench mode* (or ask and it’ll be switched off).
 
+### Bench demo video
+
+Recording of bench mode on the center cluster (boot splash, RPM arc, shift LEDs, gear, odometer sweep):
+
+**[`docs/demos/Center_demo.mp4`](docs/demos/Center_demo.mp4)** — open locally after clone, or preview on GitHub by clicking the file.
+
 ### Key settings (already set in `sdkconfig.defaults`)
 | Setting | Value |
 |---|---|
@@ -53,6 +59,8 @@ You don’t need to set any baud rate — see the setup guide for why.
 | `CANBUS-LINK-G4X-CONFIG.md` | Human-readable CAN configuration — every ECU broadcast/receive frame, byte map, scaling, and the PCLink “Custom CAN” setup for the Link G4X. |
 | `link_g4x_can_setup.lcs` | Importable PCLink CAN Setup file (CAN → Setup → File → Open). |
 | `link_g4x_can_setup.json` | Human-readable canonical spec of that CAN config. |
+| `docs/demos/Center_demo.mp4` | Bench-mode screen recording (no CAN/UART required). |
+| `docs/harness/` | Wiring diagram (HTML), connector BOM (CSV/MD). |
 
 > These files are reference/setup only — none of them are compiled or flashed. The firmware’s own
 > CAN decode map is `main/protocols/link_g4x.json` (that one **is** part of the build).

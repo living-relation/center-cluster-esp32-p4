@@ -1,6 +1,7 @@
 /build/
 /managed_components/
 .vscode/settings.json
+.cursor/
 .vs/
 out/
 sdkconfig

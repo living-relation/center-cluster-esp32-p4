@@ -16,6 +16,9 @@ These projects are already set to start in BENCH MODE -- meaning each screen
 runs a self-test demo with NOTHING else wired up, so you can confirm the display
 works on the bench. (How to turn that off later is at the bottom.)
 
+Example bench recording for THIS cluster: docs/demos/Center_demo.mp4
+(also linked from README.md)
+
 
 -------------------------------------------------------------------------------
  0. ONE-TIME: make sure the ESP-IDF extension is set up
