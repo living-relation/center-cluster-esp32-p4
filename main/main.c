@@ -36,48 +36,90 @@ extern void alarm_task(void *arg);
 
 #if CONFIG_TC_BENCH_MODE
 extern portMUX_TYPE g_dash_mux;
-/* Bench mode: no ECU connected. Slowly sweep the center's channels so the tach
- * arc, shift LEDs, gear box and odometer can be verified standalone. */
+
+#define BENCH_RPM_MAX        8000.0f
+#define BENCH_TICK_MS        4U
+#define BENCH_SWEEP_RPM_S    4000.0f
+#define BENCH_RPM_STEP       (BENCH_SWEEP_RPM_S * ((float)BENCH_TICK_MS / 1000.0f))
+
+typedef struct {
+    float    target_rpm;
+    uint32_t hold_ms;
+} bench_leg_t;
+
+/* Scripted sweep so key RPM points (5k/6k/6.5k/7k/max) can be inspected. */
+static const bench_leg_t BENCH_LEGS[] = {
+    { 8000.0f, 2000 },
+    { 5000.0f, 1000 },
+    { 8000.0f, 1000 },
+    { 6000.0f, 1000 },
+    { 8000.0f, 1000 },
+    { 6500.0f, 1000 },
+    { 8000.0f,    0 },
+    { 7000.0f, 1000 },
+    { 8000.0f,    0 },
+    {    0.0f,    0 },
+};
+#define BENCH_LEGS_N ((int)(sizeof(BENCH_LEGS) / sizeof(BENCH_LEGS[0])))
+
+static void bench_task(void *arg);
+
+void app_bench_start(void)
+{
+    ESP_LOGW(TAG, "BENCH MODE — starting scripted sweep");
+    xTaskCreatePinnedToCore(bench_task, "bench", 4096, NULL, 4, NULL, 0);
+}
+
 static void bench_task(void *arg)
 {
-    const TickType_t bench_period = pdMS_TO_TICKS(4);  /* 250 Hz producer cadence */
-    const float half_cycle_s = 2.0f;                   /* faster 0->max / max->0 */
-    const float p_step = 0.004f / half_cycle_s;        /* progress step per tick */
-    const uint32_t hold_max_ms = 1000;                 /* hold 1s at peak RPM */
-    const uint32_t hold_max_steps = hold_max_ms / 4;
-    const uint32_t min_shift_interval_ms = 280;      /* avoid rapid gear hopping */
+    const TickType_t bench_period = pdMS_TO_TICKS(BENCH_TICK_MS);
+    const uint32_t min_shift_interval_ms = 280;
 
     TickType_t wake = xTaskGetTickCount();
-    float p = 0.0f;
-    int dir = 1;
-    uint32_t hold_steps = 0;
+    float rpm = 0.0f;
+    int leg = 0;
+    uint32_t hold_remain_ms = 0;
     int8_t gear = 1;
     uint32_t last_shift_ms = 0;
 
+    portENTER_CRITICAL(&g_dash_mux);
+    g_dash.odo      = 100.0f;
+    g_dash.odo_mode = DASH_ODO;
+    portEXIT_CRITICAL(&g_dash_mux);
+
     for (;;) {
-        if (hold_steps > 0) {
-            hold_steps--;
-            p = 1.0f;
+        if (hold_remain_ms > 0) {
+            if (hold_remain_ms > BENCH_TICK_MS) {
+                hold_remain_ms -= BENCH_TICK_MS;
+            } else {
+                hold_remain_ms = 0;
+            }
         } else {
-            p += (dir > 0) ? p_step : -p_step;
-            if (p >= 1.0f) {
-                p = 1.0f;    /* exact top sample */
-                hold_steps = hold_max_steps;
-                dir = -1;
-            } else if (p <= 0.0f) {
-                p = 0.0f;    /* exact bottom sample */
-                dir = 1;
+            float target = BENCH_LEGS[leg].target_rpm;
+            float delta = target - rpm;
+            if (fabsf(delta) <= BENCH_RPM_STEP) {
+                rpm = target;
+                hold_remain_ms = BENCH_LEGS[leg].hold_ms;
+                leg++;
+                if (leg >= BENCH_LEGS_N) {
+                    leg = 0;
+                }
+            } else if (delta > 0.0f) {
+                rpm += BENCH_RPM_STEP;
+                if (rpm > target) {
+                    rpm = target;
+                }
+            } else {
+                rpm -= BENCH_RPM_STEP;
+                if (rpm < target) {
+                    rpm = target;
+                }
             }
         }
 
-        /* Linear reflected ramp for constant dRPM/dt across the sweep. */
-        const float rpm = p * 8000.0f;                       /* full 0..8000 range */
-        const float mph = p * 120.0f;                        /* 0..120 */
-
+        const float mph = (rpm / BENCH_RPM_MAX) * 120.0f;
         const uint32_t now_ms = (uint32_t)(xTaskGetTickCount() * portTICK_PERIOD_MS);
         if ((now_ms - last_shift_ms) >= min_shift_interval_ms) {
-            /* Simple hysteretic shift model tied to RPM to keep gear changes
-             * progressive and visually realistic. */
             if (gear < 6 && rpm > 6400.0f) {
                 gear++;
                 last_shift_ms = now_ms;
@@ -127,8 +169,7 @@ void app_main(void)
     bsp_lvgl_unlock();
 
 #if CONFIG_TC_BENCH_MODE
-    ESP_LOGW(TAG, "BENCH MODE — demo sweep; CAN/UART/inputs disabled");
-    xTaskCreatePinnedToCore(bench_task, "bench", 4096, NULL, 4, NULL, 0);
+    ESP_LOGW(TAG, "BENCH MODE — sweep starts after boot splash");
 #else
     /* Inputs: ODO button + dual rotary encoders (GPIO ISRs + esp_timer debounce) */
     ESP_ERROR_CHECK(inputs_init());

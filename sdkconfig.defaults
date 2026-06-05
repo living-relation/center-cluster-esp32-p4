@@ -65,7 +65,5 @@ CONFIG_FREERTOS_HZ=1000
 # Run LVGL refresh at high cadence for low-latency, sensor-true display updates.
 CONFIG_LV_DEF_REFR_PERIOD=8
 
-# ── BENCH MODE: OFF ──────────────────────────────────────────────────────────
-# Normal operation (real ECU/CAN/UART/inputs).
-# Enable only for standalone demo sweep.
+# ── BENCH MODE: OFF (UART / live vehicle data) ───────────────────────────────
 # CONFIG_TC_BENCH_MODE is not set

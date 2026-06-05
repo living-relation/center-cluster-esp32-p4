@@ -2,15 +2,16 @@
  * ui_gear_box.c — gear box + gear glyph + RPM digital readout, center cluster.
  *
  * Gear box: 244×244 centered rect. Bg tint ramps with RPM:
- *   0–2999   → transparent    3000–4000 → GREEN (0.08–0.62 opacity)
- *   4001–6400 → GOLD           6401–7000 → RED_HOT
- *   7001+     → RED_HOT strobe (400 ms toggle)
+ *   0–2999    → transparent    3000–4000 → GREEN (0.08–0.62 opacity)
+ *   4001–6400 → GOLD           6401+     → RED_HOT
+ *   ≥6000 RPM → background strobe (rate scales to ~20 Hz at 8000, shared w/ LEDs)
  *
  * Gear glyph: Aerospace 188 px, always white.
  * RPM digital: Aerospace 87 px, color tracks segment color.
  * RPM label:   RaceHead 22 px "RPM", white 32% alpha, below digital.
  */
 #include "ui_gear_box.h"
+#include "ui_shift_alert.h"
 #include "center-colors.h"
 
 LV_FONT_DECLARE(aerospace_188);
@@ -30,8 +31,25 @@ static lv_obj_t *s_gear_lbl;
 static lv_obj_t *s_gear_unit;
 static lv_obj_t *s_rpm_lbl;
 static lv_obj_t *s_rpm_unit;
-static bool      s_strobe_on = true;
-static uint32_t  s_strobe_last = 0;
+
+void ui_gear_box_raise(void)
+{
+    if (s_box) {
+        lv_obj_move_foreground(s_box);
+    }
+    if (s_gear_lbl) {
+        lv_obj_move_foreground(s_gear_lbl);
+    }
+    if (s_gear_unit) {
+        lv_obj_move_foreground(s_gear_unit);
+    }
+    if (s_rpm_lbl) {
+        lv_obj_move_foreground(s_rpm_lbl);
+    }
+    if (s_rpm_unit) {
+        lv_obj_move_foreground(s_rpm_unit);
+    }
+}
 
 void ui_gear_box_create(lv_obj_t *parent)
 {
@@ -87,7 +105,7 @@ void ui_gear_box_update(const dash_data_t *d)
     else                    lv_snprintf(gear_str, sizeof(gear_str), "%d", (int)d->gear);
     lv_label_set_text(s_gear_lbl, gear_str);
 
-    /* Box tint */
+    /* Box tint — transparent below 3k, then color/opacity ramp (no strobe). */
     float ramp = 0.0f;
     lv_color_t tint_col = COLOR_BG_PRIMARY;
     if (d->rpm >= 3000.0f) {
@@ -97,14 +115,14 @@ void ui_gear_box_update(const dash_data_t *d)
         else                       tint_col = COLOR_RED_HOT;
     }
 
-    uint32_t now = lv_tick_get();
-    if (d->rpm >= 7001.0f) {
-        if ((now - s_strobe_last) >= 400) { s_strobe_on = !s_strobe_on; s_strobe_last = now; }
-        ramp = s_strobe_on ? LV_MIN(ramp + 0.12f, 0.74f) : ramp * 0.28f;
+    if (ui_shift_alert_strobe_active()) {
+        ramp = ui_shift_alert_flash_on() ? LV_MIN(ramp + 0.12f, 0.74f) : ramp * 0.28f;
     }
 
     lv_obj_set_style_bg_color(s_box, tint_col, 0);
-    lv_obj_set_style_bg_opa(s_box, d->rpm < 3000.0f ? LV_OPA_TRANSP : (lv_opa_t)(ramp * 255), 0);
+    lv_obj_set_style_bg_opa(s_box,
+                            d->rpm < 3000.0f ? LV_OPA_TRANSP : (lv_opa_t)(ramp * 255),
+                            0);
 
     /* RPM digital color + flash */
     int seg_idx = (int)(d->rpm / 250.0f);

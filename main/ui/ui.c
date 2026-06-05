@@ -11,11 +11,13 @@
 #include "ui.h"
 #include "ui_rpm_arc.h"
 #include "ui_shift_leds.h"
+#include "ui_shift_alert.h"
 #include "ui_gear_box.h"
 #include "ui_odometer.h"
 #include "ui_boot.h"
 #include "dash_data.h"
 #include "center-colors.h"
+#include "sdkconfig.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/portmacro.h"
@@ -24,10 +26,15 @@
 static const char *TAG = "ui";
 extern portMUX_TYPE g_dash_mux;
 
-#define UI_PAINT_TICK_MS 8   /* 125 Hz UI update cadence, no display-side lag */
+#define UI_PAINT_TICK_MS     8U
+#define BOOT_LIVE_SETTLE_MS  400U
+
+#if CONFIG_TC_BENCH_MODE
+void app_bench_start(void);
+#endif
 
 static lv_obj_t *s_screen  = NULL;
-static bool      s_live    = false;   /* false during boot splash */
+static bool      s_live    = false;
 
 /* ── Paint-tick snapshot ─────────────────────────────────────────────── */
 void ui_paint_tick(lv_timer_t *t)
@@ -39,18 +46,31 @@ void ui_paint_tick(lv_timer_t *t)
     snap = *(const dash_data_t *)&g_dash;
     portEXIT_CRITICAL(&g_dash_mux);
 
+    ui_shift_alert_update(&snap);
+
     ui_rpm_arc_update(&snap);
     ui_shift_leds_update(&snap);
     ui_gear_box_update(&snap);
     ui_odometer_update(&snap);
 }
 
-/* ── Boot complete callback (called by ui_boot.c after splash) ───────── */
-void ui_on_boot_complete(void)
+static void ui_live_start_cb(lv_timer_t *t)
 {
-    ESP_LOGI(TAG, "Boot splash done — going live");
+    lv_timer_delete(t);
+#if CONFIG_TC_BENCH_MODE
+    app_bench_start();
+#endif
     s_live = true;
     lv_timer_create(ui_paint_tick, UI_PAINT_TICK_MS, NULL);
+    ESP_LOGI(TAG, "Live UI + paint tick started");
+}
+
+/* ── Boot complete callback (called by ui_boot.c after overlay fade-out) ─ */
+void ui_on_boot_complete(void)
+{
+    ESP_LOGI(TAG, "Boot splash done — settle then live");
+    lv_timer_t *t = lv_timer_create(ui_live_start_cb, BOOT_LIVE_SETTLE_MS, NULL);
+    lv_timer_set_repeat_count(t, 1);
 }
 
 /* ── Init ────────────────────────────────────────────────────────────── */
@@ -66,6 +86,9 @@ void ui_init(lv_disp_t *disp)
     ui_shift_leds_create(s_screen);
     ui_gear_box_create(s_screen);
     ui_odometer_create(s_screen);
+
+    ui_gear_box_raise();
+    ui_odometer_raise();
 
     /* Boot splash — runs on top, calls ui_on_boot_complete() when done */
     ui_boot_start(s_screen, ui_on_boot_complete);

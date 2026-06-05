@@ -43,29 +43,27 @@
 #define OPA_LABEL_DIM         LV_OPA_30
 #define OPA_LABEL_FAINT       LV_OPA_20
 
-/* ── Shift-LED color by index 0..9 with all-red hysteresis ──────────────── *
- * Caller updates `all_red` based on RPM crossings (>=7000 latch, <6500 release)
- * BEFORE calling this function. See `center-07-state-machines.md`.
+/* ── Shift-LED color by index 0..9 (bottom = 0) ─────────────────────────── *
+ * Strobe only toggles visibility; colors stay per-index during flash.
  */
-static inline lv_color_t shift_led_color(int idx, bool all_red) {
-    if (all_red) return COLOR_RED_LED;
-    if (idx < 5) return COLOR_GREEN;
-    if (idx < 8) return COLOR_YELLOW;
-    return COLOR_RED_LED;
+static inline lv_color_t shift_led_color(int idx) {
+    if (idx < 4) return COLOR_GREEN;   /* bottom 4 green */
+    if (idx < 7) return COLOR_YELLOW;  /* next 3 yellow (idx 4–6) */
+    return COLOR_RED_LED;              /* top 3 red (idx 7–9) */
 }
 
 /* ── RPM segment color by index 0..31 ──────────────────────────────────── */
 static inline lv_color_t rpm_seg_color(int idx, bool lit) {
-    if (!lit)        return COLOR_INACTIVE;
-    if (idx < 24)    return COLOR_WHITE;                // 0..6000 rpm
-    if (idx < 27) {                                     // 6000..6750 gradient
-        uint8_t t = (idx - 24) * 85;
+    if (!lit) return COLOR_INACTIVE;
+    if (idx < 22) return COLOR_WHITE;                   /* below 5500 rpm */
+    if (idx < 27) {                                       /* 5500..6750 gradient */
+        uint8_t t = (uint8_t)((idx - 22) * 51);
         uint8_t r = 255;
-        uint8_t g = 255 - (uint8_t)((255 - 23) * t / 255);
-        uint8_t b = 255 - (uint8_t)((255 - 68) * t / 255);
+        uint8_t g = (uint8_t)(255 - ((255 - 23) * t / 255));
+        uint8_t b = (uint8_t)(255 - ((255 - 68) * t / 255));
         return lv_color_make(r, g, b);
     }
-    return COLOR_RED_HOT;                               // 6750..8000
+    return COLOR_RED_HOT;                                 /* 6750..8000 */
 }
 
 /* ── Lambda color ramp ─────────────────────────────────────────────────── *

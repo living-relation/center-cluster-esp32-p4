@@ -1,21 +1,13 @@
 /**
  * ui_rpm_arc.c — 32-segment 270° RPM arc, center cluster.
  *
- * Uses custom lv_canvas + draw_wedge polygon per the reference implementation
- * in center-06-lvgl-widgets.md §"Custom-draw segmented arc".
- *
  * Geometry (native 800×800):
  *   center=(400,400)  RO=369  RI=309
  *   start=135°  sweep=270°  32 segments  gap=1.5°
- *   each segment span = (270 − 1.5×32) / 32 = 6.9375°
  *
- * Color per segment index i (0=bottom-left, 31=bottom-right):
- *   i  0–23: WHITE (#FFFFFF) lit, INACTIVE (#1A1A1A) unlit
- *   i 24–26: WHITE→RED gradient lit (lerp by (i-24)/3), INACTIVE unlit
- *   i 27–31: RED_HOT (#FF1744) lit + 3px red glow, INACTIVE unlit
- *
- * Wedge geometry is constant — precomputed once at create time.
- * On each tick only the fill color per segment is updated.
+ * Each segment is a 4-corner trapezoid (2 triangles). No arc-subdivision steps —
+ * avoids horizontal banding from quad-strip tessellation. Tiny draw-only angular
+ * bleed closes inter-segment seams without changing tick label layout.
  */
 #include "ui_rpm_arc.h"
 #include "center-colors.h"
@@ -33,112 +25,80 @@ LV_FONT_DECLARE(racehead_24);
 #define RI          309
 #define START_DEG   135.0f
 #define TOTAL_DEG   270.0f
-#define GAP_DEG     1.5f
-#define WEDGE_STEPS 8   /* polygon approx steps per arc edge */
+#define GAP_DEG         1.5f   /* layout + tick labels */
+#define GAP_BLEED_DEG   0.35f  /* draw-only: slight overlap into nominal gaps */
 
 static lv_obj_t   *s_canvas = NULL;
 static lv_color_t *s_buf    = NULL;
 static float       s_seg_fill_prev[N_SEGS];
 
-/* Pre-computed polygon point arrays — computed once at create time. */
-#define PTS_PER_WEDGE ((WEDGE_STEPS + 1) * 2)
-static lv_point_precise_t s_wedge_pts[N_SEGS][PTS_PER_WEDGE];
-static int        s_wedge_n  [N_SEGS];
+static lv_point_precise_t s_wedge_pts[N_SEGS][4];
 
 static float deg_to_rad(float d) { return d * (float)M_PI / 180.0f; }
+
+static void wedge_corner(float deg, float radius, lv_point_precise_t *out)
+{
+    float r = deg_to_rad(deg - 90.0f);
+    out->x = (lv_coord_t)((float)CX + radius * cosf(r));
+    out->y = (lv_coord_t)((float)CY + radius * sinf(r));
+}
 
 static void precompute_wedges(void)
 {
     float seg_span = (TOTAL_DEG - GAP_DEG * N_SEGS) / N_SEGS;
+    float bleed = GAP_BLEED_DEG * 0.5f;
 
     for (int i = 0; i < N_SEGS; i++) {
-        float a0 = START_DEG + i * (seg_span + GAP_DEG);
-        float a1 = a0 + seg_span;
-        lv_point_precise_t *pts = s_wedge_pts[i];
-        int n = 0;
+        float layout_a0 = START_DEG + (float)i * (seg_span + GAP_DEG);
+        float layout_a1 = layout_a0 + seg_span;
+        float a0 = layout_a0 - bleed;
+        float a1 = layout_a1 + bleed;
 
-        /* Outer arc points (a0 → a1) */
-        for (int s = 0; s <= WEDGE_STEPS; s++) {
-            float a = a0 + (a1 - a0) * (float)s / WEDGE_STEPS;
-            float r = deg_to_rad(a - 90.0f);
-            pts[n].x = CX + RO * cosf(r);
-            pts[n].y = CY + RO * sinf(r);
-            n++;
-        }
-        /* Inner arc points (a1 → a0, reversed) */
-        for (int s = WEDGE_STEPS; s >= 0; s--) {
-            float a = a0 + (a1 - a0) * (float)s / WEDGE_STEPS;
-            float r = deg_to_rad(a - 90.0f);
-            pts[n].x = CX + RI * cosf(r);
-            pts[n].y = CY + RI * sinf(r);
-            n++;
-        }
-        s_wedge_n[i] = n;
+        wedge_corner(a0, (float)RO, &s_wedge_pts[i][0]);
+        wedge_corner(a1, (float)RO, &s_wedge_pts[i][1]);
+        wedge_corner(a1, (float)RI, &s_wedge_pts[i][2]);
+        wedge_corner(a0, (float)RI, &s_wedge_pts[i][3]);
     }
 }
 
 static lv_color_t seg_color(int i, bool lit)
 {
-    if (!lit) return COLOR_INACTIVE;
-    if (i < 24) return COLOR_WHITE;
-    if (i < 27) {
-        /* Gradient: WHITE (#FFFFFF) → RED_HOT (#FF1744), lerp by (i-24)/3 */
-        float t = (float)(i - 24) / 3.0f;
-        uint8_t r = 255;
-        uint8_t g = (uint8_t)(255 * (1.0f - t));
-        uint8_t b = (uint8_t)((255 * (1.0f - t)) * (68.0f / 255.0f));
-        return lv_color_make(r, g, b);
-    }
-    return COLOR_RED_HOT;
+    return rpm_seg_color(i, lit);
+}
+
+static void draw_trapezoid(lv_layer_t *layer, const lv_point_precise_t *pts,
+                           lv_color_t color, lv_opa_t opa)
+{
+    lv_draw_triangle_dsc_t dsc;
+    lv_draw_triangle_dsc_init(&dsc);
+    dsc.bg_color = color;
+    dsc.bg_opa   = opa;
+    dsc.p[0] = pts[0];
+    dsc.p[1] = pts[1];
+    dsc.p[2] = pts[2];
+    lv_draw_triangle(layer, &dsc);
+    dsc.p[0] = pts[0];
+    dsc.p[1] = pts[2];
+    dsc.p[2] = pts[3];
+    lv_draw_triangle(layer, &dsc);
 }
 
 static void draw_segment(lv_layer_t *layer, int i, float intensity)
 {
     const lv_point_precise_t *pts = s_wedge_pts[i];
-    int n = s_wedge_n[i];
 
     lv_color_t c_off = seg_color(i, false);
     lv_color_t c_on  = seg_color(i, true);
 
-    lv_draw_triangle_dsc_t dsc;
-    lv_draw_triangle_dsc_init(&dsc);
-    dsc.bg_opa   = LV_OPA_COVER;
-    dsc.bg_color = c_off;
+    draw_trapezoid(layer, pts, c_off, LV_OPA_COVER);
 
-    /* Fan triangulation: pts[0] is the hub */
-    for (int k = 1; k < n - 1; k++) {
-        dsc.p[0] = pts[0];
-        dsc.p[1] = pts[k];
-        dsc.p[2] = pts[k + 1];
-        lv_draw_triangle(layer, &dsc);
-    }
-
-    /* Overlay lit color with fractional opacity for smooth per-segment fill. */
     if (intensity > 0.0f) {
-        lv_draw_triangle_dsc_t lit;
-        lv_draw_triangle_dsc_init(&lit);
-        lit.bg_color = c_on;
-        lit.bg_opa   = (lv_opa_t)(intensity * 255.0f);
-        for (int k = 1; k < n - 1; k++) {
-            lit.p[0] = pts[0];
-            lit.p[1] = pts[k];
-            lit.p[2] = pts[k + 1];
-            lv_draw_triangle(layer, &lit);
-        }
+        draw_trapezoid(layer, pts, c_on, (lv_opa_t)(intensity * 255.0f));
     }
 
-    /* Glow overlay for red-zone segments when lit */
     if (intensity > 0.0f && i >= 27) {
-        lv_draw_triangle_dsc_t glow;
-        lv_draw_triangle_dsc_init(&glow);
-        glow.bg_color = COLOR_RED_HOT;
-        glow.bg_opa   = (lv_opa_t)(intensity * 0.50f * 255);
-        for (int k = 1; k < n - 1; k++) {
-            glow.p[0] = pts[0];
-            glow.p[1] = pts[k];
-            glow.p[2] = pts[k + 1];
-            lv_draw_triangle(layer, &glow);
-        }
+        draw_trapezoid(layer, pts, COLOR_RED_HOT,
+                       (lv_opa_t)(intensity * 0.50f * 255.0f));
     }
 }
 
@@ -156,13 +116,11 @@ void ui_rpm_arc_create(lv_obj_t *parent)
     lv_canvas_fill_bg(s_canvas, COLOR_BG_PRIMARY, LV_OPA_COVER);
 
     for (int i = 0; i < N_SEGS; i++) {
-        s_seg_fill_prev[i] = -1.0f;   /* force first update to paint all segments */
+        s_seg_fill_prev[i] = -1.0f;
     }
 
-    /* RPM scale labels 1–8 at radius 291 (just inside RI, moved 10 px inward),
-     * RaceHead 24 px, white @ 40 %%. Placed at each 1000-RPM segment boundary. */
     for (int k = 1; k <= 8; k++) {
-        float deg = START_DEG + (float)(k * 4) * (TOTAL_DEG / N_SEGS); /* = 135 + k*33.75 */
+        float deg = START_DEG + (float)(k * 4) * (TOTAL_DEG / (float)N_SEGS);
         float r   = deg_to_rad(deg - 90.0f);
         int dx = (int)lroundf(291.0f * cosf(r));
         int dy = (int)lroundf(291.0f * sinf(r));
@@ -182,7 +140,7 @@ void ui_rpm_arc_update(const dash_data_t *d)
     float rpm = d->rpm;
     if (rpm < 0.0f) rpm = 0.0f;
     if (rpm > RPM_MAX) rpm = RPM_MAX;
-    const float lit_f = rpm / (RPM_MAX / N_SEGS);  /* 0..32 float */
+    const float lit_f = rpm / (RPM_MAX / N_SEGS);
 
     lv_layer_t layer;
     lv_canvas_init_layer(s_canvas, &layer);
@@ -191,7 +149,6 @@ void ui_rpm_arc_update(const dash_data_t *d)
         if (seg_fill < 0.0f) seg_fill = 0.0f;
         if (seg_fill > 1.0f) seg_fill = 1.0f;
 
-        /* Redraw only segments whose fractional fill changed enough to be visible. */
         if (fabsf(seg_fill - s_seg_fill_prev[i]) >= (1.0f / 255.0f)) {
             draw_segment(&layer, i, seg_fill);
             s_seg_fill_prev[i] = seg_fill;
