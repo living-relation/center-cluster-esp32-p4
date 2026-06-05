@@ -37,6 +37,8 @@ Recording of bench mode on the center cluster (boot splash, RPM arc, shift LEDs,
 
 **[`docs/demos/Center_demo.mp4`](docs/demos/Center_demo.mp4)** — open locally after clone, or preview on GitHub by clicking the file.
 
+> **Git LFS:** Demo `.mp4` files are stored with Git LFS. Run `git lfs install` once **before** `git clone`, or `git lfs pull` after clone if the video is missing or only a few kilobytes.
+
 ### Key settings (already set in `sdkconfig.defaults`)
 | Setting | Value |
 |---|---|
