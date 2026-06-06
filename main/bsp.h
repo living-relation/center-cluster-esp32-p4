@@ -18,6 +18,12 @@ extern "C" {
 #define BSP_LCD_H_RES   800
 #define BSP_LCD_V_RES   800
 
+/** Force backlight off before panel/LVGL init (avoids white flash at power-on). */
+void bsp_backlight_hold_off(void);
+
+/** Enable backlight after the first black LVGL frame (call from ui_init). */
+void bsp_backlight_on(void);
+
 /** One-time board bring-up. Call before bsp_display_start(). */
 esp_err_t  bsp_init(void);
 

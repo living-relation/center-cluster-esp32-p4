@@ -28,15 +28,51 @@
 #include "esp_log.h"
 #include "esp_err.h"
 #include "nvs_flash.h"
+#include "nvs.h"
 #include <math.h>
 
 static const char *TAG = "main";
 
+#define ODO_NVS_NS          "tc"
+#define ODO_NVS_KEY_TENTHS  "odo10"
+#define ODO_START_MILES     100.0f
+
+extern portMUX_TYPE g_dash_mux;
+
+static void odometer_init(void)
+{
+    uint32_t tenths = (uint32_t)(ODO_START_MILES * 10.0f + 0.5f);
+    nvs_handle_t h;
+    esp_err_t err = nvs_open(ODO_NVS_NS, NVS_READWRITE, &h);
+    if (err == ESP_OK) {
+        uint32_t stored = 0;
+        err = nvs_get_u32(h, ODO_NVS_KEY_TENTHS, &stored);
+        if (err == ESP_ERR_NVS_NOT_FOUND || stored == 0) {
+            stored = tenths;
+            ESP_ERROR_CHECK(nvs_set_u32(h, ODO_NVS_KEY_TENTHS, stored));
+            ESP_ERROR_CHECK(nvs_commit(h));
+            ESP_LOGI(TAG, "ODO seeded to %.1f mi", ODO_START_MILES);
+        } else if (err == ESP_OK) {
+            tenths = stored;
+        } else {
+            ESP_LOGW(TAG, "ODO NVS read failed (%s) — using %.1f mi",
+                     esp_err_to_name(err), ODO_START_MILES);
+        }
+        nvs_close(h);
+    } else {
+        ESP_LOGW(TAG, "ODO NVS open failed (%s) — using %.1f mi",
+                 esp_err_to_name(err), ODO_START_MILES);
+    }
+
+    portENTER_CRITICAL(&g_dash_mux);
+    g_dash.odo      = (float)tenths / 10.0f;
+    g_dash.odo_mode = DASH_ODO;
+    portEXIT_CRITICAL(&g_dash_mux);
+}
+
 extern void alarm_task(void *arg);
 
 #if CONFIG_TC_BENCH_MODE
-extern portMUX_TYPE g_dash_mux;
-
 #define BENCH_RPM_MAX        8000.0f
 #define BENCH_TICK_MS        4U
 #define BENCH_SWEEP_RPM_S    4000.0f
@@ -154,8 +190,10 @@ void app_main(void)
         nvs_err = nvs_flash_init();
     }
     ESP_ERROR_CHECK(nvs_err);
+    odometer_init();
 
     /* Board bring-up */
+    bsp_backlight_hold_off();
     ESP_ERROR_CHECK(bsp_init());
     lv_disp_t *disp = bsp_display_start();
     if (!disp) {

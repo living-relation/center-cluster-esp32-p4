@@ -15,6 +15,7 @@
 #include "ui_gear_box.h"
 #include "ui_odometer.h"
 #include "ui_boot.h"
+#include "bsp.h"
 #include "dash_data.h"
 #include "center-colors.h"
 #include "sdkconfig.h"
@@ -92,4 +93,10 @@ void ui_init(lv_disp_t *disp)
 
     /* Boot splash — runs on top, calls ui_on_boot_complete() when done */
     ui_boot_start(s_screen, ui_on_boot_complete);
+
+    if (bsp_lvgl_lock(portMAX_DELAY)) {
+        lv_refr_now(NULL);
+        bsp_lvgl_unlock();
+    }
+    bsp_backlight_on();
 }

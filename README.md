@@ -27,9 +27,8 @@ Short version:
 4. Plug the board in via USB-C and pick the **COM port** on the bottom bar.
 5. Click **Build → Flash → Monitor** (the flame icon does all three).
 
-It ships in **BENCH MODE** — the screen runs a self-test demo with nothing else wired up, so you
-can confirm the display works on the bench. Turn it off later via
-*menuconfig → TrackCluster → Bench mode* (or ask and it’ll be switched off).
+It ships with **bench mode OFF** (live CAN + UART bridge). For a standalone bench sweep, turn on via
+*menuconfig → TrackCluster → Bench mode* and reflash. Morning flash steps: **`FLASH_READINESS.md`**.
 
 ### Bench demo video
 
@@ -45,7 +44,7 @@ Recording of bench mode on the center cluster (boot splash, RPM arc, shift LEDs,
 | Target | esp32p4 |
 | Flash size | **32 MB** (board chip = GD25Q256) |
 | PSRAM | Hex, 200 MHz (**required** — the display buffers live here) |
-| Bench mode | ON (self-test) |
+| Bench mode | OFF (live) |
 | ESP-IDF | **5.4.2** (use 5.4.x — not 5.3.x, not 5.5+ for v1.x P4 silicon) |
 
 You don’t need to set any baud rate — see the setup guide for why.

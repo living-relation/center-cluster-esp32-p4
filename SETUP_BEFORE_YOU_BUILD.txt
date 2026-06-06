@@ -12,9 +12,9 @@ There are THREE separate projects (each is its own folder you open in VS Code):
 You build/flash each ONE AT A TIME. Open one folder, flash it, then open the
 next. They do not depend on each other at build time.
 
-These projects are already set to start in BENCH MODE -- meaning each screen
-runs a self-test demo with NOTHING else wired up, so you can confirm the display
-works on the bench. (How to turn that off later is at the bottom.)
+These projects ship with BENCH MODE OFF for the live car build -- gauges read
+real CAN/UART data and sit at zero on the bench with nothing connected.
+(To turn bench demo ON for standalone screen tests, see section 7.)
 
 Example bench recording for THIS cluster: docs/demos/Center_demo.mp4
 (also linked from README.md)
@@ -146,26 +146,29 @@ Easiest: click the [flame] icon on the bottom bar = "Build, Flash and Monitor".
 First build takes several minutes (it downloads LVGL and panel drivers and
 compiles everything); later builds are much faster.
 
-What you should see on the screen after it flashes:
+What you should see on the screen after it flashes (bench mode OFF):
     - A short Toyota logo splash, then
-    - The live gauges animating through their range (bench mode demo sweep).
-The serial Monitor window will print boot messages; look for a line like
-"BENCH MODE" confirming the demo is running. Press Ctrl+] to close Monitor.
+    - RPM arc / shift LEDs at zero without CAN (center is the ECU + UART source).
+The serial Monitor window will print boot messages. Press Ctrl+] to close Monitor.
+
+PowerShell flash helpers (from this repo root):
+    .\scripts\prepare_flash.ps1
+    .\scripts\flash_cluster.ps1 -Port COM7
+See FLASH_READINESS.md for the full morning checklist.
 
 If the build complains about timestamps / "clock skew" / loops: your PC clock
 vs the files' dates. Just rebuild, or run "ESP-IDF: Full Clean" then build.
 
 
 -------------------------------------------------------------------------------
- 7. WHEN BENCH TESTING IS DONE -> GO LIVE
+ 7. OPTIONAL: TURN BENCH MODE ON (standalone screen test)
 -------------------------------------------------------------------------------
-Ask me to switch bench mode off, OR do it yourself:
+Current default: bench OFF (live vehicle). To run the self-test sweep with
+nothing wired:
     - Open menuconfig (step 4), search:  bench
-    - Under "TrackCluster", turn OFF "Bench mode". Save.
+    - Under "TrackCluster", turn ON "Bench mode". Save.
     - Rebuild + reflash.
-That switches the board to real operation: the center reads the ECU over CAN
-and feeds the side screens over UART; with nothing connected the gauges simply
-sit at 0 (no error, no blank screen).
+Turn bench OFF again before installing in the car.
 
 
 -------------------------------------------------------------------------------
@@ -176,7 +179,7 @@ sit at 0 (no error, no blank screen).
  PSRAM:    center=Hex 200MHz left/right=Octal 80MHz   (MUST be ON)
  Baud:     leave default (monitor 115200)
  Port:     pick it on the bottom bar each session
- Bench:    ON now (self-test). Turn OFF in menuconfig -> TrackCluster for live.
+ Bench:    OFF now (live). Turn ON in menuconfig -> TrackCluster for bench demo.
  IDF:      5.4.2 (use 5.4.x; not 5.3.x; not 5.5+ on the P4 v1.x silicon)
 
  Wiring for the real install is in:  ECU_SETUP/WIRING.md

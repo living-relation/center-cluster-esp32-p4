@@ -21,6 +21,7 @@
 #include "esp_log.h"
 #include "esp_err.h"
 #include "esp_check.h"
+#include "driver/gpio.h"
 #include "driver/ledc.h"
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_panel_ops.h"
@@ -48,8 +49,29 @@ static const char *TAG = "bsp";
 #define BSP_DSI_LANE_MBPS  1250   /* MIPI bit-rate per lane (Waveshare 3.4" panel default) */
 
 /* ── Backlight (LEDC PWM, matches official Waveshare esp32_p4_wifi6_touch_lcd_xc BSP) ── */
-static esp_err_t backlight_init_on(void)
+#define BSP_BL_DUTY_MAX  1023u
+
+static bool s_backlight_pwm_ready = false;
+
+void bsp_backlight_hold_off(void)
 {
+    gpio_config_t bl = {
+        .pin_bit_mask = 1ULL << BSP_LCD_BL_GPIO,
+        .mode         = GPIO_MODE_OUTPUT,
+        .pull_up_en   = GPIO_PULLUP_DISABLE,
+        .pull_down_en = GPIO_PULLDOWN_ENABLE,
+        .intr_type    = GPIO_INTR_DISABLE,
+    };
+    gpio_config(&bl);
+    gpio_set_level(BSP_LCD_BL_GPIO, 0);
+}
+
+static esp_err_t backlight_pwm_init_off(void)
+{
+    if (s_backlight_pwm_ready) {
+        return ESP_OK;
+    }
+
     const ledc_timer_config_t bl_timer = {
         .speed_mode      = LEDC_LOW_SPEED_MODE,
         .duty_resolution = LEDC_TIMER_10_BIT,
@@ -65,12 +87,21 @@ static esp_err_t backlight_init_on(void)
         .channel    = LEDC_CHANNEL_1,
         .intr_type  = LEDC_INTR_DISABLE,
         .timer_sel  = LEDC_TIMER_1,
-        .duty       = 1023,           /* 100% with output_invert=1 → backlight ON */
+        .duty       = 0,              /* output_invert=1 → duty 0 keeps backlight off */
         .hpoint     = 0,
         .flags      = { .output_invert = 1 },
     };
     ESP_RETURN_ON_ERROR(ledc_channel_config(&bl_ch), TAG, "bl_channel");
+    s_backlight_pwm_ready = true;
     return ESP_OK;
+}
+
+void bsp_backlight_on(void)
+{
+    ESP_ERROR_CHECK(backlight_pwm_init_off());
+    ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_1, BSP_BL_DUTY_MAX));
+    ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_1));
+    ESP_LOGI(TAG, "Backlight on");
 }
 
 /* ── MIPI-DSI PHY LDO ────────────────────────────────────────────────── */
@@ -90,6 +121,28 @@ static esp_err_t mipi_phy_power_on(void)
 static esp_lcd_panel_handle_t    s_panel   = NULL;
 static esp_lcd_panel_io_handle_t s_io      = NULL;
 static esp_lcd_dsi_bus_handle_t  s_dsi_bus = NULL;
+
+static void panel_framebuffer_black(void)
+{
+    void *fb0 = NULL;
+    void *fb1 = NULL;
+    const size_t fb_bytes = (size_t)BSP_LCD_H_RES * BSP_LCD_V_RES * 2;
+    esp_err_t err = esp_lcd_dpi_panel_get_frame_buffer(s_panel, 2, &fb0, &fb1);
+    if (err == ESP_OK && fb0 != NULL) {
+        memset(fb0, 0, fb_bytes);
+        if (fb1 != NULL) {
+            memset(fb1, 0, fb_bytes);
+        }
+        return;
+    }
+    fb0 = NULL;
+    err = esp_lcd_dpi_panel_get_frame_buffer(s_panel, 1, &fb0);
+    if (err != ESP_OK || fb0 == NULL) {
+        ESP_LOGW(TAG, "DSI FB clear skipped (%s)", esp_err_to_name(err));
+        return;
+    }
+    memset(fb0, 0, fb_bytes);
+}
 
 static esp_err_t panel_init(void)
 {
@@ -168,9 +221,10 @@ static esp_err_t panel_init(void)
 esp_err_t bsp_init(void)
 {
     ESP_LOGI(TAG, "TrackCluster Center BSP — ESP32-P4-WIFI6-Touch-LCD-XC");
-    ESP_RETURN_ON_ERROR(backlight_init_on(), TAG, "backlight");
+    bsp_backlight_hold_off();
     ESP_RETURN_ON_ERROR(mipi_phy_power_on(), TAG, "mipi_ldo");
     ESP_RETURN_ON_ERROR(panel_init(),        TAG, "panel");
+    ESP_RETURN_ON_ERROR(backlight_pwm_init_off(), TAG, "backlight_pwm");
     return ESP_OK;
 }
 
@@ -211,6 +265,18 @@ lv_disp_t *bsp_display_start(void)
         .flags = { .avoid_tearing = true },
     };
     s_disp = lvgl_port_add_disp_dsi(&disp_cfg, &dsi_cfg);
+
+    if (bsp_lvgl_lock(portMAX_DELAY)) {
+        lv_obj_t *scr = lv_screen_active();
+        lv_obj_set_style_bg_color(scr, lv_color_black(), 0);
+        lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
+        lv_obj_invalidate(scr);
+        lv_refr_now(NULL);
+        lv_refr_now(NULL);
+        bsp_lvgl_unlock();
+    }
+    panel_framebuffer_black();
+
     return s_disp;
 }
 
