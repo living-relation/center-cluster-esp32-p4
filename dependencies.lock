@@ -9,6 +9,16 @@ dependencies:
       registry_url: https://components.espressif.com
       type: service
     version: 0.5.3
+  espressif/es8311:
+    component_hash: 46b3117250344bb03f143d5e2becf81cfb111679fbd7b95cefc2d302d36cc393
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=4.4,<6.0'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 1.0.0~1
   espressif/esp_lcd_jd9365:
     component_hash: ca0517ca0aaccac53e1eb572fbfc8262086401875a4823862b8bca475843db1a
     dependencies:
@@ -51,10 +61,11 @@ dependencies:
       type: service
     version: 9.2.2
 direct_dependencies:
+- espressif/es8311
 - espressif/esp_lcd_jd9365
 - espressif/esp_lvgl_port
 - idf
 - lvgl/lvgl
-manifest_hash: 7b797474ce4b363275d21dbe94ae1e11c3afdecdef3165fdde0029b8e949f406
+manifest_hash: f015381637d0f3ae24f5735479fd4f8c4c3f157914244be601ffacc43d74d376
 target: esp32p4
 version: 2.0.0

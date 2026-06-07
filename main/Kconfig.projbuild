@@ -129,6 +129,22 @@ menu "TrackCluster — Center cluster pin map (Waveshare ESP32-P4-WIFI6-Touch-LC
         hex "CAN frame ID for TC slip-angle selection"
         default 0x3ED
 
+    config TC_CAN_SIM_CONSOLE
+        bool "USB console 'can' command — inject ECU frames without transceiver"
+        default y
+        help
+            Registers a can <id> <bytes...> command on the USB/UART debug console.
+            Frames run through the same decoders as TWAI RX (g_dash, UART bridge,
+            warning tone on 0x3EE). Does not drive the physical CAN bus.
+
+    config TC_CAN_SIM_FIRE_WARN_ONCE
+        bool "On boot: inject one 0x3EE knock warning (~10 s after power-on)"
+        default n
+        depends on TC_CAN_SIM_CONSOLE
+        help
+            Bench helper: clears then sets knock in g_dash so the warning tone
+            plays once. Disable for normal driving.
+
     config TC_BENCH_MODE
         bool "Bench mode — standalone demo sweep (no ECU connected)"
         default n

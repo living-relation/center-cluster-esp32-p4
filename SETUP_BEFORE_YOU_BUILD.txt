@@ -182,6 +182,7 @@ Turn bench OFF again before installing in the car.
  Bench:    OFF now (live). Turn ON in menuconfig -> TrackCluster for bench demo.
  IDF:      5.4.2 (use 5.4.x; not 5.3.x; not 5.5+ on the P4 v1.x silicon)
 
- Wiring for the real install is in:  ECU_SETUP/WIRING.md
- ECU (Link G4X) CAN setup is in:     ECU_SETUP/  (the .lcs / .json + guides)
+ Wiring for the real install is in:  WIRING.md
+ ECU (Link G4X) CAN setup is in:     CANBUS-LINK-G4X-CONFIG.md  (+ link_g4x_can_setup.lcs/.json)
+ After wiring: no reflash needed if bench-off firmware is already on the boards (see FLASH_READINESS.md).
 ===============================================================================

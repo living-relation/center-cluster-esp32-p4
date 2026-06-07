@@ -1,7 +1,7 @@
 # Center cluster — flash readiness
 
 **Source tree (flash from here):** `C:\projects\center-cluster-esp32-p4`  
-**Git HEAD:** run `git rev-parse --short HEAD` (expect `e6d2f36` or newer)  
+**Git HEAD:** run `git rev-parse --short HEAD` after pull  
 **Mode:** bench **OFF** — live CAN + UART bridge to sides (`# CONFIG_TC_BENCH_MODE is not set`)
 
 ## Unwired bench — flash this board alone
@@ -11,7 +11,7 @@ Plug **only** the center cluster via USB-C. ECU CAN and side UART are not requir
 ## Morning checklist
 
 1. **ESP-IDF 5.4.2 only** — do **not** use 5.5+ on this P4 v1.x board
-2. **USB** — center board only; note COM port (last session: **COM7**)
+2. **USB** — center board only; note COM port (example: **COM7** — yours may differ)
 3. **Target** — `esp32p4` (set once via VS Code chip icon or `idf.py set-target esp32p4`)
 4. **Build:**
    ```powershell
@@ -26,9 +26,16 @@ Plug **only** the center cluster via USB-C. ECU CAN and side UART are not requir
 
 ## What to expect (bench off, unwired)
 
-- Toyota splash → RPM arc / shift LEDs at **0** — **no demo sweep**
+- Toyota splash (mid-splash **boot chime** on onboard speaker)
+- RPM arc / shift LEDs / gear / odometer at **0** — **no demo sweep**
 - ECU CAN and side UART not connected yet; that is fine on the bench
 - Serial log should **not** show `BENCH MODE`
+- **Warning tone** plays when ECU sets `g_dash.warn` (CAN `0x3EE` bytes 0–5)
+
+## Optional bench CAN inject (menuconfig)
+
+*TrackCluster → Enable CAN frame injection over USB console* — REPL commands `can <id> <hex>` and
+`warn_test` for desk testing without a transceiver. **Off** in the default car build.
 
 ## Settings (already in `sdkconfig.defaults`)
 
@@ -39,6 +46,13 @@ Plug **only** the center cluster via USB-C. ECU CAN and side UART are not requir
 | PSRAM | Hex 200 MHz (**required** for 800×800) |
 | Bootloader offset | **0x2000** |
 | Bench mode | **off** |
+| CAN TX / RX GPIO | **5 / 4** → [SN65HVD230 board](https://www.waveshare.com/sn65hvd230-can-board.htm) |
+
+## After you wire the car — reflash?
+
+**No**, if each board already has the latest **bench-off** firmware flashed. Wiring 12 V, CAN,
+and UART does not change flash contents. Reflash only when you pull new firmware or change
+menuconfig (e.g. bench mode, CAN sim console).
 
 ## Not in this firmware yet
 

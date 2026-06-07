@@ -5,6 +5,8 @@ idf_component_register(
         "canbus.c"
         "uart_bridge.c"
         "alarm_task.c"
+        "audio_alert.c"
+        "can_sim.c"
         "inputs.c"
         "dash_data.c"
         "ui/ui.c"
@@ -30,10 +32,13 @@ idf_component_register(
         driver
         esp_lcd
         esp_driver_gpio
+        esp_driver_i2s
         esp_driver_uart
         esp_psram
         nvs_flash
         spi_flash
+        console
+        es8311
 )
 
 target_compile_definitions(${COMPONENT_LIB} PRIVATE LV_LVGL_H_INCLUDE_SIMPLE=1)

@@ -16,6 +16,7 @@
 #include "ui_odometer.h"
 #include "ui_boot.h"
 #include "bsp.h"
+#include "audio_alert.h"
 #include "dash_data.h"
 #include "center-colors.h"
 #include "sdkconfig.h"
@@ -99,4 +100,5 @@ void ui_init(lv_disp_t *disp)
         bsp_lvgl_unlock();
     }
     bsp_backlight_on();
+    audio_alert_play_boot_async();
 }

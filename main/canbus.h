@@ -28,6 +28,12 @@ void canbus_task(void *arg);
  */
 void canbus_tx_selection(uint32_t id, uint8_t index);
 
+/** Decode one ECU frame into g_dash (TWAI RX and USB inject share this path). */
+void canbus_dispatch_frame(uint32_t id, const uint8_t *data);
+
+/** Inject a CAN data frame over USB bench tooling (same decoders as TWAI RX). */
+esp_err_t canbus_inject_frame(uint32_t id, const uint8_t *data, uint8_t len);
+
 #ifdef __cplusplus
 }
 #endif

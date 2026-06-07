@@ -20,7 +20,13 @@
 #include "inputs.h"
 #include "dash_data.h"
 #include "ui/ui.h"
+#include "audio_alert.h"
+#include "can_sim.h"
 #include "sdkconfig.h"
+
+#if CONFIG_TC_CAN_SIM_CONSOLE
+#include "esp_console.h"
+#endif
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -71,6 +77,52 @@ static void odometer_init(void)
 }
 
 extern void alarm_task(void *arg);
+
+#if CONFIG_TC_CAN_SIM_CONSOLE
+#include <stdio.h>
+#include <string.h>
+
+static void can_sim_stdin_task(void *arg)
+{
+    (void)arg;
+    char line[256];
+    for (;;) {
+        if (fgets(line, sizeof(line), stdin) == NULL) {
+            vTaskDelay(pdMS_TO_TICKS(50));
+            continue;
+        }
+        size_t len = strlen(line);
+        while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r')) {
+            line[--len] = '\0';
+        }
+        if (len == 0) {
+            continue;
+        }
+        int ret = 0;
+        esp_console_run(line, &ret);
+        fflush(stdout);
+    }
+}
+
+static void can_sim_console_start(void)
+{
+    const esp_console_config_t cfg = ESP_CONSOLE_CONFIG_DEFAULT();
+    esp_err_t err = esp_console_init(&cfg);
+    if (err != ESP_OK && err != ESP_ERR_INVALID_STATE) {
+        ESP_LOGE(TAG, "console init failed (%s)", esp_err_to_name(err));
+        return;
+    }
+    err = can_sim_console_register();
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "can command register failed (%s)", esp_err_to_name(err));
+        return;
+    }
+    xTaskCreate(can_sim_stdin_task, "can_cli", 4096, NULL, 3, NULL);
+    printf("CAN sim ready — warn_test | can 3ee 0100000000000000\n");
+    fflush(stdout);
+}
+
+#endif
 
 #if CONFIG_TC_BENCH_MODE
 #define BENCH_RPM_MAX        8000.0f
@@ -215,6 +267,12 @@ void app_main(void)
     xTaskCreatePinnedToCore(uart_tx_task, "uart",  4096, NULL, 6, NULL, 0);
 #endif
     xTaskCreatePinnedToCore(alarm_task,   "alarm", 4096, NULL, 6, NULL, 0);
+
+    /* Always on: warning tone when ECU 0x3EE sets g_dash.warn (rising edge). */
+    audio_alert_warn_monitor_start();
+#if CONFIG_TC_CAN_SIM_CONSOLE
+    can_sim_console_start();
+#endif
 
     ESP_LOGI(TAG, "All tasks started");
 }

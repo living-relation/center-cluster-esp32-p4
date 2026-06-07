@@ -25,6 +25,7 @@
 #include "esp_log.h"
 #include "esp_err.h"
 #include "esp_check.h"
+#include <string.h>
 
 static const char *TAG = "canbus";
 
@@ -116,7 +117,8 @@ static void decode_3eb(const uint8_t *d)
 /**
  * 0x3EE — engine-protection status (50 ms)
  *   [0] knock  [1] ign-cut  [2] fuel-cut  [3] boost-cut  [4] sensor-err  [5] throttle-err
- *   Each byte: 0 = OK, nonzero = active. ORed into g_dash.warn (right-cluster overlay).
+ *   Each byte: 0 = OK, nonzero = active. ORed into g_dash.warn (UART → right overlay,
+ *   center speaker tone on rising edge).
  *   Conditions already shown on gauges (oil press / fuel / temps) are NOT carried here.
  */
 static void decode_3ee(const uint8_t *d)
@@ -164,20 +166,35 @@ void canbus_task(void *arg)
         }
         if (msg.rtr) continue;  /* ignore remote-transmission requests */
 
-        /* Stamp freshness before decode so side clusters see it immediately */
-        portENTER_CRITICAL(&g_dash_mux);
-        g_dash.last_update_ms = (uint32_t)(xTaskGetTickCount() * portTICK_PERIOD_MS);
-        portEXIT_CRITICAL(&g_dash_mux);
-
-        switch (msg.identifier) {
-            case 0x3E8: decode_3e8(msg.data); break;
-            case 0x3E9: decode_3e9(msg.data); break;
-            case 0x3EA: decode_3ea(msg.data); break;
-            case 0x3EB: decode_3eb(msg.data); break;
-            case 0x3EE: decode_3ee(msg.data); break;
-            default:    /* defensive: no other IDs expected from Link G4X stream */  break;
-        }
+        canbus_dispatch_frame(msg.identifier, msg.data);
     }
+}
+
+void canbus_dispatch_frame(uint32_t id, const uint8_t *data)
+{
+    portENTER_CRITICAL(&g_dash_mux);
+    g_dash.last_update_ms = (uint32_t)(xTaskGetTickCount() * portTICK_PERIOD_MS);
+    portEXIT_CRITICAL(&g_dash_mux);
+
+    switch (id) {
+        case 0x3E8: decode_3e8(data); break;
+        case 0x3E9: decode_3e9(data); break;
+        case 0x3EA: decode_3ea(data); break;
+        case 0x3EB: decode_3eb(data); break;
+        case 0x3EE: decode_3ee(data); break;
+        default: break;
+    }
+}
+
+esp_err_t canbus_inject_frame(uint32_t id, const uint8_t *data, uint8_t len)
+{
+    if (data == NULL || len == 0 || len > 8) {
+        return ESP_ERR_INVALID_ARG;
+    }
+    uint8_t frame[8] = {0};
+    memcpy(frame, data, len);
+    canbus_dispatch_frame(id, frame);
+    return ESP_OK;
 }
 
 /* ── TX: encoder selection ───────────────────────────────────────────── */

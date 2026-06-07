@@ -23,3 +23,6 @@ dependencies:
   # the bare JD9365 needs, leaving the screen blank.
   espressif/esp_lcd_jd9365:
     version: "~2.0"
+
+  espressif/es8311:
+    version: "^1.0.0"

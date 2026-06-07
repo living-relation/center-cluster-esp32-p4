@@ -30,6 +30,10 @@ Short version:
 It ships with **bench mode OFF** (live CAN + UART bridge). For a standalone bench sweep, turn on via
 *menuconfig → TrackCluster → Bench mode* and reflash. Morning flash steps: **`FLASH_READINESS.md`**.
 
+**Already flashed?** Wiring power, [SN65HVD230 CAN](https://www.waveshare.com/sn65hvd230-can-board.htm),
+and UART to the side clusters does **not** require another flash — firmware lives in SPI flash until
+you rebuild and reflash after a code change.
+
 ### Bench demo video
 
 Recording of bench mode on the center cluster (boot splash, RPM arc, shift LEDs, gear, odometer sweep):
@@ -68,10 +72,18 @@ You don’t need to set any baud rate — see the setup guide for why.
 
 ---
 
+## Audio & desk CAN tools (center only)
+
+- **Boot chime** — four beeps mid-splash (onboard ES8311 speaker).
+- **Warning tone** — on rising edge of ECU warn bits from CAN `0x3EE`.
+- **CAN sim console** (optional, menuconfig) — inject frames over USB for bench decode tests.
+
 ## What’s in the build
 ```
 main/            firmware source (the only thing compiled/flashed)
   ui/            LVGL screens + fonts + images
+  audio_alert.c  ES8311 boot + warning tones
+  can_sim.c      optional USB CAN inject (menuconfig)
   protocols/     link_g4x.json — CAN decode map (code)
 sdkconfig.defaults   board config (PSRAM, flash, bench mode)
 partitions.csv       flash layout
