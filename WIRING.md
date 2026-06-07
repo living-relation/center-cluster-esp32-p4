@@ -23,6 +23,7 @@ Each board regulates its own 3V3 on-board; **feed them 5 V**, never 3V3 directly
 - **Buck converter:** 12 V in → **5 V** out, **≥3 A** (≈2.5 A peak all-3 with backlights; size up for margin).
   Common ground with the vehicle/ECU.
 - **Center 5 V input:** J8 **pin 2 = 5V**, **pin 39 = GND** (or the board's USB-C 5V — but use J8 for the install).
+- **Harness drawing:** `docs/harness/HARNESS_WIRING_DIAGRAM.html` (11×17 landscape print, Phoenix screw-terminal J8 adapter, Deutsch DT, shopping links).
 - **Side 5 V input:** each S3 board's **VIN / 5V** pad and **GND** (USB-C VBUS is the same net; the
   PH1.25 2-pin "BAT" connector is for an optional Li-ion only — do not feed 5 V there).
 - Add a common-mode choke / 100 µF bulk cap near each board if you see backlight flicker on engine crank.

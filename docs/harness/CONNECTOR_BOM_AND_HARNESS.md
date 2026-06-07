@@ -7,14 +7,17 @@ This is a production-oriented harness plan for the center P4 + left/right S3 top
 ## 0) Important build assumption
 
 The center board J8 is an unshrouded 2x20, 2.54 mm header. There is no sealed automotive mating shell for it.
-Use a small interposer board that plugs into J8, then bring all vehicle wiring out through sealed connectors.
+Plug a **40-pin screw-terminal GPIO adapter** onto J8 so harness wires land on Phoenix-style clamps (bare wire or ferrules), then route vehicle Deutsch DT leads from the center enclosure.
 
-Recommended J8 interposer mate (board-to-board, no crimp):
+Recommended J8 screw-terminal adapter (2.54 mm, 40 pos):
 
-| Item | Part number | Notes |
+| Item | Part number | Buy |
 |---|---|---|
-| 2x20 female socket strip, 2.54 mm | Samtec SSW-120-02-G-D | Mates to center J8 male header |
-| Alternate | Sullins PPPC202LFBN-RC | Equivalent 2x20 female socket strip |
+| Screw-mount breakout (primary) | Sequent SM-A-001 / B-RPI-X1-SM-RT | [sequentmicrosystems.com/products/breakout-card-screw-mount-for-raspberry-pi](https://sequentmicrosystems.com/products/breakout-card-screw-mount-for-raspberry-pi) |
+| Alternate labeled board | DIYables screw terminal expansion | [diyables.io/products/screw-terminal-block-expansion-board-for-raspberry-pi](https://diyables.io/products/screw-terminal-block-expansion-board-for-raspberry-pi) |
+| Replacement 2-pos terminal (optional) | Phoenix MKDS 1,5/ 2-3.5 (1775578) | [phoenixcontact.com — MKDS 1,5/ 2-3.5](https://www.phoenixcontact.com/en-us/products/screw-terminal-block-mkds-15-2-35-1775578) |
+
+Terminal **T01–T40** on the adapter = J8 physical pins **1–40**. See `HARNESS_WIRING_DIAGRAM.html` for the block diagram, full pinout, and shopping list.
 
 ## 1) Connector-by-connector list (sealed vehicle harness side)
 
@@ -46,7 +49,7 @@ Pin map:
 | 2 | CANL | CAN transceiver CANL |
 | 3 | GND | Transceiver/bus reference GND |
 
-### C2: Center interposer to left display serial link
+### C2: Center J8 adapter to left display serial link
 
 | Field | Value |
 |---|---|
@@ -63,7 +66,7 @@ Pin map:
 | 2 | RX_L (optional) | GPIO18 (UART1 RX) | GPIO43 (UART TX) |
 | 3 | GND | GND | GND |
 
-### C3: Center interposer to right display serial link
+### C3: Center J8 adapter to right display serial link
 
 | Field | Value |
 |---|---|
@@ -98,32 +101,37 @@ Pin map:
 | 1 | +5V | Board VIN/5V input |
 | 2 | GND | Board GND |
 
-## 3) Board-local pigtails (inside enclosure)
+## 3) Board-local wiring (inside center enclosure)
 
-Because J8 is not a sealed automotive connector, terminate to short pigtails on the interposer PCB:
+From the J8 screw-terminal adapter, run short leads to the SN65HVD230 CAN board and to Deutsch DT pigtails for the vehicle harness:
 
-| Interposer signal group | Recommended board connector | Notes |
+| Signal group | Center terminal | Destination |
 |---|---|---|
-| CAN logic (TXD/RXD/3V3/GND) | JST GH 1.25 mm, 4-pin: BM04B-GHS-TBT | Mating housing: GHR-04V-S, contacts: SSHL-002T-P0.2 |
-| Left UART (TX/RX/GND) | JST GH 1.25 mm, 3-pin: BM03B-GHS-TBT | Mating housing: GHR-03V-S, contacts: SSHL-002T-P0.2 |
-| Right UART (TX/RX/GND) | JST GH 1.25 mm, 3-pin: BM03B-GHS-TBT | Mating housing: GHR-03V-S, contacts: SSHL-002T-P0.2 |
-| 5V input to center interposer | JST VH 3.96 mm, 2-pin: B2B-VH | Mating housing: VHR-2N, contacts: SVH-21T-P1.1 |
+| CAN logic | T01 (3V3), T39 (GND), T11 (CTX), T12 (CRX) | SN65HVD230 board pads |
+| CAN bus | Transceiver CANH/CANL | C1 pins 1–2 |
+| Left UART | T22 (TX), T23 (RX), T39 (GND) | C2 |
+| Right UART | T13 (TX), T24 (RX), T39 (GND) | C3 |
+| 5V in | T02 (+5V), T39 (GND) | C4 center feed + buck return |
+| Controls | T18, T19, T21, T31, T32, T34, T36 + GND | C5–C7 |
 
-## 4) Center GPIO to connector mapping (authoritative)
+## 4) Center GPIO → Phoenix terminal mapping (authoritative)
 
-These values mirror sdkconfig and Kconfig.projbuild:
+GPIO numbers mirror sdkconfig / Kconfig.projbuild. **T#** = J8 physical pin = adapter screw terminal.
 
-| Net | Center GPIO |
-|---|---:|
-| CAN_TXD | 5 |
-| CAN_RXD | 4 |
-| UART1_TX_LEFT | 20 |
-| UART1_RX_LEFT | 18 |
-| UART2_TX_RIGHT | 21 |
-| UART2_RX_RIGHT | 19 |
-| ODO_BUTTON | 29 |
-| ENC1_A/B/SW | 30 / 31 / 32 |
-| ENC2_A/B/SW | 49 / 50 / 51 |
+| Net | GPIO | Terminal T# |
+|---|---:|---:|
+| +5V in | 5V rail | 2 |
+| GND ref | GND | 39 |
+| CAN_TXD | 5 | 11 |
+| CAN_RXD | 4 | 12 |
+| UART1_TX_LEFT | 20 | 22 |
+| UART1_RX_LEFT | 18 | 23 |
+| UART2_TX_RIGHT | 21 | 13 |
+| UART2_RX_RIGHT | 19 | 24 |
+| ODO_BUTTON | 29 | 18 |
+| ENC1_A / B / SW | 30 / 31 / 32 | 19 / 21 / 31 |
+| ENC2_A / B / SW | 49 / 50 / 51 | 32 / 34 / 36 |
+| CAN board VCC | 3V3 | 1 |
 
 ## 5) Purchasing checklist (single vehicle set)
 
@@ -139,15 +147,11 @@ These values mirror sdkconfig and Kconfig.projbuild:
 | 3 | W2S | DT 2-way wedgelocks |
 | 30 | 0460-202-16141 | DT pin contacts (male) |
 | 30 | 0462-201-16141 | DT socket contacts (female) |
-| 1 | SSW-120-02-G-D | Center J8 interposer socket |
-| 2 | BM03B-GHS-TBT | UART board-local headers |
-| 1 | BM04B-GHS-TBT | CAN board-local header |
-| 1 | B2B-VH | Interposer 5V board-local header |
-| 6 | GHR-03V-S | 3-pin GH housings |
-| 2 | GHR-04V-S | 4-pin GH housings |
-| 4 | VHR-2N | 2-pin VH housings |
-| 40 | SSHL-002T-P0.2 | GH crimp contacts |
-| 10 | SVH-21T-P1.1 | VH crimp contacts |
+| 1 | SM-A-001 | J8 40-pos screw-terminal adapter |
+| 1 | SN65HVD230 CAN Board | Center CAN transceiver ([Waveshare](https://www.waveshare.com/sn65hvd230-can-board.htm)) |
+| 1 | D36V50F5 | 12 V→5 V buck ([Pololu #4091](https://www.pololu.com/product/4091)) |
+
+Full shopping list with links: open `HARNESS_WIRING_DIAGRAM.html` in a browser (print landscape 11×17).
 
 ## 6) Notes before crimping
 

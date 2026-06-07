@@ -6,3 +6,5 @@
 out/
 sdkconfig
 sdkconfig.old
+# Local schematic reference copies (download from Waveshare if needed)
+docs/harness/*.pdf
