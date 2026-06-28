@@ -21,7 +21,7 @@ GPIO map,,ODO_BUTTON,,,,,GPIO29,T18,C5,,
 GPIO map,,ENC1_A/B/SW,,,,,GPIO30 / 31 / 32,T19 / T21 / T31,C6,,
 GPIO map,,ENC2_A/B/SW,,,,,GPIO49 / 50 / 51,T32 / T34 / T36,C7,,
 Purchase,,qty 1,SM-A-001,,,,,,,J8 40-pos screw-terminal adapter,https://sequentmicrosystems.com/products/breakout-card-screw-mount-for-raspberry-pi
-Purchase,,qty 1,SN65HVD230 CAN Board,,,,,,,Waveshare CAN transceiver,https://www.waveshare.com/sn65hvd230-can-board.htm
+Purchase,,qty 1,SN65HVD230 CAN Board,,,,see schematic highlighted pins for p4,,,Waveshare CAN transceiver,https://www.waveshare.com/sn65hvd230-can-board.htm
 Purchase,,qty 1,D36V50F5,,,,,,,12V to 5V buck,https://www.pololu.com/product/4091
 Purchase,,qty 3,DT04-3P,,,,,,,CAN + two UART receptacles,https://www.mouser.com/ProductDetail/TE-Connectivity/DT04-3P
 Purchase,,qty 3,DT06-3S,,,,,,,CAN + two UART plugs,https://www.mouser.com/ProductDetail/TE-Connectivity/DT06-3S
