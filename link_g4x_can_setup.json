@@ -12,7 +12,7 @@
       "cycle_ms": 10,
       "channels": [
         { "byte": 0, "length": 2, "name": "Engine Speed",  "pclink_name": "Engine Speed",  "scale": 1,    "offset": 0,    "unit": "RPM",     "note": "raw RPM, no scaling" },
-        { "byte": 2, "length": 2, "name": "MAP Absolute",  "pclink_name": "MGP",            "scale": 1,    "offset": 0,    "unit": "kPa",     "note": "absolute. Firmware subtracts 100 kPa for gauge boost." },
+        { "byte": 2, "length": 2, "name": "MAP Absolute",  "pclink_name": "MAP",            "scale": 1,    "offset": 0,    "unit": "kPa",     "note": "Use MAP (manifold ABSOLUTE pressure), NOT MGP. MAP is ~100 at idle and never negative. Firmware subtracts 100 kPa to get gauge boost." },
         { "byte": 4, "length": 1, "name": "ECT",           "pclink_name": "ECT",            "scale": 1,    "offset": 50,   "unit": "°C+50",   "note": "+50 PCLink offset; firmware subtracts 50 then converts to °F." },
         { "byte": 5, "length": 1, "name": "IAT",           "pclink_name": "IAT",            "scale": 1,    "offset": 50,   "unit": "°C+50",   "note": "Same offset as ECT." },
         { "byte": 6, "length": 1, "name": "Oil Temp",      "pclink_name": "Oil Temp",       "scale": 1,    "offset": 50,   "unit": "°C+50",   "note": "Same offset." },
@@ -26,10 +26,8 @@
       "channels": [
         { "byte": 0, "length": 2, "name": "Ignition Angle","pclink_name": "Ign Angle",      "scale": 10,   "offset": 1000, "unit": "0.1°+100°","note": "Decode: (raw - 1000) / 10.0 = degrees BTDC." },
         { "byte": 2, "length": 1, "name": "Vehicle Speed", "pclink_name": "Vehicle Speed",  "scale": 1,    "offset": 0,    "unit": "km/h",    "note": "Metric. Firmware converts km/h → MPH." },
-        { "byte": 3, "length": 1, "name": "Oil Pressure",  "pclink_name": "Oil Pressure",   "scale": 1,    "offset": 0,    "unit": "kPa",     "note": "Firmware converts kPa → PSI." },
-        { "byte": 4, "length": 1, "name": "Fuel Pressure", "pclink_name": "Fuel Pressure",  "scale": 1,    "offset": 0,    "unit": "kPa",     "note": "Firmware converts kPa → PSI." },
-        { "byte": 5, "length": 0, "name": "(unassigned)" },
-        { "byte": 6, "length": 0, "name": "(unassigned)" },
+        { "byte": 3, "length": 2, "name": "Oil Pressure",  "pclink_name": "Oil Pressure",   "scale": 1,    "offset": 0,    "unit": "kPa",     "note": "2 bytes (u16). Firmware converts kPa → PSI. Widened from 1 byte which capped at 37 PSI." },
+        { "byte": 5, "length": 2, "name": "Fuel Pressure", "pclink_name": "Fuel Pressure",  "scale": 1,    "offset": 0,    "unit": "kPa",     "note": "2 bytes (u16). Firmware converts kPa → PSI. Widened from 1 byte which capped at 37 PSI." },
         { "byte": 7, "length": 0, "name": "(unassigned)" }
       ]
     },

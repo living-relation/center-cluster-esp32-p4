@@ -58,8 +58,8 @@ the center forwards in its UART bridge frames.
 |---|---|---|---|---|---|
 | 0 | 2 | Ignition Angle | ×10 | +1000 | 0.1°+100° |
 | 2 | 1 | Vehicle Speed | ×1 | 0 | km/h (firmware → MPH) |
-| 3 | 1 | Oil Pressure | ×1 | 0 | kPa (firmware → PSI) |
-| 4 | 1 | Fuel Pressure | ×1 | 0 | kPa (firmware → PSI) |
+| 3 | 2 | Oil Pressure | ×1 | 0 | kPa u16 (firmware → PSI) — 2 bytes, was 1 (capped 37 PSI) |
+| 5 | 2 | Fuel Pressure | ×1 | 0 | kPa u16 (firmware → PSI) — 2 bytes, was 1 (capped 37 PSI) |
 
 ### 0x3EA — lambda (10 ms)
 | Byte | Len | Channel | Scale | Offset | On wire |
