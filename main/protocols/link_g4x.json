@@ -19,8 +19,8 @@
       "channels": [
         {"name": "ign_angle",     "byte": 0, "len": 2, "type": "u16", "scale": 0.1,      "offset_val": -100, "unit": "deg"},
         {"name": "speed",         "byte": 2, "len": 1, "type": "u8",  "scale": 0.621371, "offset_val": 0,    "unit": "mph"},
-        {"name": "oil_pressure",  "byte": 3, "len": 1, "type": "u8",  "scale": 0.145038, "offset_val": 0,    "unit": "psi"},
-        {"name": "fuel_pressure", "byte": 4, "len": 1, "type": "u8",  "scale": 0.145038, "offset_val": 0,    "unit": "psi"}
+        {"name": "oil_pressure",  "byte": 3, "len": 2, "type": "u16", "scale": 0.145038, "offset_val": 0,    "unit": "psi"},
+        {"name": "fuel_pressure", "byte": 5, "len": 2, "type": "u16", "scale": 0.145038, "offset_val": 0,    "unit": "psi"}
       ]
     },
     {

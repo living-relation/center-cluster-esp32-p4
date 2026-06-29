@@ -4,6 +4,8 @@
 **Git HEAD:** run `git rev-parse --short HEAD` after pull  
 **Mode:** bench **OFF** — live CAN + UART bridge to sides (`# CONFIG_TC_BENCH_MODE is not set`)
 
+> **⚠️ Reflash needed (2026-06-28):** CAN `0x3E9` oil & fuel pressure were widened from 1 byte to **2 bytes** (oil = bytes 3-4, fuel = bytes 5-6) so they read past 37 PSI. Boost source corrected to **MAP** (absolute). This build must be flashed for those fixes to take effect. See `CANBUS-RECONCILIATION-FINDINGS.md`.
+
 ## Unwired bench — flash this board alone
 
 Plug **only** the center cluster via USB-C. ECU CAN and side UART are not required to verify the flash.

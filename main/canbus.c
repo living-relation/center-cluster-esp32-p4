@@ -71,10 +71,10 @@ static void decode_3e8(const uint8_t *d)
 /**
  * 0x3E9 — speed / pressure / ignition (10 ms)
  *   [0–1] Ignition angle u16 × 0.1°, offset −100°
- *   [2]   Speed          u8 km/h → mph
- *   [3]   Oil pressure   u8 kPa  → PSI
- *   [4]   Fuel pressure  u8 kPa  → PSI
- *   [5–7] reserved
+ *   [2]   Speed          u8  km/h → mph
+ *   [3–4] Oil pressure   u16 kPa  → PSI  (widened from u8: 1 byte capped at 37 PSI)
+ *   [5–6] Fuel pressure  u16 kPa  → PSI  (widened from u8: 1 byte capped at 37 PSI)
+ *   [7]   reserved
  */
 static void decode_3e9(const uint8_t *d)
 {
@@ -83,8 +83,8 @@ static void decode_3e9(const uint8_t *d)
     portENTER_CRITICAL(&g_dash_mux);
     g_dash.ign_adv    = ign;
     g_dash.mph        = d[2] * 0.621371f;
-    g_dash.oil_press  = d[3] * 0.145038f;
-    g_dash.fuel_press = d[4] * 0.145038f;
+    g_dash.oil_press  = (float)be_u16(d + 3) * 0.145038f;   /* bytes 3-4, u16 kPa → PSI */
+    g_dash.fuel_press = (float)be_u16(d + 5) * 0.145038f;   /* bytes 5-6, u16 kPa → PSI */
     portEXIT_CRITICAL(&g_dash_mux);
 }
 

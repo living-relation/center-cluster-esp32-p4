@@ -5,7 +5,7 @@
  *
  * Usage in idf.py monitor:
  *   can 3e8 1f40006432323200     RPM / MAP / temps
- *   can 3e9 00000032000000       speed / pressures
+ *   can 3e9 04E23201C2012C00     ign=25 / speed=50 / oil=450kPa(65psi) / fuel=300kPa(43psi)
  *   can 3ee 0100000000000000     knock protection (warn tone + UART byte 16)
  *   can 3ee 0000000000000000     clear warnings
  */
