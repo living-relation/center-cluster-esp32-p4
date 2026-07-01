@@ -16,6 +16,8 @@ This file intentionally duplicates the signal map from docs/canbus-bench-test.ht
 rather than sharing code with it, so that file is never modified by this app.
 """
 
+import os
+import sys
 import threading
 import time
 import traceback
@@ -130,15 +132,19 @@ class Api:
     # ---- sending ---------------------------------------------------------
     def send_frame(self, can_id_hex, data_bytes):
         """data_bytes: list of 8 ints (0-255), already computed by the UI."""
-        if self._bus is None:
-            return {"ok": False, "error": "Not connected"}
         try:
             msg = can.Message(
                 arbitration_id=int(can_id_hex, 16),
                 data=bytes(data_bytes),
                 is_extended_id=False,
             )
+            # The None-check and the send happen under the same lock
+            # acquisition, so a concurrent disconnect() can't set _bus=None
+            # in between (which would otherwise raise AttributeError instead
+            # of returning a clean "Not connected").
             with self._lock:
+                if self._bus is None:
+                    return {"ok": False, "error": "Not connected"}
                 self._bus.send(msg, timeout=0.2)
             return {"ok": True, "sent_at": time.strftime("%H:%M:%S")}
         except can.CanError as e:
@@ -148,11 +154,22 @@ class Api:
             return {"ok": False, "error": str(e)}
 
 
+def resource_path(relative_path):
+    """Resolve a bundled resource path whether running from source or as a
+    PyInstaller --onefile executable. A frozen onefile build extracts its
+    --add-data payload to a temp dir at sys._MEIPASS at runtime -- it is NOT
+    next to the .exe or the current working directory, so a plain relative
+    path like "ui/index.html" resolves to nothing there and the window opens
+    blank."""
+    base_path = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
+
 def main():
     api = Api()
     webview.create_window(
         "TrackCluster Center — CAN Live Sender",
-        "ui/index.html",
+        resource_path("ui/index.html"),
         js_api=api,
         width=1180,
         height=860,

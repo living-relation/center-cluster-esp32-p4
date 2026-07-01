@@ -611,6 +611,7 @@ function buildUI() {
     container.appendChild(card);
 
     let continuousTimer = null;
+    let sendInFlight = false; // in-flight guard: setInterval must not stack overlapping sends
 
     function stopThis() {
       if (continuousTimer) {
@@ -622,7 +623,10 @@ function buildUI() {
     }
 
     function doSend() {
+      if (sendInFlight) return; // previous send hasn't settled yet -- skip this tick
+      sendInFlight = true;
       window.pywebview.api.send_frame(frame.id, rawBytes.slice()).then(res => {
+        sendInFlight = false;
         if (res.ok) {
           lastSent.textContent = 'Sent ' + res.sent_at;
           lastSent.classList.remove('error');
@@ -634,6 +638,7 @@ function buildUI() {
           stopThis();
         }
       }).catch(err => {
+        sendInFlight = false;
         lastSent.textContent = 'Error: ' + err;
         lastSent.classList.add('error');
         logLine(frame.id + ' FAILED: ' + err, 'err');
