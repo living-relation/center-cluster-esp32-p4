@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TrackCluster Center — CAN Bench Test Tool</title>
+<style>
+  :root {
+    --bg: #0b0f14;
+    --panel: #121821;
+    --panel2: #171f2b;
+    --border: #263140;
+    --text: #e6edf3;
+    --muted: #8b98a5;
+    --accent: #4fc3f7;
+    --accent2: #7ee787;
+    --warn: #ffb454;
+    --danger: #ff6b6b;
+    --mono: "Cascadia Code", "Consolas", "SFMono-Regular", Menlo, Monaco, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    margin: 0;
+    padding: 24px;
+    line-height: 1.4;
+  }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  h2 { font-size: 1.05rem; margin: 0 0 8px; color: var(--accent); }
+  .subtitle { color: var(--muted); margin: 0 0 20px; font-size: 0.9rem; }
+  .top-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 900px) { .top-grid { grid-template-columns: 1fr; } }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+  .panel table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .panel td { padding: 3px 0; vertical-align: top; }
+  .panel td:first-child { color: var(--muted); width: 40%; white-space: nowrap; }
+  .app-list { font-size: 0.85rem; margin-top: 10px; }
+  .app-list b { color: var(--accent2); }
+  .jump-bar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 24px;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+  .jump-bar label { color: var(--muted); font-size: 0.9rem; white-space: nowrap; }
+  select#gaugeJump, .signal-input {
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 6px 8px;
+    font-size: 16px; /* >=16px stops iOS Safari auto-zooming the page on focus */
+  }
+  select#gaugeJump { flex: 1; }
+  .frame-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+  }
+  .frame-header { font-size: 1.05rem; margin-bottom: 4px; }
+  .frame-id { color: var(--accent); font-family: var(--mono); font-weight: 700; }
+  .frame-dec { color: var(--muted); font-size: 0.85rem; }
+  .frame-period { color: var(--muted); font-size: 0.85rem; }
+  .frame-note { color: var(--muted); font-size: 0.85rem; margin-bottom: 14px; }
+  .signal-grid { display: flex; flex-direction: column; gap: 10px; }
+  .signal-row {
+    display: grid;
+    grid-template-columns: 220px 130px 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 6px;
+    transition: background 0.3s;
+  }
+  .signal-row.flash { background: #24344a; }
+  @media (max-width: 700px) { .signal-row { grid-template-columns: 1fr; } }
+  .signal-label strong { font-size: 0.92rem; }
+  .gauge-name { color: var(--muted); font-size: 0.78rem; }
+  .signal-input { width: 100%; }
+  .signal-unit { color: var(--muted); font-size: 0.78rem; grid-column: 1 / -1; margin-top: -6px; display: none; }
+  .signal-meta {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    grid-column: 1 / -1;
+    border-top: 1px dashed var(--border);
+    padding-top: 6px;
+    margin-top: 2px;
+  }
+  .range-note { color: #6fa8c9; }
+  .signal-helper { grid-column: 1 / -1; font-size: 0.8rem; color: var(--accent2); min-height: 1em; }
+  .hex-output {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .hex-label { color: var(--muted); font-size: 0.85rem; }
+  .hex-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-family: var(--mono);
+    font-size: 1.05rem;
+    letter-spacing: 1px;
+    color: var(--accent2);
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .copy-btn, .reset-btn {
+    background: var(--panel2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 7px 14px;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  .copy-btn:hover, .reset-btn:hover { border-color: var(--accent); }
+  .bool-row .signal-input { width: 18px; height: 18px; }
+  footer { color: var(--muted); font-size: 0.8rem; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 14px; }
+  code.inline { background: var(--panel2); padding: 1px 5px; border-radius: 3px; font-family: var(--mono); }
+
+  /* ── Mobile ─────────────────────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    body { padding: 12px; }
+    h1 { font-size: 1.15rem; }
+    .subtitle { font-size: 0.82rem; }
+    h2 { font-size: 0.95rem; }
+    .panel, .frame-card { padding: 12px; }
+    .panel table { font-size: 0.82rem; }
+    .panel td:first-child { width: 44%; }
+    .app-list { font-size: 0.78rem; }
+    .jump-bar { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px; }
+    .jump-bar label { white-space: normal; }
+    select#gaugeJump, .signal-input, .copy-btn, .reset-btn {
+      min-height: 42px; /* comfortable tap target */
+    }
+    .signal-row { grid-template-columns: 1fr; padding: 10px 8px; gap: 8px; }
+    .signal-meta { font-size: 0.74rem; }
+    .hex-output { flex-direction: column; align-items: stretch; }
+    .hex-box { font-size: 0.92rem; text-align: center; }
+    .copy-btn { width: 100%; padding: 10px 14px; }
+    footer { font-size: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>TrackCluster Center — CAN Bench Test Tool</h1>
+<p class="subtitle">
+  Fakes the Link G4X ECU: pick a gauge, type the value it should show, get the raw CAN frame
+  to paste into CANgaroo, PCAN&#8209;View, SavvyCAN, or any slcan/candleLight app. Built from the
+  center cluster's actual decoder (<code class="inline">main/canbus.c</code>,
+  <code class="inline">main/protocols/link_g4x.json</code>) — not a placeholder map.
+</p>
+
+<div class="top-grid">
+  <div class="panel">
+    <h2>Bus settings (same for every frame)</h2>
+    <table>
+      <tr><td>Bitrate</td><td><b>1,000,000 bps</b> (1 Mbit/s)</td></tr>
+      <tr><td>ID type</td><td><b>Standard / 11&#8209;bit</b> (every ID below is &lt; 0x800)</td></tr>
+      <tr><td>Frame type</td><td>Data frame (not RTR)</td></tr>
+      <tr><td>DLC (data length)</td><td><b>8 bytes</b>, always — pad with the zeros shown</td></tr>
+      <tr><td>Byte order</td><td>Big&#8209;endian — already baked in, paste the hex left&#8209;to&#8209;right as shown</td></tr>
+    </table>
+    <div class="app-list">
+      <div><b>CANgaroo</b> (candleLight/CANable): Connect &rarr; Bitrate <code class="inline">1000000</code> &rarr; Connect. New frame &rarr; ID (hex), Standard, DLC 8, paste data bytes.</div>
+      <div><b>PCAN&#8209;View</b> (PEAK PCAN&#8209;USB): Connect &rarr; Baud rate &quot;1 MBit/s&quot;. Transmit &rarr; New Message &rarr; ID hex, Standard, DLC 8, data bytes.</div>
+      <div><b>SavvyCAN</b> (CANable/SLCAN and most adapters): Connection &rarr; bus speed <code class="inline">1000000</code>. Send window &rarr; CAN ID hex, Extended off, 8 data bytes.</div>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>What this covers</h2>
+    <table>
+      <tr><td>0x3E8 (10 ms)</td><td>RPM, Boost/MAP, Coolant, IAT, Oil Temp</td></tr>
+      <tr><td>0x3E9 (10 ms)</td><td>Ignition, Speed, Oil Pressure, Fuel Pressure</td></tr>
+      <tr><td>0x3EA (10 ms)</td><td>Lambda</td></tr>
+      <tr><td>0x3EB (50 ms)</td><td>Gear, Fuel Level</td></tr>
+      <tr><td>0x3EE (50 ms)</td><td>6 warning flags &rarr; right&#8209;screen overlay</td></tr>
+    </table>
+    <div class="app-list">
+      Each frame below carries several gauges together — a real ECU sends all its fields in one
+      message, so fill in everything you care about in that card, then copy the one 8&#8209;byte
+      frame. Fields you leave alone use safe idle&#8209;engine defaults, not zero.
+    </div>
+  </div>
+</div>
+
+<div class="jump-bar">
+  <label for="gaugeJump">Jump to a gauge:</label>
+  <select id="gaugeJump"></select>
+</div>
+
+<div id="frames"></div>
+
+<footer>
+  Send 0x3E8 / 0x3E9 / 0x3EA / 0x3EB repeatedly (every 10&#8211;50&#8202;ms, matching the period
+  shown) to keep <code class="inline">g_dash.last_update_ms</code> fresh — a gap over
+  ~500&#8202;ms/2000&#8202;ms trips the UART&#8209;bridge staleness handling on the side
+  clusters. 0x3EE only needs to be sent when a warning state changes.
+  Formulas mirror <code class="inline">main/canbus.c</code> exactly, inverted to compute the
+  raw wire bytes from the display value you type.
+</footer>
+
+<script>
+const FRAMES = [
+  {
+    id: '0x3E8', dec: 1000, period: 10,
+    note: 'Engine fast group — RPM, Boost/MAP, Coolant, IAT, and Oil Temp all live in this one frame.',
+    signals: [
+      { key:'rpm', label:'RPM', gauge:'Center tach arc + shift LEDs + gear-box tint', byte:0, len:2,
+        unit:'RPM', wire:'u16, ×1, +0',
+        rangeNote:'Full arc 0–8000 RPM · shift LEDs light 5500→6500 · all-red latch ≥7000 (releases <6500) · 7500 = display top reference',
+        min:0, max:8000, step:10, default:850,
+        toRaw:(v)=> Math.round(v) },
+      { key:'boost', label:'Boost', gauge:'Right bar gauge (Boost)', byte:2, len:2,
+        unit:'PSI (typed here; sent as MAP kPa-abs)', wire:'u16, ×1, +0 — MAP absolute kPa; cluster computes (MAP−100)×0.145038',
+        rangeNote:'cyan ≤14 psi · orange ≤20 psi · overboost alarm ≥22 psi (full arc max not defined in this repo)',
+        min:-14, max:30, step:0.1, default:0,
+        toRaw:(v)=> Math.round(v/0.145038 + 100),
+        helper:(v)=> 'MAP absolute ≈ ' + Math.round(v/0.145038 + 100) + ' kPa on the wire' },
+      { key:'ect', label:'Coolant Temp (ECT)', gauge:'Right bar gauge (Coolant)', byte:4, len:1,
+        unit:'°F (typed here; sent as °C+50)', wire:'u8, ×1, +50',
+        rangeNote:'green ≤200°F · yellow ≤215°F · orange ≤230°F · 230°F = gauge max',
+        min:-18, max:302, step:1, default:180,
+        toRaw:(v)=> Math.round((v-32)*5/9 + 50) },
+      { key:'iat', label:'Intake Air Temp (IAT)', gauge:'Right bar gauge (IAT)', byte:5, len:1,
+        unit:'°F (typed here; sent as °C+50)', wire:'u8, ×1, +50',
+        rangeNote:'full range 30–200°F · green ≤100°F · yellow ≤130°F · orange ≤150°F',
+        min:-18, max:302, step:1, default:80,
+        toRaw:(v)=> Math.round((v-32)*5/9 + 50) },
+      { key:'oiltemp', label:'Oil Temp', gauge:'Left mini-arc (Oil Temp)', byte:6, len:1,
+        unit:'°F (typed here; sent as °C+50)', wire:'u8, ×1, +50',
+        rangeNote:'redline 215°F · max 250°F',
+        min:-18, max:302, step:1, default:180,
+        toRaw:(v)=> Math.round((v-32)*5/9 + 50) },
+    ]
+  },
+  {
+    id:'0x3E9', dec:1001, period:10,
+    note:'Speed/pressure/ignition group — Ignition, Speed, Oil Pressure, and Fuel Pressure all live in this one frame.',
+    signals:[
+      { key:'ign', label:'Ignition Angle', gauge:'Right bar gauge (Ignition)', byte:0, len:2,
+        unit:'° advance', wire:'u16, ×0.1, +1000 (decode: value×0.1 −100)',
+        rangeNote:'green band 12–32° (full arc range not defined in this repo)',
+        min:-50, max:60, step:0.1, default:15,
+        toRaw:(v)=> Math.round(v*10 + 1000) },
+      { key:'speed', label:'Vehicle Speed', gauge:'Left speedo arc + digital', byte:2, len:1,
+        unit:'mph (typed here; sent as km/h)', wire:'u8, ×1, +0',
+        rangeNote:'wire ceiling 255 km/h ≈ 158 mph (full gauge range not defined in this repo)',
+        min:0, max:158, step:1, default:0,
+        toRaw:(v)=> Math.round(v/0.621371) },
+      { key:'oilpress', label:'Oil Pressure', gauge:'Left mini-arc (Oil Press)', byte:3, len:2,
+        unit:'PSI (typed here; sent as kPa)', wire:'u16, ×1, +0',
+        rangeNote:'low-pressure alarm 25 psi (<2000 RPM) · redline 125 psi',
+        min:0, max:200, step:1, default:40,
+        toRaw:(v)=> Math.round(v/0.145038) },
+      { key:'fuelpress', label:'Fuel Pressure', gauge:'Left mini-arc (Fuel Press)', byte:5, len:2,
+        unit:'PSI (typed here; sent as kPa)', wire:'u16, ×1, +0',
+        rangeNote:'full range 20–160 psi · low warn 30 psi · redline 125 psi',
+        min:0, max:200, step:1, default:58,
+        toRaw:(v)=> Math.round(v/0.145038) },
+    ]
+  },
+  {
+    id:'0x3EA', dec:1002, period:10,
+    note:'Lambda group.',
+    signals:[
+      { key:'lambda', label:'Lambda 1', gauge:'Right digital readout', byte:0, len:2,
+        unit:'λ (dimensionless)', wire:'u16, ×0.001, +0',
+        rangeNote:'rich alarm ≤0.70 · rich warn ≤0.75 · lean warn ≥1.02 · lean alarm ≥1.05 · 1.00 = stoich',
+        min:0.5, max:1.3, step:0.001, default:1.0,
+        toRaw:(v)=> Math.round(v*1000) },
+    ]
+  },
+  {
+    id:'0x3EB', dec:1003, period:50,
+    note:'Gear/fuel group.',
+    signals:[
+      { key:'gear', label:'Gear Position', gauge:'Center gear glyph', byte:0, len:1,
+        unit:'N / 1–6 / R', wire:'u8, ×1, +0 — wire value 7 = Reverse; cluster remaps it internally',
+        rangeNote:'discrete: N, 1–6, R',
+        isSelect:true,
+        options:[['N',0],['1',1],['2',2],['3',3],['4',4],['5',5],['6',6],['R',7]],
+        default:0,
+        toRaw:(v)=> Number(v) },
+      { key:'fuellevel', label:'Fuel Level', gauge:'Left mini-arc (Fuel Level)', byte:1, len:1,
+        unit:'%', wire:'u8, ×1, +0',
+        rangeNote:'0–100% · low ≤15% · caution ≤30%',
+        min:0, max:100, step:1, default:75,
+        toRaw:(v)=> Math.round(v) },
+    ]
+  },
+  {
+    id:'0x3EE', dec:1006, period:50,
+    note:'Engine-protection warnings — each byte is its own on/off flag (0 = OK, nonzero = active). Drives the right-cluster full-screen "ECU WARNING" overlay. Only needs sending when a state changes.',
+    signals:[
+      { key:'warnknock', label:'Knock', gauge:'Warning overlay', byte:0, len:1, isBool:true, default:false, unit:'0=OK / 1=active', wire:'u8', rangeNote:'boolean' },
+      { key:'warnigncut', label:'Ignition Cut', gauge:'Warning overlay', byte:1, len:1, isBool:true, default:false, unit:'0=OK / 1=active', wire:'u8', rangeNote:'boolean' },
+      { key:'warnfuelcut', label:'Fuel Cut', gauge:'Warning overlay', byte:2, len:1, isBool:true, default:false, unit:'0=OK / 1=active', wire:'u8', rangeNote:'boolean' },
+      { key:'warnboostcut', label:'Boost Cut', gauge:'Warning overlay', byte:3, len:1, isBool:true, default:false, unit:'0=OK / 1=active', wire:'u8', rangeNote:'boolean' },
+      { key:'warnsensor', label:'Sensor Error', gauge:'Warning overlay', byte:4, len:1, isBool:true, default:false, unit:'0=OK / 1=active', wire:'u8', rangeNote:'boolean' },
+      { key:'warnthrottle', label:'Throttle Error', gauge:'Warning overlay', byte:5, len:1, isBool:true, default:false, unit:'0=OK / 1=active', wire:'u8', rangeNote:'boolean' },
+    ]
+  }
+];
+
+function clampByteWidth(raw, len) {
+  const max = len === 1 ? 255 : 65535;
+  if (raw < 0) return 0;
+  if (raw > max) return max;
+  return raw;
+}
+
+function copyText(text, btn) {
+  const done = () => {
+    const old = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = old; }, 1200);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+
+function fallbackCopy(text, done) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch (e) { /* ignore */ }
+  document.body.removeChild(ta);
+  done();
+}
+
+function buildUI() {
+  const container = document.getElementById('frames');
+  const jumpSelect = document.getElementById('gaugeJump');
+
+  const defaultOpt = document.createElement('option');
+  defaultOpt.textContent = '— Jump to a gauge —';
+  defaultOpt.value = '';
+  jumpSelect.appendChild(defaultOpt);
+
+  FRAMES.forEach(frame => {
+    const rawBytes = new Array(8).fill(0);
+
+    const card = document.createElement('div');
+    card.className = 'frame-card';
+    card.id = 'frame-' + frame.id;
+
+    const header = document.createElement('div');
+    header.className = 'frame-header';
+    header.innerHTML = '<span class="frame-id">' + frame.id + '</span> ' +
+      '<span class="frame-dec">(' + frame.dec + ' dec)</span> ' +
+      '<span class="frame-period">— send every ' + frame.period + ' ms</span>';
+    card.appendChild(header);
+
+    const noteEl = document.createElement('div');
+    noteEl.className = 'frame-note';
+    noteEl.textContent = frame.note;
+    card.appendChild(noteEl);
+
+    const grid = document.createElement('div');
+    grid.className = 'signal-grid';
+
+    frame.signals.forEach(sig => {
+      const row = document.createElement('div');
+      row.className = 'signal-row' + (sig.isBool ? ' bool-row' : '');
+      row.id = 'sig-' + sig.key;
+
+      const labelWrap = document.createElement('div');
+      labelWrap.className = 'signal-label';
+      labelWrap.innerHTML = '<strong>' + sig.label + '</strong><br><span class="gauge-name">' + sig.gauge + '</span>';
+      row.appendChild(labelWrap);
+
+      let inputEl;
+      if (sig.isBool) {
+        inputEl = document.createElement('input');
+        inputEl.type = 'checkbox';
+        inputEl.checked = !!sig.default;
+      } else if (sig.isSelect) {
+        inputEl = document.createElement('select');
+        sig.options.forEach(pair => {
+          const opt = document.createElement('option');
+          opt.textContent = pair[0];
+          opt.value = pair[1];
+          if (pair[1] === sig.default) opt.selected = true;
+          inputEl.appendChild(opt);
+        });
+      } else {
+        inputEl = document.createElement('input');
+        inputEl.type = 'number';
+        inputEl.min = sig.min;
+        inputEl.max = sig.max;
+        inputEl.step = sig.step;
+        inputEl.value = sig.default;
+      }
+      inputEl.id = 'input-' + sig.key;
+      inputEl.className = 'signal-input';
+      row.appendChild(inputEl);
+
+      const meta = document.createElement('div');
+      meta.className = 'signal-meta';
+      meta.innerHTML = 'Byte ' + sig.byte + (sig.len === 2 ? '–' + (sig.byte + 1) : '') +
+        ' · ' + (sig.wire || ('u' + (sig.len * 8))) + ' · ' + (sig.unit || '') +
+        '<br><span class="range-note">' + (sig.rangeNote || '') + '</span>';
+      row.appendChild(meta);
+
+      if (sig.helper) {
+        const helperEl = document.createElement('div');
+        helperEl.className = 'signal-helper';
+        helperEl.id = 'helper-' + sig.key;
+        row.appendChild(helperEl);
+        sig._helper = helperEl;
+      }
+
+      inputEl.addEventListener('input', recompute);
+      inputEl.addEventListener('change', recompute);
+
+      grid.appendChild(row);
+      sig._input = inputEl;
+
+      const jumpOpt = document.createElement('option');
+      jumpOpt.value = 'sig-' + sig.key;
+      jumpOpt.textContent = sig.label + ' — ' + frame.id;
+      jumpSelect.appendChild(jumpOpt);
+    });
+
+    card.appendChild(grid);
+
+    const hexWrap = document.createElement('div');
+    hexWrap.className = 'hex-output';
+    const hexLabel = document.createElement('div');
+    hexLabel.className = 'hex-label';
+    hexLabel.textContent = 'Frame to send (ID ' + frame.id + ', DLC 8):';
+    hexWrap.appendChild(hexLabel);
+    const hexBox = document.createElement('code');
+    hexBox.className = 'hex-box';
+    hexWrap.appendChild(hexBox);
+    const copyBtn = document.createElement('button');
+    copyBtn.textContent = 'Copy bytes';
+    copyBtn.className = 'copy-btn';
+    copyBtn.addEventListener('click', () => copyText(hexBox.textContent, copyBtn));
+    hexWrap.appendChild(copyBtn);
+    card.appendChild(hexWrap);
+
+    container.appendChild(card);
+
+    function recompute() {
+      frame.signals.forEach(sig => {
+        let raw;
+        if (sig.isBool) {
+          raw = sig._input.checked ? 1 : 0;
+        } else if (sig.isSelect) {
+          raw = Number(sig._input.value);
+        } else {
+          let v = parseFloat(sig._input.value);
+          if (Number.isNaN(v)) v = sig.default;
+          raw = sig.toRaw(v);
+          if (sig._helper) {
+            sig._helper.textContent = sig.helper(v);
+          }
+        }
+        raw = clampByteWidth(raw, sig.len);
+        if (sig.len === 1) {
+          rawBytes[sig.byte] = raw & 0xFF;
+        } else {
+          rawBytes[sig.byte] = (raw >> 8) & 0xFF;
+          rawBytes[sig.byte + 1] = raw & 0xFF;
+        }
+      });
+      hexBox.textContent = rawBytes.map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(' ');
+    }
+
+    recompute();
+  });
+}
+
+function wireGaugeJump() {
+  const sel = document.getElementById('gaugeJump');
+  sel.addEventListener('change', () => {
+    if (!sel.value) return;
+    const el = document.getElementById(sel.value);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('flash');
+      setTimeout(() => el.classList.remove('flash'), 1500);
+      const input = el.querySelector('input,select');
+      if (input) input.focus();
+    }
+    sel.value = '';
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildUI();
+  wireGaugeJump();
+});
+</script>
+</body>
+</html>
