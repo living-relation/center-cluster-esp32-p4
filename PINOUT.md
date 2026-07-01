@@ -21,9 +21,11 @@ mapping are the part that matters and are not affected by the numbering.**
 ## Pinout table
 
 Legend: **[wired]** = a wire is landed on this pin in the firmware/harness ·
-**[opt]** = pin is assigned in firmware but the harness conductor is optional
-and the signal is reserved/not yet active (the inter-cluster RX lines) ·
 **[free]** = broken out, unused · **[reserved]** = do not use.
+
+> The inter-cluster serial link is **TX-only**: the center transmits to the
+> Left/Right boards and never receives from them. No center-side UART RX pin
+> is used, so GPIO22 and GPIO28 are free.
 
 | Pin | Silk | Signal / GPIO | Pin | Silk | Signal / GPIO |
 |---:|:---:|---|---:|:---:|---|
@@ -32,9 +34,9 @@ and the signal is reserved/not yet active (the inter-cluster RX lines) ·
 | 5 | SCL | GPIO7 — I²C SCL (touch + audio) **[wired]** | 6 | GND | Ground |
 | 7 | 29 | GPIO29 — **ODO/Trip button** **[wired]** | 8 | TXD | ESP32-C6 co-proc UART0 TX — *not a P4 GPIO* |
 | 9 | GND | Ground | 10 | RXD | ESP32-C6 co-proc UART0 RX — *not a P4 GPIO* |
-| 11 | 21 | GPIO21 — **UART2 TX → RIGHT** **[wired]** | 12 | 22 | GPIO22 — **UART2 RX ← RIGHT** **[opt]** ¹ |
+| 11 | 21 | GPIO21 — **UART2 TX → RIGHT** **[wired]** | 12 | 22 | GPIO22 **[free]** |
 | 13 | 20 | GPIO20 — **UART1 TX → LEFT** **[wired]** | 14 | GND | Ground |
-| 15 | 28 | GPIO28 — **UART1 RX ← LEFT** **[opt]** ¹ | 16 | 5 | GPIO5 — **CAN interface** (see §CAN) **[wired]** |
+| 15 | 28 | GPIO28 **[free]** | 16 | 5 | GPIO5 — **CAN interface** (see §CAN) **[wired]** |
 | 17 | 3V3 | 3.3 V rail | 18 | 4 | GPIO4 — **CAN interface** (see §CAN) **[wired]** |
 | 19 | 3 | GPIO3 **[free]** | 20 | GND | Ground |
 | 21 | 2 | GPIO2 **[free]** | 22 | 35 | GPIO35 — strapping **[reserved]** |
@@ -48,12 +50,6 @@ and the signal is reserved/not yet active (the inter-cluster RX lines) ·
 | 37 | 47 | GPIO47 **[free]** | 38 | 46 | GPIO46 **[free]** |
 | 39 | GND | Ground | 40 | 30 | GPIO30 — **Encoder 1 A / CLK** **[wired]** |
 
-¹ **Corrected pins.** The firmware previously defaulted UART1 RX to GPIO18 and
-UART2 RX to GPIO19 — **neither of which is routed to J8** (they are unrouted
-die pins on the schematic). They are now GPIO28 (UART1 RX) and GPIO22
-(UART2 RX), both present on J8. Requires a reflash to take effect. The RX
-lines are currently *reserved* (received but not yet decoded by firmware).
-
 ## Wired connections summary
 
 | Function | Center GPIO | J8 pin | Notes |
@@ -62,10 +58,8 @@ lines are currently *reserved* (received but not yet decoded by firmware).
 | I²C SCL (touch + audio) | 7 | 5 | fixed by board |
 | CAN interface (see §CAN) | 5 | 16 | to transceiver |
 | CAN interface (see §CAN) | 4 | 18 | to transceiver |
-| UART1 TX → Left | 20 | 13 | → Left GPIO44 (RX) |
-| UART1 RX ← Left (reserved) | 28 | 15 | ← Left GPIO43 (TX) |
-| UART2 TX → Right | 21 | 11 | → Right GPIO44 (RX) |
-| UART2 RX ← Right (reserved) | 22 | 12 | ← Right GPIO43 (TX) |
+| UART1 TX → Left | 20 | 13 | → Left GPIO44 (RX); TX-only, no center RX |
+| UART2 TX → Right | 21 | 11 | → Right GPIO44 (RX); TX-only, no center RX |
 | ODO / Trip button | 29 | 7 | active-low to GND |
 | Encoder 1 (Boost) A / CLK | 30 | 40 | |
 | Encoder 1 (Boost) B / DT | 31 | 36 | |

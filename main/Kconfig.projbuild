@@ -43,28 +43,15 @@ menu "TrackCluster — Center cluster pin map (Waveshare ESP32-P4-WIFI6-Touch-LC
         range 0 54
         default 20
 
-    config TC_UART1_RX_GPIO
-        int "UART1 RX ← LEFT cluster (reserved for future telemetry)"
-        range -1 54
-        default 28
-        help
-            Connect to the LEFT board GPIO43/TX. GPIO28 is on the J8 header
-            (schematic-verified). Was GPIO18 — corrected: GPIO18 is not routed
-            to J8, so the old default landed on a dead pin.
+    # NOTE: the inter-cluster link is TX-only. The center never receives from
+    # the side boards, so no UART RX pin is configured or claimed (see
+    # uart_bridge.c, which passes UART_PIN_NO_CHANGE for RX). GPIO22 and GPIO28
+    # are therefore free on J8.
 
     config TC_UART2_TX_GPIO
         int "UART2 TX → RIGHT cluster (connect to RIGHT board GPIO44/RX)"
         range 0 54
         default 21
-
-    config TC_UART2_RX_GPIO
-        int "UART2 RX ← RIGHT cluster (reserved for future telemetry)"
-        range -1 54
-        default 22
-        help
-            Connect to the RIGHT board GPIO43/TX. GPIO22 is on the J8 header
-            (adjacent to UART2 TX/GPIO21). Was GPIO19 — corrected: GPIO19 is
-            not routed to J8, so the old default landed on a dead pin.
 
     config TC_BUTTON_ODO_GPIO
         int "Push-button 1 — ODO / Trip cycle (active-low; -1 disables)"

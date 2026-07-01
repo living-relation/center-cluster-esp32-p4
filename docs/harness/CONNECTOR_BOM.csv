@@ -2,35 +2,31 @@ section,ref,net_group,receptacle,plug,wedgelocks,pin,net,center_side,far_side,wi
 Connector,C1,ECU CAN <-> transceiver,DT04-3P,DT06-3S,W3P / W3S,1,CANH,transceiver CANH,ECU CANH,22 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
 Connector,C1,ECU CAN <-> transceiver,DT04-3P,DT06-3S,W3P / W3S,2,CANL,transceiver CANL,ECU CANL,22 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
 Connector,C1,ECU CAN <-> transceiver,DT04-3P,DT06-3S,W3P / W3S,3,GND,reference GND,bus GND,22 AWG,pin 0460-202-16141 / socket 0462-201-16141
-Connector,C2,Center -> Left serial,DT04-3P,DT06-3S,W3P / W3S,1,TX_L,T22 GPIO20 (UART1 TX),Left GPIO44 (RX),24 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
-Connector,C2,Center -> Left serial,DT04-3P,DT06-3S,W3P / W3S,2,RX_L (opt),T23 GPIO28 (UART1 RX),Left GPIO43 (TX),24 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
-Connector,C2,Center -> Left serial,DT04-3P,DT06-3S,W3P / W3S,3,GND,T39 GND,GND,24 AWG,pin 0460-202-16141 / socket 0462-201-16141
-Connector,C3,Center -> Right serial,DT04-3P,DT06-3S,W3P / W3S,1,TX_R,T13 GPIO21 (UART2 TX),Right GPIO44 (RX),24 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
-Connector,C3,Center -> Right serial,DT04-3P,DT06-3S,W3P / W3S,2,RX_R (opt),T24 GPIO22 (UART2 RX),Right GPIO43 (TX),24 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
-Connector,C3,Center -> Right serial,DT04-3P,DT06-3S,W3P / W3S,3,GND,T39 GND,GND,24 AWG,pin 0460-202-16141 / socket 0462-201-16141
+Connector,C2,Center -> Left serial (TX-only),DT04-2P,DT06-2S,W2P / W2S,1,TX_L,T22 GPIO20 (UART1 TX),Left GPIO44 (RX),24 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
+Connector,C2,Center -> Left serial (TX-only),DT04-2P,DT06-2S,W2P / W2S,2,GND,T39 GND,GND,24 AWG,pin 0460-202-16141 / socket 0462-201-16141
+Connector,C3,Center -> Right serial (TX-only),DT04-2P,DT06-2S,W2P / W2S,1,TX_R,T13 GPIO21 (UART2 TX),Right GPIO44 (RX),24 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
+Connector,C3,Center -> Right serial (TX-only),DT04-2P,DT06-2S,W2P / W2S,2,GND,T39 GND,GND,24 AWG,pin 0460-202-16141 / socket 0462-201-16141
 Connector,C4,5V feed (one per board x3),DT04-2P,DT06-2S,W2P / W2S,1,+5V,T02 +5V,buck +5V / board VIN,20 AWG (18 long),pin 0460-202-16141 / socket 0462-201-16141
 Connector,C4,5V feed (one per board x3),DT04-2P,DT06-2S,W2P / W2S,2,GND,T39 GND,buck GND / board GND,20 AWG (18 long),pin 0460-202-16141 / socket 0462-201-16141
 Adapter,,J8 screw-terminal breakout,SM-A-001,,,,T01-T40,J8 pins 1-40,Phoenix clamps 2.54mm,26-18 AWG,n/a
 GPIO map,,CAN_TXD,,,,,GPIO5,T11,transceiver CTX,,
 GPIO map,,CAN_RXD,,,,,GPIO4,T12,transceiver CRX,,
 GPIO map,,UART1_TX_LEFT,,,,,GPIO20,T22,C2 pin 1,,
-GPIO map,,UART1_RX_LEFT,,,,,GPIO28,T23,C2 pin 2 (reserved),,
 GPIO map,,UART2_TX_RIGHT,,,,,GPIO21,T13,C3 pin 1,,
-GPIO map,,UART2_RX_RIGHT,,,,,GPIO22,T24,C3 pin 2 (reserved),,
 GPIO map,,ODO_BUTTON,,,,,GPIO29,T18,C5,,
 GPIO map,,ENC1_A/B/SW,,,,,GPIO30 / 31 / 32,T19 / T21 / T31,C6,,
 GPIO map,,ENC2_A/B/SW,,,,,GPIO49 / 50 / 51,T32 / T34 / T36,C7,,
 Purchase,,qty 1,SM-A-001,,,,,,,J8 40-pos screw-terminal adapter,https://sequentmicrosystems.com/products/breakout-card-screw-mount-for-raspberry-pi
 Purchase,,qty 1,SN65HVD230 CAN Board,,,,see schematic highlighted pins for p4,,,Waveshare CAN transceiver,https://www.waveshare.com/sn65hvd230-can-board.htm
 Purchase,,qty 1,D36V50F5,,,,,,,12V to 5V buck,https://www.pololu.com/product/4091
-Purchase,,qty 3,DT04-3P,,,,,,,CAN + two UART receptacles,https://www.mouser.com/ProductDetail/TE-Connectivity/DT04-3P
-Purchase,,qty 3,DT06-3S,,,,,,,CAN + two UART plugs,https://www.mouser.com/ProductDetail/TE-Connectivity/DT06-3S
-Purchase,,qty 3/3,W3P / W3S,,,,,,,DT 3-way wedgelocks,
-Purchase,,qty 3,DT04-2P,,,,,,,5V feed receptacles,https://www.mouser.com/ProductDetail/TE-Connectivity/DT04-2P
-Purchase,,qty 3,DT06-2S,,,,,,,5V feed plugs,https://www.mouser.com/ProductDetail/TE-Connectivity/DT06-2S
+Purchase,,qty 1,DT04-3P,,,,,,,CAN receptacle (C1),https://www.mouser.com/ProductDetail/TE-Connectivity/DT04-3P
+Purchase,,qty 1,DT06-3S,,,,,,,CAN plug (C1),https://www.mouser.com/ProductDetail/TE-Connectivity/DT06-3S
+Purchase,,qty 1/1,W3P / W3S,,,,,,,DT 3-way wedgelocks,
+Purchase,,qty 5,DT04-2P,,,,,,,TX-only serial (C2/C3) + 5V feed (C4 x3) receptacles,https://www.mouser.com/ProductDetail/TE-Connectivity/DT04-2P
+Purchase,,qty 5,DT06-2S,,,,,,,TX-only serial (C2/C3) + 5V feed (C4 x3) plugs,https://www.mouser.com/ProductDetail/TE-Connectivity/DT06-2S
 Purchase,,qty 2,DT04-4P,,,,,,,Encoder receptacles C6/C7,https://www.mouser.com/ProductDetail/TE-Connectivity/DT04-4P
 Purchase,,qty 2,DT06-4S,,,,,,,Encoder plugs C6/C7,https://www.mouser.com/ProductDetail/TE-Connectivity/DT06-4S
-Purchase,,qty 3/3,W2P / W2S,,,,,,,DT 2-way wedgelocks,
+Purchase,,qty 5/5,W2P / W2S,,,,,,,DT 2-way wedgelocks,
 Purchase,,qty 2/2,W4P / W4S,,,,,,,DT 4-way wedgelocks,
 Purchase,,qty 50,0460-202-16141,,,,,,,DT pin contacts (male),https://www.mouser.com/ProductDetail/TE-Connectivity/0460-202-16141
 Purchase,,qty 50,0462-201-16141,,,,,,,DT socket contacts (female),https://www.mouser.com/ProductDetail/TE-Connectivity/0462-201-16141
