@@ -1,6 +1,6 @@
 # CAN Live Sender — build & run
 
-Separate desktop app, companion to `docs/canbus-bench-test.html` (which stays browser-only
+Separate desktop app, companion to `apps/canbus-bench-test.html` (which stays browser-only
 and unmodified). This one actually transmits to a CAN-USB adapter via `python-can`.
 
 ## Run from source (fastest way to iterate)
@@ -48,4 +48,4 @@ Notes:
 |---|---|
 | "No adapters found" | Adapter not plugged in, or (gs_usb) Zadig driver not bound yet |
 | Connect succeeds but Send fails immediately | Adapter unplugged mid-session, or another app (CANgaroo, SavvyCAN) already has it open — close the other app first |
-| Gauges don't react on the cluster | Confirm CAN wiring (`docs/canbus-bench-test.html` bus-settings panel), and that "Send continuously" is checked for the frames you care about |
+| Gauges don't react on the cluster | Confirm CAN wiring (`apps/canbus-bench-test.html` bus-settings panel), and that "Send continuously" is checked for the frames you care about |
