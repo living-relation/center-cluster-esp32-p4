@@ -56,19 +56,20 @@ The ESP32-P4 TWAI controller is logic-level; it needs an **external CAN transcei
 
 ## 3. Inter-cluster UART — Center → Left, Center → Right
 
-921600 8N1, one direction used (center transmits; side RX lines reserved are optional). Keep runs
-short or twisted; common ground required.
+921600 8N1, **TX-only** — the center transmits to each side board and never
+receives from them. There is no center-side RX pin or wire. Keep runs short or
+twisted; common ground required.
 
 ```
   Center P4                          Left S3                 Right S3
   GPIO20 (UART1 TX) ───────────────► GPIO44 (RX)
-  GPIO18 (UART1 RX, reserved) ◄────  GPIO43 (TX, reserved)
   GPIO21 (UART2 TX) ─────────────────────────────────────►  GPIO44 (RX)
-  GPIO19 (UART2 RX, reserved) ◄───────────────────────────  GPIO43 (TX, reserved)
   GND ───────────────────────────────common───────────────  GND
 ```
 
-- The S3 boards expose **GPIO43/44 on the on-board UART connector** (silk UART_TXD/UART_RXD).
+- Only the two TX lines + common GND are wired. The side boards' GPIO43/TX is
+  left unconnected on the center end.
+- The S3 boards expose **GPIO44 as the RX input** on the on-board UART connector.
 - **Console note:** GPIO43/44 are the S3's default UART0 console pins. Flash/monitor each side board
   over its **USB-C (USB-Serial-JTAG)** so the inter-cluster link stays clean — the firmware build
   already targets the USB console; don't also drive a serial monitor on GPIO43/44.
@@ -103,10 +104,9 @@ All inputs use internal pull-ups; wire the common side to **GND**. 44 kΩ… use
 | LCD reset | 27 | panel reset line |
 | Shared board I²C SDA | 6 | touch/peripheral bus |
 | Shared board I²C SCL | 7 | touch/peripheral bus |
-| UART1 TX → Left | 20 | → Left GPIO44 |
-| UART1 RX ← Left (reserved) | 18 | |
-| UART2 TX → Right | 21 | → Right GPIO44 |
-| UART2 RX ← Right (reserved) | 19 | *(was 20 — fixed; 20 collided with UART1 TX)* |
+| UART1 TX → Left | 20 | → Left GPIO44 (TX-only; no center RX) |
+| UART2 TX → Right | 21 | → Right GPIO44 (TX-only; no center RX) |
+| J8 `RXD`/`TXD` silk pins | — | ESP32-C6 co-processor UART0 — **not P4 GPIO**, not usable for the inter-cluster link |
 | Button (ODO/Trip) | 29 | active-low |
 | Encoder 1 A/B/SW | 30 / 31 / 32 | |
 | Encoder 2 A/B/SW | 49 / 50 / 51 | |
@@ -116,7 +116,6 @@ All inputs use internal pull-ups; wire the common side to **GND**. 44 kΩ… use
 | Function | GPIO | Notes |
 |---|---:|---|
 | UART RX ← Center TX | 44 | on UART connector |
-| UART TX → Center (reserved) | 43 | on UART connector |
 | Shared I²C SCL (TCA9554 + GT911) | 7 | drives panel reset/CS via expander |
 | Shared I²C SDA | 15 | |
 | **Panel RGB (fixed by board)** | R:46,3,8,18,17 · G:14,13,12,11,10,9 · B:5,45,48,47,21 · PCLK 41 · DE 40 · VSYNC 39 · HSYNC 38 · LCD_SDA 1 · LCD_SCK 2 · BL 6 | hard-wired on the Waveshare board — informational only |
@@ -129,10 +128,10 @@ All inputs use internal pull-ups; wire the common side to **GND**. 44 kΩ… use
 | Item | Result |
 |---|---|
 | Center CAN 4/5, buttons 29, encoders 30/31/32/49/50/51 | ✅ all on J8, clear of strapping/PSRAM/USB/microSD |
-| Center UART pins | ⚠️ **Fixed:** UART2 RX moved 20 → 19 (GPIO20 was assigned to both UART1 TX and UART2 RX) |
+| Center UART link | ✅ **TX-only:** center transmits on GPIO20 (Left) / GPIO21 (Right); no center RX pin is claimed. The previously "reserved" RX pins were removed entirely — the side-board-TX → center-RX link is not used. |
 | Center "available" list | ⚠️ Annotated: GPIO34/35/36 are **strapping** pins — removed from the free list in Kconfig |
 | Side I²C 7/15 | ✅ free, not strapping/USB/flash |
-| Side UART 43/44 | ✅ valid (default UART0 console) — **flash via USB-C** so console doesn't fight the link |
+| Side UART RX 44 | ✅ valid (default UART0 console pin) — **flash via USB-C** so console doesn't fight the link. Only GPIO44/RX is used; GPIO43/TX is left unconnected on the center end. |
 | Side RGB uses strapping GPIO3/45/46 | ✅ acceptable — Waveshare-fixed; panel is idle during boot strap sampling |
 | ESP32-S3 GPIO19/20 startup glitch (datasheet) | ✅ N/A — those pins are USB, not used for our I/O |
 | Errata (S3 + P4) | ✅ no GPIO-level silicon issues affecting this design (entries are cache/secure-boot/PSRAM) |

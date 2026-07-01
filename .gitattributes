@@ -1,3 +1,5 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Normalize all text files to LF in the repo and on checkout (every OS).
+# eol=lf forces LF even on Windows regardless of core.autocrlf, which stops
+# GitHub Desktop's "LF -> CRLF" line-ending warnings.
+* text=auto eol=lf
 docs/demos/*.mp4 filter=lfs diff=lfs merge=lfs -text

@@ -8,6 +8,9 @@
  *   UART1 TX = GPIO20 → Left S3  GPIO44 RX
  *   UART2 TX = GPIO21 → Right S3 GPIO44 RX
  *
+ * The link is TX-only from the center's side: no center RX pin is claimed
+ * (RX = UART_PIN_NO_CHANGE), so no additional P4 GPIO is tied up.
+ *
  * Frame format and encoder/decoder implementations live in shared/dash_data.c.
  * This file owns only the UART driver bring-up and the TX task loop.
  */
@@ -29,7 +32,7 @@ static const char *TAG = "uart_bridge";
 extern portMUX_TYPE g_dash_mux;
 
 /* ── UART driver bring-up ────────────────────────────────────────────── */
-static void uart_init(uart_port_t port, int tx_gpio, int rx_gpio)
+static void uart_init(uart_port_t port, int tx_gpio)
 {
     uart_config_t cfg = {
         .baud_rate  = UART_BRIDGE_BAUD,
@@ -40,21 +43,20 @@ static void uart_init(uart_port_t port, int tx_gpio, int rx_gpio)
         .source_clk = UART_SCLK_DEFAULT,
     };
     ESP_ERROR_CHECK(uart_param_config(port, &cfg));
-    ESP_ERROR_CHECK(uart_set_pin(port, tx_gpio, rx_gpio,
+    /* TX-only: RX pin left unrouted so no extra P4 GPIO is claimed. */
+    ESP_ERROR_CHECK(uart_set_pin(port, tx_gpio, UART_PIN_NO_CHANGE,
                                  UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
-    /* 256-byte RX buf is minimal — we only TX here; RX is reserved future. */
+    /* Transmit-only bridge; the RX ring buffer is unused (no RX pin routed). */
     ESP_ERROR_CHECK(uart_driver_install(port, 256, 256, 0, NULL, 0));
-    ESP_LOGI(TAG, "UART%d ready — baud=%u, TX=GPIO%d RX=GPIO%d",
-             (int)port, UART_BRIDGE_BAUD, tx_gpio, rx_gpio);
+    ESP_LOGI(TAG, "UART%d ready — baud=%u, TX=GPIO%d (TX-only)",
+             (int)port, UART_BRIDGE_BAUD, tx_gpio);
 }
 
 /* ── TX task ─────────────────────────────────────────────────────────── */
 void uart_tx_task(void *arg)
 {
-    uart_init(UART_NUM_1,
-              CONFIG_TC_UART1_TX_GPIO, CONFIG_TC_UART1_RX_GPIO);   /* → LEFT  */
-    uart_init(UART_NUM_2,
-              CONFIG_TC_UART2_TX_GPIO, CONFIG_TC_UART2_RX_GPIO);   /* → RIGHT */
+    uart_init(UART_NUM_1, CONFIG_TC_UART1_TX_GPIO);   /* → LEFT  */
+    uart_init(UART_NUM_2, CONFIG_TC_UART2_TX_GPIO);   /* → RIGHT */
 
     uint8_t  buf_l[UART_BRIDGE_FRAME_LEN];
     uint8_t  buf_r[UART_BRIDGE_FRAME_LEN];

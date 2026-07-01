@@ -49,39 +49,43 @@ Pin map:
 | 2 | CANL | CAN transceiver CANL |
 | 3 | GND | Transceiver/bus reference GND |
 
-### C2: Center J8 adapter to left display serial link
+### C2: Center J8 adapter to left display serial link (TX-only)
 
 | Field | Value |
 |---|---|
-| Connector pair | DT04-3P + DT06-3S |
-| Wedgelocks | W3P + W3S |
-| Conductors | TX_L, RX_L (reserved), GND |
-| Suggested wire | 24 AWG twisted pair (TX/RX) + 24 AWG GND |
+| Connector pair | DT04-2P + DT06-2S |
+| Wedgelocks | W2P + W2S |
+| Conductors | TX_L, GND |
+| Suggested wire | 24 AWG twisted pair (TX + GND) |
 
 Pin map:
 
 | C2 pin | Net | Center side | Left side |
 |---|---|---|---|
 | 1 | TX_L | GPIO20 (UART1 TX) | GPIO44 (UART RX) |
-| 2 | RX_L (optional) | GPIO18 (UART1 RX) | GPIO43 (UART TX) |
-| 3 | GND | GND | GND |
+| 2 | GND | GND | GND |
 
-### C3: Center J8 adapter to right display serial link
+The link is TX-only; the center does not receive from the side board, so there
+is no RX conductor and the Left board's GPIO43/TX is left unconnected.
+
+### C3: Center J8 adapter to right display serial link (TX-only)
 
 | Field | Value |
 |---|---|
-| Connector pair | DT04-3P + DT06-3S |
-| Wedgelocks | W3P + W3S |
-| Conductors | TX_R, RX_R (reserved), GND |
-| Suggested wire | 24 AWG twisted pair (TX/RX) + 24 AWG GND |
+| Connector pair | DT04-2P + DT06-2S |
+| Wedgelocks | W2P + W2S |
+| Conductors | TX_R, GND |
+| Suggested wire | 24 AWG twisted pair (TX + GND) |
 
 Pin map:
 
 | C3 pin | Net | Center side | Right side |
 |---|---|---|---|
 | 1 | TX_R | GPIO21 (UART2 TX) | GPIO44 (UART RX) |
-| 2 | RX_R (optional) | GPIO19 (UART2 RX) | GPIO43 (UART TX) |
-| 3 | GND | GND | GND |
+| 2 | GND | GND | GND |
+
+The link is TX-only; the center does not receive from the side board, so there
+is no RX conductor and the Right board's GPIO43/TX is left unconnected.
 
 ### C4: 5V power feed to each display node
 
@@ -109,8 +113,8 @@ From the J8 screw-terminal adapter, run short leads to the SN65HVD230 CAN board 
 |---|---|---|
 | CAN logic | T01 (3V3), T39 (GND), T11 (CTX), T12 (CRX) | SN65HVD230 board pads |
 | CAN bus | Transceiver CANH/CANL | C1 pins 1–2 |
-| Left UART | T22 (TX), T23 (RX), T39 (GND) | C2 |
-| Right UART | T13 (TX), T24 (RX), T39 (GND) | C3 |
+| Left UART (TX-only) | T22 (TX), T39 (GND) | C2 |
+| Right UART (TX-only) | T13 (TX), T39 (GND) | C3 |
 | 5V in | T02 (+5V), T39 (GND) | C4 center feed + buck return |
 | Controls | T18, T19, T21, T31, T32, T34, T36 + GND | C5–C7 |
 
@@ -125,9 +129,7 @@ GPIO numbers mirror sdkconfig / Kconfig.projbuild. **T#** = J8 physical pin = ad
 | CAN_TXD | 5 | 11 |
 | CAN_RXD | 4 | 12 |
 | UART1_TX_LEFT | 20 | 22 |
-| UART1_RX_LEFT | 18 | 23 |
 | UART2_TX_RIGHT | 21 | 13 |
-| UART2_RX_RIGHT | 19 | 24 |
 | ODO_BUTTON | 29 | 18 |
 | ENC1_A / B / SW | 30 / 31 / 32 | 19 / 21 / 31 |
 | ENC2_A / B / SW | 49 / 50 / 51 | 32 / 34 / 36 |
@@ -137,14 +139,14 @@ GPIO numbers mirror sdkconfig / Kconfig.projbuild. **T#** = J8 physical pin = ad
 
 | Qty | Part number | Use |
 |---:|---|---|
-| 3 | DT04-3P | CAN + two UART receptacles |
-| 3 | DT06-3S | CAN + two UART plugs |
-| 3 | W3P | DT 3-way wedgelocks |
-| 3 | W3S | DT 3-way wedgelocks |
-| 3 | DT04-2P | 5V feeds receptacles |
-| 3 | DT06-2S | 5V feeds plugs |
-| 3 | W2P | DT 2-way wedgelocks |
-| 3 | W2S | DT 2-way wedgelocks |
+| 1 | DT04-3P | CAN receptacle (C1) |
+| 1 | DT06-3S | CAN plug (C1) |
+| 1 | W3P | DT 3-way wedgelocks |
+| 1 | W3S | DT 3-way wedgelocks |
+| 5 | DT04-2P | TX-only serial (C2/C3) + 5V feeds (C4 ×3) receptacles |
+| 5 | DT06-2S | TX-only serial (C2/C3) + 5V feeds (C4 ×3) plugs |
+| 5 | W2P | DT 2-way wedgelocks |
+| 5 | W2S | DT 2-way wedgelocks |
 | 30 | 0460-202-16141 | DT pin contacts (male) |
 | 30 | 0462-201-16141 | DT socket contacts (female) |
 | 1 | SM-A-001 | J8 40-pos screw-terminal adapter |
@@ -156,7 +158,7 @@ Full shopping list with links: open `HARNESS_WIRING_DIAGRAM.html` in a browser (
 ## 6) Notes before crimping
 
 - Keep CAN pair twisted from ECU branch to transceiver.
-- Keep UART TX/RX as twisted pair with ground reference nearby.
+- Keep each UART TX line paired with its ground reference nearby (TX-only; no RX conductor).
 - Star-ground all three displays and transceiver back to buck output ground.
 - Side displays should be flashed over USB-C; do not share UART console on GPIO43/44 during runtime.
 - If your board revision uses a different side-board connector pitch, keep the DT harness unchanged and only swap the board-local pigtail connector family.
