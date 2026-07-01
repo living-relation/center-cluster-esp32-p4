@@ -63,7 +63,7 @@ Pin map:
 | C2 pin | Net | Center side | Left side |
 |---|---|---|---|
 | 1 | TX_L | GPIO20 (UART1 TX) | GPIO44 (UART RX) |
-| 2 | RX_L (optional) | GPIO18 (UART1 RX) | GPIO43 (UART TX) |
+| 2 | RX_L (optional) | GPIO28 (UART1 RX) | GPIO43 (UART TX) |
 | 3 | GND | GND | GND |
 
 ### C3: Center J8 adapter to right display serial link
@@ -80,7 +80,7 @@ Pin map:
 | C3 pin | Net | Center side | Right side |
 |---|---|---|---|
 | 1 | TX_R | GPIO21 (UART2 TX) | GPIO44 (UART RX) |
-| 2 | RX_R (optional) | GPIO19 (UART2 RX) | GPIO43 (UART TX) |
+| 2 | RX_R (optional) | GPIO22 (UART2 RX) | GPIO43 (UART TX) |
 | 3 | GND | GND | GND |
 
 ### C4: 5V power feed to each display node

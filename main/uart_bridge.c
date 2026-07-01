@@ -6,7 +6,10 @@
  *
  * Pin defaults (Kconfig.projbuild):
  *   UART1 TX = GPIO20 → Left S3  GPIO44 RX
+ *   UART1 RX = GPIO28 ← Left S3  GPIO43 TX (reserved)
  *   UART2 TX = GPIO21 → Right S3 GPIO44 RX
+ *   UART2 RX = GPIO22 ← Right S3 GPIO43 TX (reserved)
+ *   (RX was GPIO18/19 — corrected; those pins are not routed to J8.)
  *
  * Frame format and encoder/decoder implementations live in shared/dash_data.c.
  * This file owns only the UART driver bring-up and the TX task loop.

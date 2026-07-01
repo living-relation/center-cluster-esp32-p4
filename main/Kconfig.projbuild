@@ -15,7 +15,11 @@ menu "TrackCluster — Center cluster pin map (Waveshare ESP32-P4-WIFI6-Touch-LC
    #     Avoid for general I/O; 35/36/37/38 set boot mode at reset, 34 = JTAG sel.
    #
    # Available GPIOs on J8 40-pin header, clear of all of the above (schematic-verified):
-   #   2, 3, 4, 5, 17, 18, 19, 20, 21, 22, 24, 25, 28, 29, 30, 31, 32, 46, 47, 48, 49, 50, 51, 52
+   #   2, 3, 4, 5, 20, 21, 22, 24, 25, 28, 29, 30, 31, 32, 46, 47, 48, 49, 50, 51, 52
+   #   NOTE: GPIO17/18/19 were previously listed here in error — they are NOT
+   #   routed to J8 (unrouted die pins on the schematic). Do not assign them.
+   #   The two J8 pins silkscreened RXD/TXD belong to the on-board ESP32-C6
+   #   co-processor's UART0, not the P4 — not usable for general I/O.
 
     config TC_CAN_TX_GPIO
         int "TWAI (CAN) TX GPIO → transceiver TXD"
@@ -42,7 +46,11 @@ menu "TrackCluster — Center cluster pin map (Waveshare ESP32-P4-WIFI6-Touch-LC
     config TC_UART1_RX_GPIO
         int "UART1 RX ← LEFT cluster (reserved for future telemetry)"
         range -1 54
-        default 18
+        default 28
+        help
+            Connect to the LEFT board GPIO43/TX. GPIO28 is on the J8 header
+            (schematic-verified). Was GPIO18 — corrected: GPIO18 is not routed
+            to J8, so the old default landed on a dead pin.
 
     config TC_UART2_TX_GPIO
         int "UART2 TX → RIGHT cluster (connect to RIGHT board GPIO44/RX)"
@@ -52,7 +60,11 @@ menu "TrackCluster — Center cluster pin map (Waveshare ESP32-P4-WIFI6-Touch-LC
     config TC_UART2_RX_GPIO
         int "UART2 RX ← RIGHT cluster (reserved for future telemetry)"
         range -1 54
-        default 19
+        default 22
+        help
+            Connect to the RIGHT board GPIO43/TX. GPIO22 is on the J8 header
+            (adjacent to UART2 TX/GPIO21). Was GPIO19 — corrected: GPIO19 is
+            not routed to J8, so the old default landed on a dead pin.
 
     config TC_BUTTON_ODO_GPIO
         int "Push-button 1 — ODO / Trip cycle (active-low; -1 disables)"
