@@ -21,6 +21,8 @@ mapping are the part that matters and are not affected by the numbering.**
 ## Pinout table
 
 Legend: **[wired]** = a wire is landed on this pin in the firmware/harness ·
+**[opt]** = pin is assigned in firmware but the harness conductor is optional
+and the signal is reserved/not yet active (the inter-cluster RX lines) ·
 **[free]** = broken out, unused · **[reserved]** = do not use.
 
 | Pin | Silk | Signal / GPIO | Pin | Silk | Signal / GPIO |
@@ -30,9 +32,9 @@ Legend: **[wired]** = a wire is landed on this pin in the firmware/harness ·
 | 5 | SCL | GPIO7 — I²C SCL (touch + audio) **[wired]** | 6 | GND | Ground |
 | 7 | 29 | GPIO29 — **ODO/Trip button** **[wired]** | 8 | TXD | ESP32-C6 co-proc UART0 TX — *not a P4 GPIO* |
 | 9 | GND | Ground | 10 | RXD | ESP32-C6 co-proc UART0 RX — *not a P4 GPIO* |
-| 11 | 21 | GPIO21 — **UART2 TX → RIGHT** **[wired]** | 12 | 22 | GPIO22 — **UART2 RX ← RIGHT** **[wired]** ¹ |
+| 11 | 21 | GPIO21 — **UART2 TX → RIGHT** **[wired]** | 12 | 22 | GPIO22 — **UART2 RX ← RIGHT** **[opt]** ¹ |
 | 13 | 20 | GPIO20 — **UART1 TX → LEFT** **[wired]** | 14 | GND | Ground |
-| 15 | 28 | GPIO28 — **UART1 RX ← LEFT** **[wired]** ¹ | 16 | 5 | GPIO5 — **CAN interface** (see §CAN) **[wired]** |
+| 15 | 28 | GPIO28 — **UART1 RX ← LEFT** **[opt]** ¹ | 16 | 5 | GPIO5 — **CAN interface** (see §CAN) **[wired]** |
 | 17 | 3V3 | 3.3 V rail | 18 | 4 | GPIO4 — **CAN interface** (see §CAN) **[wired]** |
 | 19 | 3 | GPIO3 **[free]** | 20 | GND | Ground |
 | 21 | 2 | GPIO2 **[free]** | 22 | 35 | GPIO35 — strapping **[reserved]** |

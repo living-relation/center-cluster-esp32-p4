@@ -130,8 +130,7 @@ All inputs use internal pull-ups; wire the common side to **GND**. 44 kΩ… use
 | Item | Result |
 |---|---|
 | Center CAN 4/5, buttons 29, encoders 30/31/32/49/50/51 | ✅ all on J8, clear of strapping/PSRAM/USB/microSD |
-| Center UART pins | ⚠️ **Fixed:** UART2 RX moved 20 → 19 (GPIO20 was assigned to both UART1 TX and UART2 RX) |
-| Center UART RX pins on J8 | ⚠️ **Fixed:** UART1 RX 18 → 28, UART2 RX 19 → 22 (GPIO18/19 are unrouted die pins, never present on J8; new pins are header-verified). Requires reflash. |
+| Center UART RX pins | ⚠️ **Fixed (current):** UART1 RX → **GPIO28**, UART2 RX → **GPIO22**, both header-verified. Root cause: the earlier defaults GPIO18/19 are unrouted die pins, never present on J8. (Supersedes an earlier interim note that had moved UART2 RX 20 → 19 to dodge a GPIO20/UART1-TX collision — 19 was itself off-header, so both RX pins are now corrected together.) Requires reflash. |
 | Center "available" list | ⚠️ Annotated: GPIO34/35/36 are **strapping** pins — removed from the free list in Kconfig |
 | Side I²C 7/15 | ✅ free, not strapping/USB/flash |
 | Side UART 43/44 | ✅ valid (default UART0 console) — **flash via USB-C** so console doesn't fight the link |

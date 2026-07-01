@@ -3,10 +3,10 @@ Connector,C1,ECU CAN <-> transceiver,DT04-3P,DT06-3S,W3P / W3S,1,CANH,transceive
 Connector,C1,ECU CAN <-> transceiver,DT04-3P,DT06-3S,W3P / W3S,2,CANL,transceiver CANL,ECU CANL,22 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
 Connector,C1,ECU CAN <-> transceiver,DT04-3P,DT06-3S,W3P / W3S,3,GND,reference GND,bus GND,22 AWG,pin 0460-202-16141 / socket 0462-201-16141
 Connector,C2,Center -> Left serial,DT04-3P,DT06-3S,W3P / W3S,1,TX_L,T22 GPIO20 (UART1 TX),Left GPIO44 (RX),24 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
-Connector,C2,Center -> Left serial,DT04-3P,DT06-3S,W3P / W3S,2,RX_L (opt),T23 GPIO18 (UART1 RX),Left GPIO43 (TX),24 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
+Connector,C2,Center -> Left serial,DT04-3P,DT06-3S,W3P / W3S,2,RX_L (opt),T23 GPIO28 (UART1 RX),Left GPIO43 (TX),24 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
 Connector,C2,Center -> Left serial,DT04-3P,DT06-3S,W3P / W3S,3,GND,T39 GND,GND,24 AWG,pin 0460-202-16141 / socket 0462-201-16141
 Connector,C3,Center -> Right serial,DT04-3P,DT06-3S,W3P / W3S,1,TX_R,T13 GPIO21 (UART2 TX),Right GPIO44 (RX),24 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
-Connector,C3,Center -> Right serial,DT04-3P,DT06-3S,W3P / W3S,2,RX_R (opt),T24 GPIO19 (UART2 RX),Right GPIO43 (TX),24 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
+Connector,C3,Center -> Right serial,DT04-3P,DT06-3S,W3P / W3S,2,RX_R (opt),T24 GPIO22 (UART2 RX),Right GPIO43 (TX),24 AWG TP,pin 0460-202-16141 / socket 0462-201-16141
 Connector,C3,Center -> Right serial,DT04-3P,DT06-3S,W3P / W3S,3,GND,T39 GND,GND,24 AWG,pin 0460-202-16141 / socket 0462-201-16141
 Connector,C4,5V feed (one per board x3),DT04-2P,DT06-2S,W2P / W2S,1,+5V,T02 +5V,buck +5V / board VIN,20 AWG (18 long),pin 0460-202-16141 / socket 0462-201-16141
 Connector,C4,5V feed (one per board x3),DT04-2P,DT06-2S,W2P / W2S,2,GND,T39 GND,buck GND / board GND,20 AWG (18 long),pin 0460-202-16141 / socket 0462-201-16141
@@ -14,9 +14,9 @@ Adapter,,J8 screw-terminal breakout,SM-A-001,,,,T01-T40,J8 pins 1-40,Phoenix cla
 GPIO map,,CAN_TXD,,,,,GPIO5,T11,transceiver CTX,,
 GPIO map,,CAN_RXD,,,,,GPIO4,T12,transceiver CRX,,
 GPIO map,,UART1_TX_LEFT,,,,,GPIO20,T22,C2 pin 1,,
-GPIO map,,UART1_RX_LEFT,,,,,GPIO18,T23,C2 pin 2 (reserved),,
+GPIO map,,UART1_RX_LEFT,,,,,GPIO28,T23,C2 pin 2 (reserved),,
 GPIO map,,UART2_TX_RIGHT,,,,,GPIO21,T13,C3 pin 1,,
-GPIO map,,UART2_RX_RIGHT,,,,,GPIO19,T24,C3 pin 2 (reserved),,
+GPIO map,,UART2_RX_RIGHT,,,,,GPIO22,T24,C3 pin 2 (reserved),,
 GPIO map,,ODO_BUTTON,,,,,GPIO29,T18,C5,,
 GPIO map,,ENC1_A/B/SW,,,,,GPIO30 / 31 / 32,T19 / T21 / T31,C6,,
 GPIO map,,ENC2_A/B/SW,,,,,GPIO49 / 50 / 51,T32 / T34 / T36,C7,,
