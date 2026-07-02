@@ -1,7 +1,7 @@
 """
 app.py -- TrackCluster CAN bench-test LIVE SENDER.
 
-Companion to ../../docs/canbus-bench-test.html (which is a browser-only, copy
+Companion to ../canbus-bench-test.html (which is a browser-only, copy
 -the-hex-out tool). This app has the same UI, but actually transmits frames to
 a connected CAN-USB adapter via python-can, so gauges react live on the bench.
 
@@ -12,7 +12,7 @@ Adapter support:
   - slcan                -- shows up as a plain COM port; used if the adapter
                             is reflashed to slcan mode.
 
-This file intentionally duplicates the signal map from docs/canbus-bench-test.html
+This file intentionally duplicates the signal map from apps/canbus-bench-test.html
 rather than sharing code with it, so that file is never modified by this app.
 """
 
