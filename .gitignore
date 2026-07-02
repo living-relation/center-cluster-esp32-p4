@@ -6,5 +6,6 @@
 out/
 sdkconfig
 sdkconfig.old
+.claude/settings.local.json
 # Local schematic reference copies (download from Waveshare if needed)
 docs/harness/*.pdf
