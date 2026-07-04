@@ -139,6 +139,13 @@ the side display over UART. The only difference is the boost gauge's display ran
 change only the boost gauge's minimum on the display side — nothing in the CAN config, units, or center
 firmware changes. Do <b>not</b> switch the ECU to send MGP (gauge pressure): that would require a firmware
 change to drop the −100 offset, for no benefit.</div>
+<div class="note"><b>Engine-off / key-on reading, and altitude:</b> the gauge subtracts a <b>fixed 100 kPa</b>
+(≈ sea-level ambient), so with the engine off the MAP sensor reads ambient barometric pressure and the
+value is <code>(ambient − 100) × 0.145038</code>. At elevation your ambient is below 100 kPa, so that value
+is slightly <b>negative</b> (≈ −1 psi around 2,000–2,500 ft). With the current 0→+30 gauge (floored at 0)
+it displays <b>0</b>; a vacuum-capable gauge would show the small negative. To read exactly 0 engine-off
+regardless of altitude you'd have to reference barometric (BAP) instead of a fixed 100 kPa — a firmware
+change not worth making for the key-on reading.</div>
 
 <h2>External Link CAN Lambda → ECU (shares CAN1 with the cluster)</h2>
 <p class="sub">The wideband is a <b>Link CAN Lambda</b> module on <b>CAN1</b> — the same bus the cluster is on.
@@ -185,16 +192,13 @@ and every node runs 1&nbsp;Mbit/s — so nothing collides.</div>
 
 <h2>Apply &amp; validate (PCLink)</h2>
 <ol>
-  <li>Global: CAN → Custom Setup → <b>Custom</b> stream, <b>1 Mbit/s</b>, <b>Big endian</b>. Transmit streams 0x3E8–0x3EB and 0x3EE; optionally receive 0x3EC / 0x3ED.</li>
+  <li>Global: CAN → Custom Setup → <b>Custom</b> stream, <b>1 Mbit/s</b>, <b>Big endian</b>. Transmit streams 0x3E8–0x3EB and 0x3EE.</li>
   <li>Enter each channel exactly as the ENCODE columns above (byte, size, multiplier, offset). Only assign the channels listed — extra channels waste bus bandwidth.</li>
   <li>Set up the CAN1 Link CAN Lambda receive (section above) so Lambda 1 is populated before it's forwarded on 0x3EA.</li>
+  <li><b>Optional:</b> only if you want the cluster's boost-map / TC-select buttons to change the ECU, set up the ECU to <b>receive</b> <code>0x3EC</code> (boost-map index) and <code>0x3ED</code> (TC index). Skip it and the cluster still runs — those buttons just won't affect the ECU.</li>
   <li>CAN → Monitor: confirm 0x3E8–0x3EB and 0x3EE appear at their cycle times; cross-check values against the runtime page (should match within rounding).</li>
   <li>Power the dashboard: gauges track within ~2 s; an engine-protection flag raises the right-cluster warning overlay.</li>
 </ol>
-<p class="sub"><b>Adding/removing a channel:</b> add the field to <code>main/dash_data.h</code>, decode it in
-<code>main/canbus.c</code>, carry it in the UART frame in <code>main/dash_data.c</code>, render it in the
-cluster UI — <b>then</b> assign it on the next free byte here and update this reference. Never broadcast a
-channel the firmware has no field for.</p>
 
 <h2>Round-trip identities (sanity checks)</h2>
 <div class="wrap"><table class="grid" style="min-width:0"><tbody>
