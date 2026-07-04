@@ -1,7 +1,7 @@
 <!-- STATUS: CODED-COMPLETE — config artifacts shipped: link_g4x_can_setup.lcs / .json (this folder); firmware decode map main/protocols/link_g4x.json -->
 # Link G4X — PCLink CAN setup (ECU side)
 
-Apply this to the **Link G4X FuryX** in PCLink so it broadcasts exactly the frames the center
+Apply this to the **Link G4X XtremeX** in PCLink so it broadcasts exactly the frames the center
 cluster decodes. The matching config is shipped two ways in this folder:
 
 - **`link_g4x_can_setup.lcs`** — import directly: PCLink → **CAN → Setup → File → Open**.
@@ -65,6 +65,11 @@ the center forwards in its UART bridge frames.
 | Byte | Len | Channel | Scale | Offset | On wire |
 |---|---|---|---|---|---|
 | 0 | 2 | Lambda 1 | ×1000 | 0 | 0.001 λ |
+
+> **Lambda source:** the XtremeX has no onboard wideband — lambda comes from an **external Link
+> CAN Lambda controller** on the ECU's **CAN1** bus. Configure that device in PCLink (CAN1 →
+> Link CAN Lambda) so it populates the **Lambda 1** parameter, then transmit Lambda 1 here on the
+> dashboard stream with multiplier **×1000**. The cluster decode is unchanged (raw ÷ 1000 = λ).
 
 ### 0x3EB — gear / fuel (50 ms)
 | Byte | Len | Channel | Scale | Offset | On wire |

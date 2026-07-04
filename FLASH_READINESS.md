@@ -4,7 +4,7 @@
 **Git HEAD:** run `git rev-parse --short HEAD` after pull  
 **Mode:** bench **OFF** — live CAN + UART bridge to sides (`# CONFIG_TC_BENCH_MODE is not set`)
 
-> **⚠️ Reflash needed (2026-06-28):** CAN `0x3E9` oil & fuel pressure were widened from 1 byte to **2 bytes** (oil = bytes 3-4, fuel = bytes 5-6) so they read past 37 PSI. Boost source corrected to **MAP** (absolute). This build must be flashed for those fixes to take effect. See `CANBUS-RECONCILIATION-FINDINGS.md`.
+> **⚠️ Reflash needed:** CAN `0x3E9` oil & fuel pressure are **2 bytes** (oil = bytes 3-4, fuel = bytes 5-6) so they read past 37 PSI, and boost is derived from **MAP** (absolute). The build must be flashed for these to take effect. Full channel map: `CANBUS-ENCODE-DECODE-REFERENCE.md`.
 
 ## Unwired bench — flash this board alone
 
@@ -55,7 +55,3 @@ Plug **only** the center cluster via USB-C. ECU CAN and side UART are not requir
 **No**, if each board already has the latest **bench-off** firmware flashed. Wiring 12 V, CAN,
 and UART does not change flash contents. Reflash only when you pull new firmware or change
 menuconfig (e.g. bench mode, CAN sim console).
-
-## Not in this firmware yet
-
-`0x3EF` stream, `0x3EE` bytes 6–7 — see `st185-furyx-base-map\docs\CLUSTER_FIRMWARE_BACKLOG.md`.

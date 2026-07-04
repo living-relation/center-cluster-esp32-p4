@@ -3,8 +3,7 @@
  *
  * This file is the SHARED, CANONICAL header. All three firmware projects
  * (center-cluster-esp32-p4, left-side-cluster-esp32s3, right-side-cluster-esp32s3)
- * include this exact header — the per-cluster `center-dash_data.h` /
- * `left-dash_data.h` / `right-dash_data.h` files are thin shims that #include this.
+ * include this exact header directly.
  *
  *  - Center cluster:  PRODUCER. Decodes ECU CAN, populates the struct, transmits the
  *                      per-side UART frames.

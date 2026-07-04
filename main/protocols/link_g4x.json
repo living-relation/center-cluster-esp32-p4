@@ -1,6 +1,6 @@
 {
   "name": "Link G4X",
-  "comment": "Custom CAN page for Link G4X FuryX. Apply via PCLink → CAN → Custom Setup. See center-CANBUS-LINK-G4X-CONFIG.md for screenshots.",
+  "comment": "Custom CAN page for Link G4X XtremeX. Apply via PCLink → CAN → Custom Setup. See CANBUS-LINK-G4X-CONFIG.md and CANBUS-ENCODE-DECODE-REFERENCE.md.",
   "bitrate": 1000000,
   "byte_order": "big",
   "frames": [
@@ -25,6 +25,7 @@
     },
     {
       "id": "0x3EA", "period_ms": 10,
+      "comment": "Lambda 1 originates from an external Link CAN Lambda controller on the ECU's CAN1 bus; the XtremeX forwards it to the cluster here. ECU transmit multiplier ×1000, firmware decodes ×0.001.",
       "channels": [
         {"name": "lambda_a",      "byte": 0, "len": 2, "type": "u16", "scale": 0.001,    "offset_val": 0}
       ]

@@ -1,8 +1,8 @@
 {
-  "_comment": "TrackCluster — Link G4X FuryX CAN broadcast config. Apply in PCLink → CAN → Custom Setup. This JSON is the single source of truth; the firmware link_g4x.json must decode every channel listed here.",
-  "name": "Link G4X FuryX — TrackCluster Dashboard",
+  "_comment": "TrackCluster — Link G4X XtremeX CAN broadcast config. Apply in PCLink → CAN → Custom Setup. This JSON is the single source of truth; the firmware link_g4x.json must decode every channel listed here.",
+  "name": "Link G4X XtremeX — TrackCluster Dashboard",
   "version": "1.0",
-  "ecu": "Link G4X FuryX",
+  "ecu": "Link G4X XtremeX",
   "bit_rate_bps": 1000000,
   "byte_order": "BigEndian",
   "streams": [
@@ -36,7 +36,7 @@
       "name": "Lambda",
       "cycle_ms": 10,
       "channels": [
-        { "byte": 0, "length": 2, "name": "Lambda 1",      "pclink_name": "Lambda 1",       "scale": 1000, "offset": 0,    "unit": "0.001 λ","note": "Decode: raw / 1000.0 = lambda. Do NOT add Lambda 2 / baro." },
+        { "byte": 0, "length": 2, "name": "Lambda 1",      "pclink_name": "Lambda 1",       "scale": 1000, "offset": 0,    "unit": "0.001 λ","note": "Source: external Link CAN Lambda controller on the ECU's CAN1 bus; the XtremeX receives it and populates the Lambda 1 parameter, then rebroadcasts it here on the dashboard CAN stream. Transmit multiplier ×1000; firmware decodes raw / 1000.0 = lambda. Do NOT add Lambda 2 / baro." },
         { "byte": 2, "length": 0, "name": "(unassigned)" },
         { "byte": 3, "length": 0, "name": "(unassigned)" },
         { "byte": 4, "length": 0, "name": "(unassigned)" },
