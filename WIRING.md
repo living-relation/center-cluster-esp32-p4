@@ -50,7 +50,7 @@ The ESP32-P4 TWAI controller is logic-level; it needs an **external CAN transcei
   Do not short CANH and CANL.
 - **Bus:** 1 Mbit/s, 120 Ω termination at both physical ends of the CAN backbone (one is usually in
   the ECU; add one 120 Ω at the transceiver end if it's the far end).
-- ECU broadcast IDs 0x3E8–0x3EB + status 0x3EE; dash→ECU TX 0x3EC/0x3ED. See `link_g4x_can_setup.*`.
+- ECU broadcast IDs 0x3E8–0x3EB + status 0x3EE; dash→ECU TX 0x3EC/0x3ED. See `CANBUS-ENCODE-DECODE-REFERENCE.html`.
 
 ---
 

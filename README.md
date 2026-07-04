@@ -61,14 +61,13 @@ You don’t need to set any baud rate — see the setup guide for why.
 |---|---|
 | `SETUP_BEFORE_YOU_BUILD.txt` | Step-by-step VS Code flashing guide for first-timers — flash size, PSRAM, port, baud, bench mode. |
 | `WIRING.md` | Physical install: 12 V→5 V power, CAN transceiver, center↔side UART, buttons/encoders, full pin reference + GPIO/silicon validation. |
-| `CANBUS-LINK-G4X-CONFIG.md` | Human-readable CAN configuration — every ECU broadcast/receive frame, byte map, scaling, and the PCLink “Custom CAN” setup for the Link G4X. |
-| `link_g4x_can_setup.lcs` | Importable PCLink CAN Setup file (CAN → Setup → File → Open). |
-| `link_g4x_can_setup.json` | Human-readable canonical spec of that CAN config. |
+| `CANBUS-ENCODE-DECODE-REFERENCE.html` | **The** CAN reference — open in any browser. Every channel's ENCODE (ECU transmit) and DECODE (cluster) values side by side, the Link G4X XtremeX + external CAN-Lambda topology, PCLink apply/validation notes, and an embedded machine-readable channel map. |
+| `docs/datasheets/LinkCANLambda-manual.pdf` | Link CAN-Lambda module manual (external wideband on the ECU's CAN1 bus). |
 | `docs/demos/Center_demo.mp4` | Bench-mode screen recording (no CAN/UART required). |
 | `docs/harness/` | Wiring diagram (HTML), connector BOM (CSV/MD). |
 
-> These files are reference/setup only — none of them are compiled or flashed. The firmware’s own
-> CAN decode map is `main/protocols/link_g4x.json` (that one **is** part of the build).
+> These files are reference/setup only — none of them are compiled or flashed. The firmware's
+> actual CAN decode lives in `main/canbus.c`.
 
 ---
 
@@ -83,8 +82,7 @@ You don’t need to set any baud rate — see the setup guide for why.
 main/            firmware source (the only thing compiled/flashed)
   ui/            LVGL screens + fonts + images
   audio_alert.c  ES8311 boot + warning tones
-  can_sim.c      optional USB CAN inject (menuconfig)
-  protocols/     link_g4x.json — CAN decode map (code)
+  can_sim.c      optional USB CAN inject (menuconfig; off by default)
 sdkconfig.defaults   board config (PSRAM, flash, bench mode)
 partitions.csv       flash layout
 CMakeLists.txt       project file

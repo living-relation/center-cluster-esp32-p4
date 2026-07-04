@@ -1,9 +1,10 @@
 # Build (unless -SkipBuild) and flash center cluster (ESP32-P4).
 # Bootloader offset 0x2000 is in sdkconfig — idf.py flash uses build/flash_args.
-#   .\scripts\flash_cluster.ps1
-#   .\scripts\flash_cluster.ps1 -Port COM7 -Monitor
+# -Port is required (the COM port changes per PC/session; pass it each time).
+#   .\scripts\flash_cluster.ps1 -Port <your COM port>
+#   .\scripts\flash_cluster.ps1 -Port <your COM port> -Monitor
 param(
-    [string]$Port = "COM7",
+    [Parameter(Mandatory = $true)][string]$Port,
     [switch]$SkipBuild,
     [switch]$Monitor
 )
