@@ -4,7 +4,7 @@
 **Git HEAD:** run `git rev-parse --short HEAD` after pull  
 **Mode:** bench **OFF** — live CAN + UART bridge to sides (`# CONFIG_TC_BENCH_MODE is not set`)
 
-> **⚠️ Reflash needed:** CAN `0x3E9` oil & fuel pressure are **2 bytes** (oil = bytes 3-4, fuel = bytes 5-6) so they read past 37 PSI, and boost is derived from **MAP** (absolute). The build must be flashed for these to take effect. Full channel map: `CANBUS-ENCODE-DECODE-REFERENCE.md`.
+> **⚠️ Reflash needed (CAN pressure/MAP fix, 2026-06-28):** CAN `0x3E9` oil & fuel pressure are **2 bytes** (oil = bytes 3-4, fuel = bytes 5-6) so they read past 37 PSI, and boost is derived from **MAP** (absolute). A board flashed **before 2026-06-28** must be reflashed for these to take effect. Full channel map: `CANBUS-ENCODE-DECODE-REFERENCE.md`.
 
 ## Unwired bench — flash this board alone
 

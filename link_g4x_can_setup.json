@@ -1,5 +1,5 @@
 {
-  "_comment": "TrackCluster — Link G4X XtremeX CAN broadcast config. Apply in PCLink → CAN → Custom Setup. This JSON is the single source of truth; the firmware link_g4x.json must decode every channel listed here.",
+  "_comment": "TrackCluster — Link G4X XtremeX CAN broadcast config. Apply in PCLink → CAN → Custom Setup. This JSON is the single source of truth; the firmware decode map main/protocols/link_g4x.json must decode every channel listed here.",
   "name": "Link G4X XtremeX — TrackCluster Dashboard",
   "version": "1.0",
   "ecu": "Link G4X XtremeX",
