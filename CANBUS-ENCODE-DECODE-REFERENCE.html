@@ -82,9 +82,9 @@ machine-readable copy of the map is embedded at the bottom.</p>
 <div class="topo">
   <table>
     <tr><td>ECU</td><td>Link G4X <b>XtremeX</b></td></tr>
-    <tr><td>Dashboard CAN bus</td><td><b>1 Mbit/s</b> · big-endian (MS byte first) · standard <b>11-bit</b> IDs · 8-byte frames</td></tr>
-    <tr><td>Only node on dashboard CAN</td><td>center cluster (ESP32-P4) — TWAI TX=GPIO5 / RX=GPIO4 via SN65HVD230; side displays follow over UART</td></tr>
-    <tr><td>Lambda source</td><td>no onboard wideband — an <b>external Link CAN Lambda</b> module on the ECU's <b>CAN1</b> bus feeds the <b>Lambda 1</b> parameter, which the XtremeX rebroadcasts to the cluster on <code>0x3EA</code>. The ECU <b>must be configured to receive</b> from the module (see the CAN1 section below) before it can forward lambda.</td></tr>
+    <tr><td>Bus — everything is on ECU <b>CAN1</b></td><td><b>1 Mbit/s</b> · big-endian (MS byte first) · standard <b>11-bit</b> IDs · 8-byte frames. The ECU's CAN2 is unused by this system.</td></tr>
+    <tr><td>Nodes on CAN1</td><td>the XtremeX ECU, the center cluster (ESP32-P4, TWAI TX=GPIO5 / RX=GPIO4 via SN65HVD230), and the external <b>Link CAN Lambda</b> module — all share this one bus. Side displays follow over UART (not CAN).</td></tr>
+    <tr><td>Lambda source</td><td>no onboard wideband — the <b>external Link CAN Lambda</b> module (on CAN1, same bus) feeds the <b>Lambda 1</b> parameter, which the XtremeX rebroadcasts on <code>0x3EA</code>. The ECU <b>must be configured to receive</b> from the module (see the Link CAN Lambda section below) before it can forward lambda.</td></tr>
   </table>
 </div>
 
@@ -140,10 +140,11 @@ change only the boost gauge's minimum on the display side — nothing in the CAN
 firmware changes. Do <b>not</b> switch the ECU to send MGP (gauge pressure): that would require a firmware
 change to drop the −100 offset, for no benefit.</div>
 
-<h2>External Link CAN Lambda → ECU (on CAN1, not the dashboard bus)</h2>
-<p class="sub">The wideband is a <b>Link CAN Lambda</b> module on the ECU's <b>CAN1</b> bus. Use its factory
-defaults (device identifier <b>0</b>, <b>1 Mbit/s</b>) — a single module needs no reconfiguration. The
-ECU receives it into <b>Lambda 1</b>, then forwards Lambda 1 to the cluster on <code>0x3EA</code> above.
+<h2>External Link CAN Lambda → ECU (shares CAN1 with the cluster)</h2>
+<p class="sub">The wideband is a <b>Link CAN Lambda</b> module on <b>CAN1</b> — the same bus the cluster is on.
+Use its factory defaults (device identifier <b>0</b>, <b>1 Mbit/s</b>) — a single module needs no
+reconfiguration. The ECU receives it into <b>Lambda 1</b>, then forwards Lambda 1 to the cluster on
+<code>0x3EA</code> above.
 See <a href="docs/datasheets/LinkCANLambda-manual.pdf">docs/datasheets/LinkCANLambda-manual.pdf</a>.</p>
 
 <h3>Configure the XtremeX to receive it (PCLink)</h3>
@@ -165,10 +166,11 @@ See <a href="docs/datasheets/LinkCANLambda-manual.pdf">docs/datasheets/LinkCANLa
 </table>
 </div>
 <p class="sub">CAN ID = <b>950 + device identifier</b> (device 0 → 950/0x3B6). Reconfig commands go on 958 + device id.</p>
-<div class="note"><b>No conflict.</b> The module lives on <b>CAN1</b>, a physically separate bus from the dashboard
-CAN bus — so it can't collide with the cluster channels regardless. And even by ID, <code>0x3B6</code>/
-<code>0x3BE</code> (950/958) sit below the dashboard block <code>0x3E8–0x3EE</code> (1000–1006), so there
-is no overlap on either bus.</div>
+<div class="note"><b>No conflict.</b> The module shares <b>CAN1</b> with the ECU and the cluster (one bus), so
+"no conflict" here means <b>no two nodes use the same CAN ID</b> — which is what would corrupt arbitration
+on a shared bus. The module's IDs <code>0x3B6</code>/<code>0x3BE</code> (950/958) are distinct from the
+cluster block <code>0x3E8–0x3EE</code> (1000–1006) and the cluster's own TX <code>0x3EC</code>/<code>0x3ED</code>,
+and every node runs 1&nbsp;Mbit/s — so nothing collides.</div>
 
 <h2>Cluster → ECU — the ECU must RECEIVE these</h2>
 <div class="wrap">
@@ -214,10 +216,10 @@ channel the firmware has no field for.</p>
 <script type="application/json" id="canmap">
 {
   "ecu": "Link G4X XtremeX",
-  "dashboard_bus": { "bitrate": 1000000, "byte_order": "big", "id_bits": 11 },
+  "bus": { "name": "CAN1", "bitrate": 1000000, "byte_order": "big", "id_bits": 11, "note": "Single shared bus: ECU, cluster, and Link CAN Lambda all on CAN1. ECU CAN2 unused." },
   "lambda_source": {
     "device": "Link CAN Lambda",
-    "ecu_bus": "CAN1",
+    "bus": "CAN1 (shared with the cluster)",
     "tx_can_id": "0x3B6",
     "tx_can_id_dec": 950,
     "device_identifier": 0,
@@ -225,7 +227,7 @@ channel the firmware has no field for.</p>
     "lambda_bytes": [2, 3],
     "lambda_scale_on_wire": 1000,
     "ecu_to_module_can_id": "0x3BE",
-    "note": "Separate bus from the dashboard CAN; 0x3B6/0x3BE do not overlap 0x3E8-0x3EE."
+    "note": "Same bus as the cluster; no conflict because 0x3B6/0x3BE are distinct from 0x3E8-0x3EE and 0x3EC/0x3ED."
   },
   "broadcast": [
     { "id": "0x3E8", "period_ms": 10, "signals": [
