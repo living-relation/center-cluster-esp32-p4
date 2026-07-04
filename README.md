@@ -63,6 +63,7 @@ You don’t need to set any baud rate — see the setup guide for why.
 | `WIRING.md` | Physical install: 12 V→5 V power, CAN transceiver, center↔side UART, buttons/encoders, full pin reference + GPIO/silicon validation. |
 | `CANBUS-ENCODE-DECODE-REFERENCE.html` | **The** CAN reference — open in any browser. Every channel's ENCODE (ECU transmit) and DECODE (cluster) values side by side, the Link G4X XtremeX + external CAN-Lambda topology, PCLink apply/validation notes, and an embedded machine-readable channel map. |
 | `docs/datasheets/LinkCANLambda-manual.pdf` | Link CAN-Lambda module manual (external wideband on the ECU's CAN1 bus). |
+| `docs/datasheets/XtremeX-QuickStart-Guide.pdf` | Link G4X XtremeX ECU quick-start guide. |
 | `docs/demos/Center_demo.mp4` | Bench-mode screen recording (no CAN/UART required). |
 | `docs/harness/` | Wiring diagram (HTML), connector BOM (CSV/MD). |
 

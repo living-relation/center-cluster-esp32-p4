@@ -78,6 +78,12 @@ machine-readable copy of the map is embedded at the bottom.</p>
   <b>×1000</b> on the ECU and <b>×0.001</b> in the cluster — same relationship, opposite direction.
 </div>
 
+<div class="note"><b>Two systems, one table.</b> Everything you <b>configure</b> is on the <b>ECU</b>, in
+<b>Link PCLink G4X → CAN Setup</b> — the green ENCODE columns, the Apply steps, and the Link CAN Lambda
+setup. The blue DECODE columns just describe what the <b>cluster firmware</b> (already flashed) does with
+each value, so you can confirm the ECU settings produce the right on-screen reading. Nothing here requires
+editing the cluster's repo/firmware.</div>
+
 <h2>Bus / topology</h2>
 <div class="topo">
   <table>
@@ -180,12 +186,14 @@ cluster block <code>0x3E8–0x3EE</code> (1000–1006) and the cluster's own TX 
 and every node runs 1&nbsp;Mbit/s — so nothing collides.</div>
 
 <h2>Cluster → ECU — the ECU must RECEIVE these</h2>
+<p class="sub">Sent by the two dash <b>rotary encoders</b> (EC11-style, each with an integral push button) —
+turn the encoder to choose an index, press to transmit it. They are <b>not</b> plain buttons.</p>
 <div class="wrap">
 <table class="grid" style="min-width:0">
-  <thead><tr><th>Frame</th><th>Size</th><th>Payload</th><th>Meaning</th></tr></thead>
+  <thead><tr><th>Frame</th><th>Size</th><th>Payload</th><th>Sent by</th></tr></thead>
   <tbody>
-    <tr><td class="grp">0x3EC</td><td>u8</td><td class="mono">map index 0–3</td><td>Boost-map selection (on button press)</td></tr>
-    <tr><td class="grp">0x3ED</td><td>u8</td><td class="mono">angle index 0–4</td><td>Traction slip-angle selection (on button press)</td></tr>
+    <tr><td class="grp">0x3EC</td><td>u8</td><td class="mono">map index 0–3</td><td><b>Boost-map rotary encoder</b> — turn to select the boost map, press to send</td></tr>
+    <tr><td class="grp">0x3ED</td><td>u8</td><td class="mono">angle index 0–4</td><td><b>TC (traction) rotary encoder</b> — turn to select the slip-angle level, press to send</td></tr>
   </tbody>
 </table>
 </div>
@@ -195,7 +203,7 @@ and every node runs 1&nbsp;Mbit/s — so nothing collides.</div>
   <li>Global: CAN → Custom Setup → <b>Custom</b> stream, <b>1 Mbit/s</b>, <b>Big endian</b>. Transmit streams 0x3E8–0x3EB and 0x3EE.</li>
   <li>Enter each channel exactly as the ENCODE columns above (byte, size, multiplier, offset). Only assign the channels listed — extra channels waste bus bandwidth.</li>
   <li>Set up the CAN1 Link CAN Lambda receive (section above) so Lambda 1 is populated before it's forwarded on 0x3EA.</li>
-  <li><b>Optional:</b> only if you want the cluster's boost-map / TC-select buttons to change the ECU, set up the ECU to <b>receive</b> <code>0x3EC</code> (boost-map index) and <code>0x3ED</code> (TC index). Skip it and the cluster still runs — those buttons just won't affect the ECU.</li>
+  <li>Set up the ECU to <b>receive</b> <code>0x3EC</code> (boost-map index) and <code>0x3ED</code> (TC index) — the cluster's boost-map and TC rotary encoders transmit these to switch the ECU's boost map and traction level.</li>
   <li>CAN → Monitor: confirm 0x3E8–0x3EB and 0x3EE appear at their cycle times; cross-check values against the runtime page (should match within rounding).</li>
   <li>Power the dashboard: gauges track within ~2 s; an engine-protection flag raises the right-cluster warning overlay.</li>
 </ol>
@@ -212,9 +220,9 @@ and every node runs 1&nbsp;Mbit/s — so nothing collides.</div>
 </tbody></table></div>
 
 <footer>
-  Source of truth: <span class="mono">main/canbus.c</span> (decode) and the ECU's PCLink config (encode).
-  Keep this file in lockstep with <span class="mono">canbus.c</span> — change both in the same edit.
-  Machine-readable channel map embedded below.
+  The ENCODE side is what you set on the ECU (Link PCLink G4X → CAN Setup). The DECODE side mirrors the
+  cluster firmware (<span class="mono">main/canbus.c</span>), which is already flashed — shown for
+  cross-checking only, not something you configure here. Machine-readable channel map embedded below.
 </footer>
 
 <script type="application/json" id="canmap">
