@@ -43,4 +43,4 @@ $head = git -C $ProjectRoot rev-parse --short HEAD 2>$null
 Write-Host ""
 Write-Host "READY  center_cluster commit $head"
 Write-Host "       $bin size $((Get-Item $bin).Length) bytes"
-Write-Host "Flash: .\scripts\flash_cluster.ps1 -Port COM7"
+Write-Host "Flash: .\scripts\flash_cluster.ps1 -Port <your COM port>"

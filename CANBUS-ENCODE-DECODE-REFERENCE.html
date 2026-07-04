@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<!--
+  CANBUS-ENCODE-DECODE-REFERENCE.html
+  THE single CAN reference for the TrackCluster center cluster (ESP32-P4) paired
+  with a Link G4X XtremeX ECU. Open in any browser. Human + agent readable:
+  a machine-readable copy of the channel map is embedded at the bottom in a
+  JSON script block with id="canmap". Derived from main/canbus.c.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CAN encode / decode — XtremeX ↔ center cluster</title>
+<style>
+  :root{
+    --bg:#0b0f14; --panel:#121821; --border:#2b3646; --text:#e6edf3; --muted:#93a1b0;
+    --enc:#7ee787; --encbg:rgba(126,231,135,0.09); --dec:#4fc3f7; --decbg:rgba(79,195,247,0.09);
+    --warn:#ffb454; --warnbg:rgba(255,180,84,0.10); --mono:"Cascadia Code","Consolas",Menlo,monospace;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#f6f8fa; --panel:#fff; --border:#d0d7de; --text:#1f2328; --muted:#57606a;
+      --enc:#1a7f37; --encbg:rgba(26,127,55,0.08); --dec:#0969da; --decbg:rgba(9,105,218,0.08);
+      --warn:#9a6700; --warnbg:rgba(154,103,0,0.08); }
+  }
+  *{box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);margin:0;padding:24px;
+    font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.45;}
+  h1{font-size:1.35rem;margin:0 0 4px;}
+  h2{font-size:1.05rem;margin:26px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;}
+  h3{font-size:.95rem;margin:16px 0 6px;}
+  p.sub{color:var(--muted);margin:0 0 16px;font-size:.9rem;max-width:80ch;}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin:0 0 14px;font-size:.85rem;}
+  .chip{display:inline-flex;align-items:center;gap:7px;}
+  .sw{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid var(--border);}
+  .sw.enc{background:var(--encbg);border-color:var(--enc);}
+  .sw.dec{background:var(--decbg);border-color:var(--dec);}
+  .callout{background:var(--panel);border:1px solid var(--warn);border-left:4px solid var(--warn);
+    border-radius:8px;padding:12px 14px;margin:0 0 18px;font-size:.9rem;}
+  .note{background:var(--warnbg);border-radius:6px;padding:10px 12px;margin:10px 0;font-size:.88rem;}
+  .topo{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:6px 14px;margin:0 0 14px;}
+  .topo table{width:100%;border-collapse:collapse;font-size:.86rem;}
+  .topo td{padding:5px 0;vertical-align:top;}
+  .topo td:first-child{color:var(--muted);width:210px;white-space:nowrap;padding-right:12px;}
+  .wrap{border:1px solid var(--border);border-radius:8px;margin-bottom:6px;}
+  table.grid{border-collapse:collapse;width:100%;font-size:.8rem;table-layout:auto;}
+  table.grid th,table.grid td{padding:5px 8px;text-align:left;border-bottom:1px solid var(--border);
+    vertical-align:top;white-space:normal;overflow-wrap:anywhere;}
+  table.grid thead th{position:sticky;top:0;background:var(--panel);z-index:1;font-size:.68rem;
+    text-transform:uppercase;letter-spacing:.03em;color:var(--muted);}
+  table.grid td.enc{background:var(--encbg);} table.grid td.dec{background:var(--decbg);}
+  table.grid th.ench{color:var(--enc);} table.grid th.dech{color:var(--dec);}
+  .grp{font-family:var(--mono);font-weight:700;}
+  .mono{font-family:var(--mono);}
+  tr.framestart td{border-top:2px solid var(--border);}
+  .ex{font-family:var(--mono);color:var(--muted);}
+  code{font-family:var(--mono);background:var(--decbg);padding:1px 5px;border-radius:3px;}
+  ol,ul{font-size:.88rem;} li{margin:3px 0;}
+  a{color:var(--dec);}
+  footer{color:var(--muted);font-size:.8rem;margin-top:26px;border-top:1px solid var(--border);padding-top:12px;}
+</style>
+</head>
+<body>
+<h1>CAN encode / decode reference</h1>
+<p class="sub">Every channel the <b>Link&nbsp;G4X&nbsp;XtremeX</b> broadcasts to the center cluster, with the
+<b style="color:var(--enc)">ENCODE</b> side (what the ECU puts on the wire) and the
+<b style="color:var(--dec)">DECODE</b> side (what the cluster firmware computes) together — so ECU and
+cluster scale/offset never get confused. This HTML file is the single canonical CAN reference; a
+machine-readable copy of the map is embedded at the bottom.</p>
+
+<div class="legend">
+  <span class="chip"><span class="sw enc"></span> ENCODE — ECU / PCLink transmit: <span class="mono">wire = round(value × Mult ÷ Div) + Offset</span></span>
+  <span class="chip"><span class="sw dec"></span> DECODE — cluster firmware (<span class="mono">main/canbus.c</span>)</span>
+</div>
+
+<div class="callout">
+  ⚠️ <b>Never copy a DECODE value into PCLink.</b> The ECU multiplier is the reciprocal of the
+  cluster scale and the ECU offset is the negative of the cluster offset. Lambda is
+  <b>×1000</b> on the ECU and <b>×0.001</b> in the cluster — same relationship, opposite direction.
+</div>
+
+<div class="note"><b>Two systems, one table.</b> Everything you <b>configure</b> is on the <b>ECU</b>, in
+<b>Link PCLink G4X → CAN Setup</b> — the green ENCODE columns, the Apply steps, and the Link CAN Lambda
+setup. The blue DECODE columns just describe what the <b>cluster firmware</b> (already flashed) does with
+each value, so you can confirm the ECU settings produce the right on-screen reading. Nothing here requires
+editing the cluster's repo/firmware.</div>
+
+<h2>Bus / topology</h2>
+<div class="topo">
+  <table>
+    <tr><td>ECU</td><td>Link G4X <b>XtremeX</b></td></tr>
+    <tr><td>Bus — everything is on ECU <b>CAN1</b></td><td><b>1 Mbit/s</b> · big-endian (MS byte first) · standard <b>11-bit</b> IDs · 8-byte frames. The ECU's CAN2 is unused by this system.</td></tr>
+    <tr><td>Nodes on CAN1</td><td>the XtremeX ECU, the center cluster (ESP32-P4, TWAI TX=GPIO5 / RX=GPIO4 via SN65HVD230), and the external <b>Link CAN Lambda</b> module — all share this one bus. Side displays follow over UART (not CAN).</td></tr>
+    <tr><td>Lambda source</td><td>no onboard wideband — the <b>external Link CAN Lambda</b> module (on CAN1, same bus) feeds the <b>Lambda 1</b> parameter, which the XtremeX rebroadcasts on <code>0x3EA</code>. The ECU <b>must be configured to receive</b> from the module (see the Link CAN Lambda section below) before it can forward lambda.</td></tr>
+  </table>
+</div>
+
+<h2>ECU → cluster (dashboard CAN broadcast)</h2>
+<p class="sub"><span class="mono">u16</span> = 2 bytes big-endian, <span class="mono">u8</span> = 1 byte.</p>
+<div class="wrap">
+<table class="grid">
+  <thead>
+    <tr>
+      <th>Frame</th><th>Cyc</th><th>Byte</th><th>Size</th><th>Channel</th><th>PCLink param</th>
+      <th class="ench">ENCODE Mult</th><th class="ench">ENCODE Offset</th><th class="ench">→ wire</th>
+      <th class="dech">DECODE formula</th><th class="dech">→ unit</th><th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="framestart"><td class="grp">0x3E8</td><td>10ms</td><td>0</td><td>u16</td><td>Engine RPM</td><td>Engine Speed</td><td class="enc">×1</td><td class="enc">+0</td><td class="enc mono">RPM</td><td class="dec mono">wire × 1</td><td class="dec">RPM</td><td class="ex">3500 → 0x0DAC → 3500</td></tr>
+    <tr><td></td><td></td><td>2</td><td>u16</td><td>MAP absolute <b>(not MGP)</b></td><td>MAP</td><td class="enc">×1</td><td class="enc">+0</td><td class="enc mono">kPa abs</td><td class="dec mono">(wire − 100) × 0.145038</td><td class="dec">boost PSI (signed)</td><td class="ex">200kPa → 0x00C8 → +14.5psi</td></tr>
+    <tr><td></td><td></td><td>4</td><td>u8</td><td>Coolant (ECT)</td><td>ECT</td><td class="enc">×1</td><td class="enc">+50</td><td class="enc mono">°C+50</td><td class="dec mono">(wire − 50) × 9/5 + 32</td><td class="dec">°F</td><td class="ex">90°C → 0x8C → 194°F</td></tr>
+    <tr><td></td><td></td><td>5</td><td>u8</td><td>Intake air (IAT)</td><td>IAT</td><td class="enc">×1</td><td class="enc">+50</td><td class="enc mono">°C+50</td><td class="dec mono">(wire − 50) × 9/5 + 32</td><td class="dec">°F</td><td class="ex">30°C → 0x50 → 86°F</td></tr>
+    <tr><td></td><td></td><td>6</td><td>u8</td><td>Oil temp</td><td>Oil Temp</td><td class="enc">×1</td><td class="enc">+50</td><td class="enc mono">°C+50</td><td class="dec mono">(wire − 50) × 9/5 + 32</td><td class="dec">°F</td><td class="ex">100°C → 0x96 → 212°F</td></tr>
+    <tr class="framestart"><td class="grp">0x3E9</td><td>10ms</td><td>0</td><td>u16</td><td>Ignition angle</td><td>Ign Angle</td><td class="enc">×10</td><td class="enc">+1000</td><td class="enc mono">0.1°+100°</td><td class="dec mono">wire × 0.1 − 100</td><td class="dec">°BTDC</td><td class="ex">25° → 0x04E2 → 25°</td></tr>
+    <tr><td></td><td></td><td>2</td><td>u8</td><td>Vehicle speed</td><td>Vehicle Speed</td><td class="enc">×1</td><td class="enc">+0</td><td class="enc mono">km/h</td><td class="dec mono">wire × 0.621371</td><td class="dec">mph</td><td class="ex">100km/h → 0x64 → 62mph</td></tr>
+    <tr><td></td><td></td><td>3</td><td>u16</td><td>Oil pressure</td><td>Oil Pressure</td><td class="enc">×1</td><td class="enc">+0</td><td class="enc mono">kPa</td><td class="dec mono">wire × 0.145038</td><td class="dec">PSI</td><td class="ex">450kPa → 0x01C2 → 65psi</td></tr>
+    <tr><td></td><td></td><td>5</td><td>u16</td><td>Fuel pressure</td><td>Fuel Pressure</td><td class="enc">×1</td><td class="enc">+0</td><td class="enc mono">kPa</td><td class="dec mono">wire × 0.145038</td><td class="dec">PSI</td><td class="ex">300kPa → 0x012C → 44psi</td></tr>
+    <tr class="framestart"><td class="grp">0x3EA</td><td>10ms</td><td>0</td><td>u16</td><td>Lambda 1 <span class="ex">(forwarded from CAN1 Link CAN Lambda)</span></td><td>Lambda 1</td><td class="enc">×1000</td><td class="enc">+0</td><td class="enc mono">0.001 λ</td><td class="dec mono">wire × 0.001</td><td class="dec">λ</td><td class="ex">0.90λ → 0x0384 → 0.90λ</td></tr>
+    <tr class="framestart"><td class="grp">0x3EB</td><td>50ms</td><td>0</td><td>u8</td><td>Gear position</td><td>Gear Position</td><td class="enc">×1</td><td class="enc">+0</td><td class="enc mono">0=N,1–6,7=R</td><td class="dec mono">7→R, else wire</td><td class="dec">gear</td><td class="ex">R → 0x07 → R</td></tr>
+    <tr><td></td><td></td><td>1</td><td>u8</td><td>Fuel level</td><td>An Volt x (cal. 0–100%)</td><td class="enc">×1</td><td class="enc">+0</td><td class="enc mono">%</td><td class="dec mono">wire</td><td class="dec">%</td><td class="ex">75% → 0x4B → 75%</td></tr>
+    <tr class="framestart"><td class="grp">0x3EE</td><td>50ms</td><td>0</td><td>u8</td><td>Knock</td><td>Knock Level / Limit</td><td class="enc" colspan="3" style="text-align:center">0 = OK · nonzero = active</td><td class="dec mono">nonzero → warn bit</td><td class="dec">overlay</td><td class="ex">active → 0x01</td></tr>
+    <tr><td></td><td></td><td>1</td><td>u8</td><td>Ignition cut</td><td>Ignition Cut %</td><td class="enc" colspan="3" style="text-align:center">0 = OK · nonzero = active</td><td class="dec mono">nonzero → warn bit</td><td class="dec">overlay</td><td class="ex">—</td></tr>
+    <tr><td></td><td></td><td>2</td><td>u8</td><td>Fuel cut</td><td>Fuel Cut %</td><td class="enc" colspan="3" style="text-align:center">0 = OK · nonzero = active</td><td class="dec mono">nonzero → warn bit</td><td class="dec">overlay</td><td class="ex">—</td></tr>
+    <tr><td></td><td></td><td>3</td><td>u8</td><td>Boost cut</td><td>Boost Limit / Overboost</td><td class="enc" colspan="3" style="text-align:center">0 = OK · nonzero = active</td><td class="dec mono">nonzero → warn bit</td><td class="dec">overlay</td><td class="ex">—</td></tr>
+    <tr><td></td><td></td><td>4</td><td>u8</td><td>Sensor error</td><td>Fault Code Active</td><td class="enc" colspan="3" style="text-align:center">0 = OK · nonzero = active</td><td class="dec mono">nonzero → warn bit</td><td class="dec">overlay</td><td class="ex">—</td></tr>
+    <tr><td></td><td></td><td>5</td><td>u8</td><td>Throttle error</td><td>TPS / ETB Error</td><td class="enc" colspan="3" style="text-align:center">0 = OK · nonzero = active</td><td class="dec mono">nonzero → warn bit</td><td class="dec">overlay</td><td class="ex">—</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="sub"><b>0x3EE</b> is warnings only (drives the right-cluster full-screen "ECU WARNING" overlay,
+priority knock→ign-cut→fuel-cut→boost-cut→sensor→throttle). Never duplicate gauge-shown conditions
+(oil pressure, fuel, temps) here.</p>
+
+<h2>Boost gauge: vacuum vs. boost display</h2>
+<p class="sub">The CAN config is <b>identical</b> for both options below — the ECU always sends
+<b>MAP absolute (kPa)</b> on <code>0x3E8</code> bytes 2–3. The cluster computes
+<code>boost_psi = (MAP − 100) × 0.145038</code>, which is already <b>signed</b> (negative below
+~100&nbsp;kPa&nbsp;=&nbsp;vacuum, positive above&nbsp;=&nbsp;boost) and stays signed all the way to
+the side display over UART. The only difference is the boost gauge's display range:</p>
+<ul>
+  <li><b>Negative vacuum + positive boost:</b> set the boost gauge minimum negative (e.g. <b>−15 to +30 psi</b>). No CAN or firmware change — the value is already signed. <b>Units:</b> wire = MAP kPa absolute; display = PSI gauge (signed).</li>
+  <li><b>0 in vacuum, positive boost (current, 0 → +30 psi):</b> floor the gauge minimum at 0. Same CAN config and units; vacuum just reads 0.</li>
+</ul>
+<div class="note"><b>Simpler route:</b> keep <b>MAP absolute</b> (what's already configured) for both. To show vacuum,
+change only the boost gauge's minimum on the display side — nothing in the CAN config, units, or center
+firmware changes. Do <b>not</b> switch the ECU to send MGP (gauge pressure): that would require a firmware
+change to drop the −100 offset, for no benefit.</div>
+<div class="note"><b>Engine-off / key-on reading, and altitude:</b> the gauge subtracts a <b>fixed 100 kPa</b>
+(≈ sea-level ambient), so with the engine off the MAP sensor reads ambient barometric pressure and the
+value is <code>(ambient − 100) × 0.145038</code>. At elevation your ambient is below 100 kPa, so that value
+is slightly <b>negative</b> (≈ −1 psi around 2,000–2,500 ft). With the current 0→+30 gauge (floored at 0)
+it displays <b>0</b>; a vacuum-capable gauge would show the small negative. To read exactly 0 engine-off
+regardless of altitude you'd have to reference barometric (BAP) instead of a fixed 100 kPa — a firmware
+change not worth making for the key-on reading.</div>
+
+<h2>External Link CAN Lambda → ECU (shares CAN1 with the cluster)</h2>
+<p class="sub">The wideband is a <b>Link CAN Lambda</b> module on <b>CAN1</b> — the same bus the cluster is on.
+Use its factory defaults (device identifier <b>0</b>, <b>1 Mbit/s</b>) — a single module needs no
+reconfiguration. The ECU receives it into <b>Lambda 1</b>, then forwards Lambda 1 to the cluster on
+<code>0x3EA</code> above.
+See <a href="docs/datasheets/LinkCANLambda-manual.pdf">docs/datasheets/LinkCANLambda-manual.pdf</a>.</p>
+
+<h3>Configure the XtremeX to receive it (PCLink)</h3>
+<ol>
+  <li>ECU Controls → <b>CAN Setup</b>. In the <b>Mode</b> tab select the CAN module wired to the Lambda (CAN1); set CAN Configuration to <b>User Defined</b>, Bit Rate <b>1 Mbit/s</b>.</li>
+  <li>In the <b>Data</b> box, pick a free channel, set Mode = <b>Link CAN-Lambda</b>, CAN ID = <b>950</b>, format <b>Normal</b>. (This is the receive setup — it fills the Lambda 1 parameter.)</li>
+  <li><b>CAN Devices</b> tab → <b>Find Devices</b> → confirm the module appears assigned to Lambda 1.</li>
+</ol>
+
+<h3>Module message layout (for reference / non-Link tools)</h3>
+<div class="wrap">
+<table class="grid" style="min-width:0">
+  <thead><tr><th>Direction</th><th>CAN ID</th><th>Data0 (frame idx)</th><th>Payload</th><th>Scaling</th></tr></thead>
+  <tbody>
+    <tr><td>module → ECU</td><td class="grp">950 (0x3B6)</td><td class="mono">50</td><td>D1 error code · D2–3 <b>Lambda</b> Hi/Lo · D4–5 sensor temp · D6 status</td><td class="mono">λ ×1000 (1000 = 1.000)</td></tr>
+    <tr><td>module → ECU</td><td class="grp">950 (0x3B6)</td><td class="mono">51</td><td>D1–2 pump current · D3–4 battery V · D5–6 heater V</td><td class="mono">mA ×1000 · V ×100</td></tr>
+    <tr><td>ECU → module</td><td class="grp">958 (0x3BE)</td><td class="mono">85</td><td>D1–2 engine speed (RPM) · D3–4 exhaust abs pressure (×10 kPa) · D5 use-pressure flag</td><td class="mono">auto in Link CAN-Lambda mode</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="sub">CAN ID = <b>950 + device identifier</b> (device 0 → 950/0x3B6). Reconfig commands go on 958 + device id.</p>
+<div class="note"><b>No conflict.</b> The module shares <b>CAN1</b> with the ECU and the cluster (one bus), so
+"no conflict" here means <b>no two nodes use the same CAN ID</b> — which is what would corrupt arbitration
+on a shared bus. The module's IDs <code>0x3B6</code>/<code>0x3BE</code> (950/958) are distinct from the
+cluster block <code>0x3E8–0x3EE</code> (1000–1006) and the cluster's own TX <code>0x3EC</code>/<code>0x3ED</code>,
+and every node runs 1&nbsp;Mbit/s — so nothing collides.</div>
+
+<h2>Cluster → ECU — the ECU must RECEIVE these</h2>
+<p class="sub">Sent by the two dash <b>rotary encoders</b> (EC11-style, each with an integral push button) —
+turn the encoder to choose an index, press to transmit it. They are <b>not</b> plain buttons.</p>
+<div class="wrap">
+<table class="grid" style="min-width:0">
+  <thead><tr><th>Frame</th><th>Size</th><th>Payload</th><th>Sent by</th></tr></thead>
+  <tbody>
+    <tr><td class="grp">0x3EC</td><td>u8</td><td class="mono">map index 0–3</td><td><b>Boost-map rotary encoder</b> — turn to select the boost map, press to send</td></tr>
+    <tr><td class="grp">0x3ED</td><td>u8</td><td class="mono">angle index 0–4</td><td><b>TC (traction) rotary encoder</b> — turn to select the slip-angle level, press to send</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Apply &amp; validate (PCLink)</h2>
+<ol>
+  <li>Global: CAN → Custom Setup → <b>Custom</b> stream, <b>1 Mbit/s</b>, <b>Big endian</b>. Transmit streams 0x3E8–0x3EB and 0x3EE.</li>
+  <li>Enter each channel exactly as the ENCODE columns above (byte, size, multiplier, offset). Only assign the channels listed — extra channels waste bus bandwidth.</li>
+  <li>Set up the CAN1 Link CAN Lambda receive (section above) so Lambda 1 is populated before it's forwarded on 0x3EA.</li>
+  <li>Set up the ECU to <b>receive</b> <code>0x3EC</code> (boost-map index) and <code>0x3ED</code> (TC index) — the cluster's boost-map and TC rotary encoders transmit these to switch the ECU's boost map and traction level.</li>
+  <li>CAN → Monitor: confirm 0x3E8–0x3EB and 0x3EE appear at their cycle times; cross-check values against the runtime page (should match within rounding).</li>
+  <li>Power the dashboard: gauges track within ~2 s; an engine-protection flag raises the right-cluster warning overlay.</li>
+</ol>
+
+<h2>Round-trip identities (sanity checks)</h2>
+<div class="wrap"><table class="grid" style="min-width:0"><tbody>
+  <tr><td class="mono">RPM</td><td class="mono">cluster = wire × 1</td><td class="mono">ECU wire = RPM</td></tr>
+  <tr><td class="mono">MAP→boost</td><td class="mono">boost_psi = (wire − 100) × 0.145038</td><td class="mono">ECU wire = MAP_kPa_abs</td></tr>
+  <tr><td class="mono">Temps</td><td class="mono">°F = (wire − 50) × 9/5 + 32</td><td class="mono">ECU wire = °C + 50</td></tr>
+  <tr><td class="mono">Ignition</td><td class="mono">° = wire × 0.1 − 100</td><td class="mono">ECU wire = ° × 10 + 1000</td></tr>
+  <tr><td class="mono">Speed</td><td class="mono">mph = wire × 0.621371</td><td class="mono">ECU wire = km/h</td></tr>
+  <tr><td class="mono">Pressure</td><td class="mono">psi = wire × 0.145038</td><td class="mono">ECU wire = kPa</td></tr>
+  <tr><td class="mono">Lambda</td><td class="mono">λ = wire × 0.001</td><td class="mono">ECU wire = λ × 1000</td></tr>
+</tbody></table></div>
+
+<footer>
+  The ENCODE side is what you set on the ECU (Link PCLink G4X → CAN Setup). The DECODE side mirrors the
+  cluster firmware (<span class="mono">main/canbus.c</span>), which is already flashed — shown for
+  cross-checking only, not something you configure here. Machine-readable channel map embedded below.
+</footer>
+
+<script type="application/json" id="canmap">
+{
+  "ecu": "Link G4X XtremeX",
+  "bus": { "name": "CAN1", "bitrate": 1000000, "byte_order": "big", "id_bits": 11, "note": "Single shared bus: ECU, cluster, and Link CAN Lambda all on CAN1. ECU CAN2 unused." },
+  "lambda_source": {
+    "device": "Link CAN Lambda",
+    "bus": "CAN1 (shared with the cluster)",
+    "tx_can_id": "0x3B6",
+    "tx_can_id_dec": 950,
+    "device_identifier": 0,
+    "bitrate": 1000000,
+    "lambda_bytes": [2, 3],
+    "lambda_scale_on_wire": 1000,
+    "ecu_to_module_can_id": "0x3BE",
+    "note": "Same bus as the cluster; no conflict because 0x3B6/0x3BE are distinct from 0x3E8-0x3EE and 0x3EC/0x3ED."
+  },
+  "broadcast": [
+    { "id": "0x3E8", "period_ms": 10, "signals": [
+      { "key": "rpm",       "byte": 0, "len": 2, "enc_mult": 1,    "enc_offset": 0,    "dec": "wire*1",              "unit_wire": "RPM",     "unit_display": "RPM" },
+      { "key": "boost",     "byte": 2, "len": 2, "enc_mult": 1,    "enc_offset": 0,    "dec": "(wire-100)*0.145038", "unit_wire": "kPa_abs", "unit_display": "psi_signed", "pclink": "MAP" },
+      { "key": "ect",       "byte": 4, "len": 1, "enc_mult": 1,    "enc_offset": 50,   "dec": "(wire-50)*9/5+32",    "unit_wire": "C+50",    "unit_display": "F" },
+      { "key": "iat",       "byte": 5, "len": 1, "enc_mult": 1,    "enc_offset": 50,   "dec": "(wire-50)*9/5+32",    "unit_wire": "C+50",    "unit_display": "F" },
+      { "key": "oil_temp",  "byte": 6, "len": 1, "enc_mult": 1,    "enc_offset": 50,   "dec": "(wire-50)*9/5+32",    "unit_wire": "C+50",    "unit_display": "F" }
+    ]},
+    { "id": "0x3E9", "period_ms": 10, "signals": [
+      { "key": "ign_angle", "byte": 0, "len": 2, "enc_mult": 10,   "enc_offset": 1000, "dec": "wire*0.1-100",        "unit_wire": "0.1deg+100", "unit_display": "deg_btdc" },
+      { "key": "speed",     "byte": 2, "len": 1, "enc_mult": 1,    "enc_offset": 0,    "dec": "wire*0.621371",       "unit_wire": "km/h",    "unit_display": "mph" },
+      { "key": "oil_press", "byte": 3, "len": 2, "enc_mult": 1,    "enc_offset": 0,    "dec": "wire*0.145038",       "unit_wire": "kPa",     "unit_display": "psi" },
+      { "key": "fuel_press","byte": 5, "len": 2, "enc_mult": 1,    "enc_offset": 0,    "dec": "wire*0.145038",       "unit_wire": "kPa",     "unit_display": "psi" }
+    ]},
+    { "id": "0x3EA", "period_ms": 10, "signals": [
+      { "key": "lambda",    "byte": 0, "len": 2, "enc_mult": 1000, "enc_offset": 0,    "dec": "wire*0.001",          "unit_wire": "0.001lambda", "unit_display": "lambda", "pclink": "Lambda 1" }
+    ]},
+    { "id": "0x3EB", "period_ms": 50, "signals": [
+      { "key": "gear",      "byte": 0, "len": 1, "enc_mult": 1,    "enc_offset": 0,    "dec": "7->R else wire",      "unit_wire": "0=N,1-6,7=R", "unit_display": "gear" },
+      { "key": "fuel_level","byte": 1, "len": 1, "enc_mult": 1,    "enc_offset": 0,    "dec": "wire",                "unit_wire": "%",       "unit_display": "%" }
+    ]},
+    { "id": "0x3EE", "period_ms": 50, "type": "warnings_0_ok_nonzero_active",
+      "signals": [
+        { "key": "knock",         "byte": 0 }, { "key": "ign_cut",  "byte": 1 },
+        { "key": "fuel_cut",      "byte": 2 }, { "key": "boost_cut","byte": 3 },
+        { "key": "sensor_error",  "byte": 4 }, { "key": "throttle_error", "byte": 5 }
+      ]}
+  ],
+  "receive_from_cluster": [
+    { "id": "0x3EC", "len": 1, "meaning": "boost map index 0-3" },
+    { "id": "0x3ED", "len": 1, "meaning": "TC slip-angle index 0-4" }
+  ]
+}
+</script>
+</body>
+</html>

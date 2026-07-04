@@ -104,6 +104,18 @@ void bsp_backlight_on(void)
     ESP_LOGI(TAG, "Backlight on");
 }
 
+void bsp_backlight_set_percent(uint8_t pct)
+{
+    /* Pure hardware setter: 0..100 % → LEDC duty. output_invert=1 already makes
+     * a higher percent brighter. Brightness policy (day/night, floor) lives in
+     * the caller (inputs.c); this only guards the raw 0..100 range. */
+    ESP_ERROR_CHECK(backlight_pwm_init_off());
+    if (pct > 100u) pct = 100u;
+    uint32_t duty = (uint32_t)BSP_BL_DUTY_MAX * pct / 100u;
+    ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_1, duty));
+    ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_1));
+}
+
 /* ── MIPI-DSI PHY LDO ────────────────────────────────────────────────── */
 static esp_ldo_channel_handle_t s_ldo_mipi = NULL;
 

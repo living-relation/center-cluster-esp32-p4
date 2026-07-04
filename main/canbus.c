@@ -9,8 +9,8 @@
  * transmits encoder selection frames (boost map, TC slip angle) to the ECU
  * on explicit button press. TX is never triggered by a timer.
  *
- * Link G4X PCLink custom-stream configuration: see main/protocols/link_g4x.json
- * and CANBUS-LINK-G4X-CONFIG.md for the exact channel assignments the
+ * Link G4X XtremeX PCLink custom-stream configuration: see
+ * CANBUS-ENCODE-DECODE-REFERENCE.html for the exact channel assignments the
  * car owner must apply in PCLink before this firmware can decode anything.
  */
 

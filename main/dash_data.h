@@ -3,8 +3,7 @@
  *
  * This file is the SHARED, CANONICAL header. All three firmware projects
  * (center-cluster-esp32-p4, left-side-cluster-esp32s3, right-side-cluster-esp32s3)
- * include this exact header — the per-cluster `center-dash_data.h` /
- * `left-dash_data.h` / `right-dash_data.h` files are thin shims that #include this.
+ * include this exact header directly.
  *
  *  - Center cluster:  PRODUCER. Decodes ECU CAN, populates the struct, transmits the
  *                      per-side UART frames.
@@ -96,6 +95,11 @@ typedef struct {
      * The right display renders a popup overlay when menu_id != 0. */
     uint8_t  menu_id;      /* 0=hidden, 1=BOOST MAP, 2=TC SLIP ANGLE */
     uint8_t  menu_cursor;  /* currently highlighted item index (0-based) */
+
+    /* Backlight brightness, 0-100 %. Set by the center from the headlight input
+     * + dim encoder, and broadcast to BOTH sides at UART frame offset 28 so all
+     * three clusters dim together. 100 = full (day / headlights off). */
+    uint8_t  brightness;
 } dash_data_t;
 
 /* Global snapshot. Mutated under a critical section in the producer (center). */

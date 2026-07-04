@@ -75,8 +75,8 @@ the build. Do this once per project; it remembers afterward.
   USB / "UART" port on the board (the boards flash over USB).
 - Click the COM port icon on the bottom bar (or run
   "ESP-IDF: Select Port to Use"). Pick the COM port that appeared when you
-  plugged the board in (e.g. COM3, COM5...). If unsure, unplug/replug and see
-  which COM number comes and goes.
+  plugged the board in. If unsure, unplug/replug and see which COM entry comes
+  and goes.
 - We deliberately did NOT hard-code a port, because it changes per PC and per
   board. You set it here each time you work on a board.
 
@@ -153,7 +153,7 @@ The serial Monitor window will print boot messages. Press Ctrl+] to close Monito
 
 PowerShell flash helpers (from this repo root):
     .\scripts\prepare_flash.ps1
-    .\scripts\flash_cluster.ps1 -Port COM7
+    .\scripts\flash_cluster.ps1 -Port <your COM port>
 See FLASH_READINESS.md for the full morning checklist.
 
 If the build complains about timestamps / "clock skew" / loops: your PC clock
@@ -183,6 +183,6 @@ Turn bench OFF again before installing in the car.
  IDF:      5.4.2 (use 5.4.x; not 5.3.x; not 5.5+ on the P4 v1.x silicon)
 
  Wiring for the real install is in:  WIRING.md
- ECU (Link G4X) CAN setup is in:     CANBUS-LINK-G4X-CONFIG.md  (+ link_g4x_can_setup.lcs/.json)
+ ECU (Link G4X XtremeX) CAN setup:   CANBUS-ENCODE-DECODE-REFERENCE.html
  After wiring: no reflash needed if bench-off firmware is already on the boards (see FLASH_READINESS.md).
 ===============================================================================

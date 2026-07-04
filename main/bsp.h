@@ -24,6 +24,9 @@ void bsp_backlight_hold_off(void);
 /** Enable backlight after the first black LVGL frame (call from ui_init). */
 void bsp_backlight_on(void);
 
+/** Set backlight brightness 0-100 % (LEDC duty). 100 = full. Used for night dimming. */
+void bsp_backlight_set_percent(uint8_t pct);
+
 /** One-time board bring-up. Call before bsp_display_start(). */
 esp_err_t  bsp_init(void);
 

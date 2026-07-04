@@ -68,6 +68,12 @@ CONFIG_LV_DEF_REFR_PERIOD=8
 # ── BENCH MODE: OFF (UART / live vehicle data) ───────────────────────────────
 # CONFIG_TC_BENCH_MODE is not set
 
+# ── CAN debug console: OFF (bench-only) ──────────────────────────────────────
+# The USB-console `can <id> <hex>` frame injector is a bench/debug aid, not for
+# the live car build. Pin it OFF here (its Kconfig default is y). Only turn it
+# back on deliberately for desk testing.
+CONFIG_TC_CAN_SIM_CONSOLE=n
+
 # ── Logging: ERROR only (less UART/CPU overhead in the vehicle) ──────────────
 CONFIG_BOOTLOADER_LOG_LEVEL_ERROR=y
 CONFIG_LOG_DEFAULT_LEVEL_ERROR=y

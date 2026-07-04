@@ -50,7 +50,7 @@ The ESP32-P4 TWAI controller is logic-level; it needs an **external CAN transcei
   Do not short CANH and CANL.
 - **Bus:** 1 Mbit/s, 120 Ω termination at both physical ends of the CAN backbone (one is usually in
   the ECU; add one 120 Ω at the transceiver end if it's the far end).
-- ECU broadcast IDs 0x3E8–0x3EB + status 0x3EE; dash→ECU TX 0x3EC/0x3ED. See `link_g4x_can_setup.*`.
+- ECU broadcast IDs 0x3E8–0x3EB + status 0x3EE; dash→ECU TX 0x3EC/0x3ED. See `CANBUS-ENCODE-DECODE-REFERENCE.html`.
 
 ---
 
@@ -90,6 +90,17 @@ All inputs use internal pull-ups; wire the common side to **GND**. 44 kΩ… use
 | Encoder 2 — TC slip | A / CLK | **49** |
 | | B / DT | **50** |
 | | push (to GND) | **51** |
+| Encoder 3 — Backlight dim | A / CLK | **24** |
+| | B / DT | **25** |
+| | push (to GND) | **2** |
+| Headlight sense | **active-low to GND** | **28** |
+
+**Backlight dimming:** the **headlight sense** (GPIO28) must **switch to GND** when the
+headlights/illumination are on — use a **relay, opto-isolator, or open-collector**, and **do not
+feed +12 V** to the pin (active-low = no divider, but still a ground-switch, not raw 12 V).
+Headlights on → all three clusters dim to the night level; encoder 3 adjusts that level (only while
+headlights are on; its push resets to the default). The center broadcasts the level to the sides
+over the UART bridge, so left/right dim in step.
 
 ---
 
@@ -110,6 +121,8 @@ All inputs use internal pull-ups; wire the common side to **GND**. 44 kΩ… use
 | Button (ODO/Trip) | 29 | active-low |
 | Encoder 1 A/B/SW | 30 / 31 / 32 | |
 | Encoder 2 A/B/SW | 49 / 50 / 51 | |
+| Encoder 3 A/B/SW (backlight dim) | 24 / 25 / 2 | active on headlights only |
+| Headlight sense | 28 | active-low; switch-to-GND (relay/opto), **not** +12 V |
 | **Reserved — do not use** | 37,38 (PSRAM) · 39–44 (microSD) · 34,35,36 (strapping) · DSI pads | |
 
 ### Left & Right — ESP32-S3 (identical)
