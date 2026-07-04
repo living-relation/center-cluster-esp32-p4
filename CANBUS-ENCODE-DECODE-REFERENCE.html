@@ -24,7 +24,7 @@
   }
   *{box-sizing:border-box;}
   body{background:var(--bg);color:var(--text);margin:0;padding:24px;
-    font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.45;max-width:1120px;}
+    font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.45;}
   h1{font-size:1.35rem;margin:0 0 4px;}
   h2{font-size:1.05rem;margin:26px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;}
   h3{font-size:.95rem;margin:16px 0 6px;}
@@ -41,11 +41,12 @@
   .topo table{width:100%;border-collapse:collapse;font-size:.86rem;}
   .topo td{padding:5px 0;vertical-align:top;}
   .topo td:first-child{color:var(--muted);width:210px;white-space:nowrap;padding-right:12px;}
-  .wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;}
-  table.grid{border-collapse:collapse;width:100%;font-size:.82rem;min-width:920px;}
-  table.grid th,table.grid td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;}
-  table.grid thead th{position:sticky;top:0;background:var(--panel);z-index:1;font-size:.72rem;
-    text-transform:uppercase;letter-spacing:.04em;color:var(--muted);}
+  .wrap{border:1px solid var(--border);border-radius:8px;margin-bottom:6px;}
+  table.grid{border-collapse:collapse;width:100%;font-size:.8rem;table-layout:auto;}
+  table.grid th,table.grid td{padding:5px 8px;text-align:left;border-bottom:1px solid var(--border);
+    vertical-align:top;white-space:normal;overflow-wrap:anywhere;}
+  table.grid thead th{position:sticky;top:0;background:var(--panel);z-index:1;font-size:.68rem;
+    text-transform:uppercase;letter-spacing:.03em;color:var(--muted);}
   table.grid td.enc{background:var(--encbg);} table.grid td.dec{background:var(--decbg);}
   table.grid th.ench{color:var(--enc);} table.grid th.dech{color:var(--dec);}
   .grp{font-family:var(--mono);font-weight:700;}
@@ -122,7 +123,7 @@ machine-readable copy of the map is embedded at the bottom.</p>
 </div>
 <p class="sub"><b>0x3EE</b> is warnings only (drives the right-cluster full-screen "ECU WARNING" overlay,
 priority knock→ign-cut→fuel-cut→boost-cut→sensor→throttle). Never duplicate gauge-shown conditions
-(oil pressure, fuel, temps) here. Bytes 6–7 of 0x3EE, and byte 7 of 0x3E8/0x3E9, are unused.</p>
+(oil pressure, fuel, temps) here.</p>
 
 <h2>Boost gauge: vacuum vs. boost display</h2>
 <p class="sub">The CAN config is <b>identical</b> for both options below — the ECU always sends
