@@ -113,6 +113,50 @@ menu "TrackCluster — Center cluster pin map (Waveshare ESP32-P4-WIFI6-Touch-LC
             If the encoder is not touched for this many ms the popup closes
             without making a new selection.
 
+    comment "── Backlight dimming (headlight input + dim encoder) ──────────────────"
+    comment "Headlights ON dims all three clusters to the night level; encoder 3"
+    comment "adjusts that level (only while headlights are on). Center broadcasts the"
+    comment "level to the sides over UART (frame offset 28)."
+
+    config TC_HEADLIGHT_GPIO
+        int "Headlight sense input pin (active-low: LOW = headlights on)"
+        range 0 54
+        default 28
+        help
+            Internal pull-up; the wire must SWITCH TO GROUND when the headlights
+            are on (via a relay / opto / open-collector). Do NOT feed +12 V to
+            this pin. HIGH (idle) = headlights off = full brightness.
+
+    config TC_ENC3_A_GPIO
+        int "Dim encoder — A / CLK pin"
+        range 0 54
+        default 24
+
+    config TC_ENC3_B_GPIO
+        int "Dim encoder — B / DT pin"
+        range 0 54
+        default 25
+
+    config TC_ENC3_SW_GPIO
+        int "Dim encoder — push-button (resets night level to default)"
+        range 0 54
+        default 2
+
+    config TC_BL_NIGHT_DEFAULT
+        int "Default night brightness (%)"
+        range 5 100
+        default 40
+
+    config TC_BL_MIN_PERCENT
+        int "Minimum brightness (%) — floor so the screen never goes black"
+        range 1 100
+        default 15
+
+    config TC_BL_STEP
+        int "Dim encoder step per detent (%)"
+        range 1 50
+        default 5
+
     comment "── CAN TX IDs for encoder selections ─────────────────────────────────"
 
     config TC_CAN_TX_BOOST_ID

@@ -27,6 +27,7 @@
 
 #include "inputs.h"
 #include "canbus.h"
+#include "bsp.h"
 #include "dash_data.h"
 #include "menu_strings.h"
 #include "sdkconfig.h"
@@ -62,6 +63,11 @@ static const char * const TC_SLIPS_REFERENCE[] __attribute__((unused)) = {
 /* ── State ───────────────────────────────────────────────────────────── */
 static volatile int  s_enc1_last_a = 1;   /* Boost encoder last A state */
 static volatile int  s_enc2_last_a = 1;   /* TC encoder last A state    */
+static volatile int  s_enc3_last_a = 1;   /* Dim encoder last A state   */
+
+/* Backlight dimming state */
+static volatile bool    s_headlights_on = false;                 /* GPIO active-low */
+static volatile uint8_t s_night_level   = CONFIG_TC_BL_NIGHT_DEFAULT; /* encoder-set % */
 
 /* Menu auto-close timer */
 static esp_timer_handle_t s_menu_close_timer = NULL;
@@ -101,7 +107,37 @@ static void IRAM_ATTR debounce_isr(void *arg)
 
 static debounced_gpio_t s_enc1_a, s_enc1_b, s_enc1_sw;
 static debounced_gpio_t s_enc2_a, s_enc2_b, s_enc2_sw;
+static debounced_gpio_t s_enc3_a, s_enc3_b, s_enc3_sw;
 static debounced_gpio_t s_odo_btn;
+static debounced_gpio_t s_headlight;
+
+/* ── Backlight brightness ────────────────────────────────────────────────
+ * Effective brightness = 100 % (headlights off) or the encoder-set night
+ * level (headlights on), floored at TC_BL_MIN_PERCENT so the screen never
+ * goes black. Applied to the center panel and published in g_dash.brightness
+ * so the UART bridge forwards the same level to both side clusters. */
+static void apply_brightness(void)
+{
+    uint8_t pct = s_headlights_on ? s_night_level : 100u;
+    if (pct < CONFIG_TC_BL_MIN_PERCENT) pct = CONFIG_TC_BL_MIN_PERCENT;
+
+    bsp_backlight_set_percent(pct);
+
+    portENTER_CRITICAL(&g_dash_mux);
+    g_dash.brightness = pct;
+    portEXIT_CRITICAL(&g_dash_mux);
+}
+
+/* Headlight sense: active-low (LOW = headlights on → dim). */
+static void headlight_stable_cb(int level)
+{
+    gpio_intr_enable(s_headlight.gpio);
+    s_headlights_on = (level == 0);
+    apply_brightness();
+    ESP_LOGI(TAG, "headlights %s → brightness %u%%",
+             s_headlights_on ? "ON" : "off", (unsigned)g_dash.brightness);
+}
+static void headlight_timer_cb(void *a) { headlight_stable_cb(gpio_get_level(s_headlight.gpio)); }
 
 /* ── ODO button ──────────────────────────────────────────────────────── */
 #define ODO_LONG_PRESS_MS  1000
@@ -223,6 +259,36 @@ static void enc2_sw_stable_cb(int level)
 }
 static void enc2_sw_timer_cb(void *a) { enc2_sw_stable_cb(gpio_get_level(s_enc2_sw.gpio)); }
 
+/* Encoder 3 (backlight dim level) — only active while headlights are ON */
+static void enc3_a_stable_cb(int level)
+{
+    gpio_intr_enable(s_enc3_a.gpio);
+    if (level == s_enc3_last_a) return;   /* no edge on A */
+    s_enc3_last_a = level;
+    if (!s_headlights_on) return;         /* dim encoder is inert in daylight */
+
+    int dir  = (level != gpio_get_level(s_enc3_b.gpio)) ? 1 : -1;
+    int next = (int)s_night_level + dir * CONFIG_TC_BL_STEP;
+    if (next < CONFIG_TC_BL_MIN_PERCENT) next = CONFIG_TC_BL_MIN_PERCENT;
+    if (next > 100) next = 100;
+    s_night_level = (uint8_t)next;
+    apply_brightness();
+    ESP_LOGD(TAG, "night level → %u%%", (unsigned)s_night_level);
+}
+static void enc3_a_timer_cb(void *a) { enc3_a_stable_cb(gpio_get_level(s_enc3_a.gpio)); }
+static void enc3_b_stable_cb(int l)  { (void)l; gpio_intr_enable(s_enc3_b.gpio); }
+static void enc3_b_timer_cb(void *a) { enc3_b_stable_cb(gpio_get_level(s_enc3_b.gpio)); }
+
+static void enc3_sw_stable_cb(int level)
+{
+    gpio_intr_enable(s_enc3_sw.gpio);
+    if (level != 0) return;               /* press only, active-low */
+    s_night_level = CONFIG_TC_BL_NIGHT_DEFAULT;   /* push = reset to default */
+    if (s_headlights_on) apply_brightness();
+    ESP_LOGD(TAG, "night level reset → %u%%", (unsigned)s_night_level);
+}
+static void enc3_sw_timer_cb(void *a) { enc3_sw_stable_cb(gpio_get_level(s_enc3_sw.gpio)); }
+
 /* ── GPIO + debounce init helper ─────────────────────────────────────── */
 static esp_err_t setup_debounced(debounced_gpio_t *d, gpio_num_t gpio,
                                  esp_timer_cb_t timer_cb, bool pull_up)
@@ -290,9 +356,25 @@ esp_err_t inputs_init(void)
     ESP_RETURN_ON_ERROR(setup_debounced(&s_odo_btn, CONFIG_TC_BUTTON_ODO_GPIO, odo_timer_cb, true), TAG, "odo");
 #endif
 
+    /* Encoder 3 (backlight dim level) + headlight sense (active-low) */
+    ESP_RETURN_ON_ERROR(setup_debounced(&s_enc3_a,   CONFIG_TC_ENC3_A_GPIO,   enc3_a_timer_cb,   true), TAG, "enc3a");
+    ESP_RETURN_ON_ERROR(setup_debounced(&s_enc3_b,   CONFIG_TC_ENC3_B_GPIO,   enc3_b_timer_cb,   true), TAG, "enc3b");
+    ESP_RETURN_ON_ERROR(setup_debounced(&s_enc3_sw,  CONFIG_TC_ENC3_SW_GPIO,  enc3_sw_timer_cb,  true), TAG, "enc3sw");
+    ESP_RETURN_ON_ERROR(setup_debounced(&s_headlight, CONFIG_TC_HEADLIGHT_GPIO, headlight_timer_cb, true), TAG, "headlight");
+
     /* Capture initial encoder A-pin states */
     s_enc1_last_a = gpio_get_level(CONFIG_TC_ENC1_A_GPIO);
     s_enc2_last_a = gpio_get_level(CONFIG_TC_ENC2_A_GPIO);
+    s_enc3_last_a = gpio_get_level(CONFIG_TC_ENC3_A_GPIO);
+
+    /* Apply the correct backlight now (inputs_init runs after bsp_backlight_on,
+     * so this only adjusts the already-lit panel — no boot flash). */
+    s_headlights_on = (gpio_get_level(CONFIG_TC_HEADLIGHT_GPIO) == 0);
+    apply_brightness();
+    ESP_LOGI(TAG, "dim: headlights %s, night default %u%% (enc3 A=%d B=%d SW=%d, headlight=%d)",
+             s_headlights_on ? "ON" : "off", (unsigned)s_night_level,
+             CONFIG_TC_ENC3_A_GPIO, CONFIG_TC_ENC3_B_GPIO, CONFIG_TC_ENC3_SW_GPIO,
+             CONFIG_TC_HEADLIGHT_GPIO);
 
     return ESP_OK;
 }

@@ -25,7 +25,7 @@ Legend: **[wired]** = a wire is landed on this pin in the firmware/harness ·
 
 > The inter-cluster serial link is **TX-only**: the center transmits to the
 > Left/Right boards and never receives from them. No center-side UART RX pin
-> is used, so GPIO22 and GPIO28 are free.
+> is used, so GPIO22 is free. (GPIO28 is now the headlight-dimming input.)
 
 | Pin | Silk | Signal / GPIO | Pin | Silk | Signal / GPIO |
 |---:|:---:|---|---:|:---:|---|
@@ -36,13 +36,13 @@ Legend: **[wired]** = a wire is landed on this pin in the firmware/harness ·
 | 9 | GND | Ground | 10 | RXD | ESP32-C6 co-proc UART0 RX — *not a P4 GPIO* |
 | 11 | 21 | GPIO21 — **UART2 TX → RIGHT** **[wired]** | 12 | 22 | GPIO22 **[free]** |
 | 13 | 20 | GPIO20 — **UART1 TX → LEFT** **[wired]** | 14 | GND | Ground |
-| 15 | 28 | GPIO28 **[free]** | 16 | 5 | GPIO5 — **CAN interface** (see §CAN) **[wired]** |
+| 15 | 28 | GPIO28 — **Headlight sense** (active-low) **[wired]** | 16 | 5 | GPIO5 — **CAN interface** (see §CAN) **[wired]** |
 | 17 | 3V3 | 3.3 V rail | 18 | 4 | GPIO4 — **CAN interface** (see §CAN) **[wired]** |
 | 19 | 3 | GPIO3 **[free]** | 20 | GND | Ground |
-| 21 | 2 | GPIO2 **[free]** | 22 | 35 | GPIO35 — strapping **[reserved]** |
+| 21 | 2 | GPIO2 — **Encoder 3 SW / push** **[wired]** | 22 | 35 | GPIO35 — strapping **[reserved]** |
 | 23 | 50 | GPIO50 — **Encoder 2 B / DT** **[wired]** | 24 | 36 | GPIO36 — strapping **[reserved]** |
 | 25 | GND | Ground | 26 | 49 | GPIO49 — **Encoder 2 A / CLK** **[wired]** |
-| 27 | 24 | GPIO24 **[free]** | 28 | 25 | GPIO25 **[free]** |
+| 27 | 24 | GPIO24 — **Encoder 3 A / CLK** **[wired]** | 28 | 25 | GPIO25 — **Encoder 3 B / DT** **[wired]** |
 | 29 | 51 | GPIO51 — **Encoder 2 SW / push** **[wired]** | 30 | GND | Ground |
 | 31 | 32 | GPIO32 — **Encoder 1 SW / push** **[wired]** | 32 | 34 | GPIO34 — strapping (JTAG) **[reserved]** |
 | 33 | 48 | GPIO48 **[free]** | 34 | GND | Ground |
@@ -67,6 +67,10 @@ Legend: **[wired]** = a wire is landed on this pin in the firmware/harness ·
 | Encoder 2 (TC slip) A / CLK | 49 | 26 | |
 | Encoder 2 (TC slip) B / DT | 50 | 23 | |
 | Encoder 2 (TC slip) SW / push | 51 | 29 | active-low to GND |
+| Encoder 3 (Backlight dim) A / CLK | 24 | 27 | adjusts night level, only while headlights on |
+| Encoder 3 (Backlight dim) B / DT | 25 | 28 | |
+| Encoder 3 (Backlight dim) SW / push | 2 | 21 | active-low to GND; push resets night level to default |
+| Headlight sense | 28 | 15 | **active-low**: switch to GND when headlights on (relay/opto/open-collector). **Do NOT feed +12 V** to this pin |
 
 ## CAN — bus wiring (Hi / Lo)
 
@@ -99,6 +103,18 @@ if you see bounce).
 **Center pin groups (from firmware defaults):**
 - Encoder 1 (**Boost** map): A=GPIO30, B=GPIO31, SW=GPIO32
 - Encoder 2 (**TC** slip angle): A=GPIO49, B=GPIO50, SW=GPIO51
+- Encoder 3 (**Backlight dim**): A=GPIO24, B=GPIO25, SW=GPIO2 — adjusts the night
+  brightness, and only does anything **while headlights are on**; the push resets
+  the night level to the default. Same EC11 wiring (common legs to GND).
+
+**Headlight sense input (backlight dimming):**
+- **GPIO28**, **active-low** with the chip's internal pull-up. Wire it to **switch
+  to GND** when the headlights/illumination are on (via a relay, opto-isolator, or
+  open-collector output). **Do not connect +12 V to the pin** — active-low means no
+  divider is needed, but it still requires a ground-switch, not a raw 12 V feed.
+- Headlights **on** → all three clusters dim to the night level (the center
+  broadcasts the level to the sides over the UART bridge). Headlights **off** →
+  full brightness.
 
 ### Step 1 — identify the encoder's own pins with a multimeter
 
