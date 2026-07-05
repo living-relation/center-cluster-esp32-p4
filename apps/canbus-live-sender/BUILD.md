@@ -6,7 +6,7 @@ and unmodified). This one actually transmits to a CAN-USB adapter via `python-ca
 ## Run from source (fastest way to iterate)
 
 ```powershell
-cd tools\canbus-live-sender
+cd apps\canbus-live-sender
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
