@@ -3,6 +3,30 @@
 Separate desktop app, companion to `apps/canbus-bench-test.html` (which stays browser-only
 and unmodified). This one actually transmits to a CAN-USB adapter via `python-can`.
 
+## One-click launch (Windows desktop shortcut)
+
+A "CAN Live Sender" shortcut on the desktop runs `launch_silent.vbs`, which:
+
+- If `.venv` already exists, launches `pythonw.exe` directly — instant, no window at all.
+- Otherwise, runs `launch.ps1` hidden to build the venv and install dependencies first,
+  then starts the app. Still no visible window, just a short delay on first run.
+
+If the shortcut ever doesn't work, run `launch.ps1` directly from PowerShell instead —
+it does the same setup/launch but shows output and any Python tracebacks.
+
+To recreate the shortcut (e.g. after moving the repo):
+
+```powershell
+$appDir = "C:\path\to\center-cluster-esp32-p4\apps\canbus-live-sender"
+$lnkPath = Join-Path ([Environment]::GetFolderPath("Desktop")) "CAN Live Sender.lnk"
+$s = (New-Object -ComObject WScript.Shell).CreateShortcut($lnkPath)
+$s.TargetPath = "$env:WINDIR\System32\wscript.exe"
+$s.Arguments = "`"$appDir\launch_silent.vbs`""
+$s.WorkingDirectory = $appDir
+$s.IconLocation = "$appDir\.venv\Scripts\pythonw.exe,0"
+$s.Save()
+```
+
 ## Run from source (fastest way to iterate)
 
 ```powershell
