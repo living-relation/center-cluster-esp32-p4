@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TrackCluster — CAN Live Sender</title>
+<style>
+  :root {
+    --bg: #0b0f14;
+    --panel: #121821;
+    --panel2: #171f2b;
+    --border: #263140;
+    --text: #e6edf3;
+    --muted: #8b98a5;
+    --accent: #4fc3f7;
+    --accent2: #7ee787;
+    --warn: #ffb454;
+    --danger: #ff6b6b;
+    --mono: "Cascadia Code", "Consolas", "SFMono-Regular", Menlo, Monaco, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    margin: 0;
+    padding: 24px;
+    line-height: 1.4;
+  }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  h2 { font-size: 1.05rem; margin: 0 0 8px; color: var(--accent); }
+  .subtitle { color: var(--muted); margin: 0 0 20px; font-size: 0.9rem; }
+  .device-bar {
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+    background: linear-gradient(90deg, rgba(79,195,247,0.10), rgba(126,231,135,0.06));
+    border: 1px solid var(--accent); border-radius: 8px;
+    padding: 12px 16px; margin-bottom: 18px;
+  }
+  .device-bar label { color: var(--text); font-size: 0.95rem; font-weight: 600; white-space: nowrap; }
+  .device-bar select {
+    background: var(--bg); color: var(--text); border: 1px solid var(--accent);
+    border-radius: 5px; padding: 8px 10px; font-size: 16px; min-width: 260px;
+  }
+  .device-badge { margin-left: auto; font-size: 0.82rem; color: var(--muted); font-family: var(--mono); }
+  .device-badge b { color: var(--accent2); }
+  .top-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  @media (max-width: 900px) { .top-grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; margin-bottom: 16px; }
+  .panel table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .panel td { padding: 3px 0; vertical-align: top; }
+  .panel td:first-child { color: var(--muted); width: 40%; white-space: nowrap; }
+  .app-list { font-size: 0.85rem; margin-top: 10px; }
+  .app-list b { color: var(--accent2); }
+  .jump-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 24px; background: var(--panel2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+  .jump-bar label { color: var(--muted); font-size: 0.9rem; white-space: nowrap; }
+  select#gaugeJump, select#adapterSelect, .signal-input {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+    border-radius: 5px; padding: 6px 8px; font-size: 16px;
+  }
+  select#gaugeJump { flex: 1; }
+  .frame-card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; margin-bottom: 18px; }
+  .frame-header { font-size: 1.05rem; margin-bottom: 4px; }
+  .frame-id { color: var(--accent); font-family: var(--mono); font-weight: 700; }
+  .frame-dec { color: var(--muted); font-size: 0.85rem; }
+  .frame-period { color: var(--muted); font-size: 0.85rem; }
+  .frame-note { color: var(--muted); font-size: 0.85rem; margin-bottom: 14px; }
+  .signal-grid { display: flex; flex-direction: column; gap: 10px; }
+  .signal-row { display: grid; grid-template-columns: 220px 130px 1fr; gap: 12px; align-items: center; padding: 8px 10px; border-radius: 6px; transition: background 0.3s; }
+  .signal-row.flash { background: #24344a; }
+  @media (max-width: 700px) { .signal-row { grid-template-columns: 1fr; } }
+  .signal-label strong { font-size: 0.92rem; }
+  .gauge-name { color: var(--muted); font-size: 0.78rem; }
+  .signal-input { width: 100%; }
+  .signal-meta { font-size: 0.78rem; color: var(--muted); font-family: var(--mono); grid-column: 1 / -1; border-top: 1px dashed var(--border); padding-top: 6px; margin-top: 2px; }
+  .range-note { color: #6fa8c9; }
+  .signal-helper { grid-column: 1 / -1; font-size: 0.8rem; color: var(--accent2); min-height: 1em; }
+  .hex-output { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .hex-label { color: var(--muted); font-size: 0.85rem; }
+  .hex-box { background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 8px 12px; font-family: var(--mono); font-size: 1.05rem; letter-spacing: 1px; color: var(--accent2); max-width: 100%; overflow-x: auto; white-space: pre; }
+  .copy-btn, .reset-btn { background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 5px; padding: 7px 14px; cursor: pointer; font-size: 0.85rem; }
+  .copy-btn:hover, .reset-btn:hover { border-color: var(--accent); }
+  .copy-btn:disabled, select:disabled, input:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-primary { border-color: var(--accent); color: var(--accent); background: rgba(79,195,247,0.08); }
+  .bool-row .signal-input { width: 18px; height: 18px; }
+  footer { color: var(--muted); font-size: 0.8rem; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 14px; }
+  code.inline { background: var(--panel2); padding: 1px 5px; border-radius: 3px; font-family: var(--mono); }
+  .connect-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  select#adapterSelect { min-width: 260px; flex: 1; }
+  .connect-status { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 0.9rem; }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--danger); flex: none; }
+  .status-dot.connected { background: var(--accent2); }
+  .send-row { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+  .send-btn { border-color: var(--accent2); color: var(--accent2); }
+  .continuous-label { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--muted); }
+  .continuous-label input { width: 16px; height: 16px; }
+  .last-sent { font-size: 0.78rem; color: var(--muted); }
+  .last-sent.error { color: var(--danger); }
+  .log-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; font-family: var(--mono); font-size: 0.8rem; max-height: 220px; overflow-y: auto; }
+  .log-line { padding: 2px 0; white-space: pre-wrap; word-break: break-all; }
+  .log-line.err { color: var(--danger); }
+  .log-line.ok { color: var(--accent2); }
+  @media (max-width: 600px) {
+    body { padding: 12px; }
+    h1 { font-size: 1.15rem; }
+    .subtitle { font-size: 0.82rem; }
+    h2 { font-size: 0.95rem; }
+    .panel, .frame-card { padding: 12px; }
+    .panel table { font-size: 0.82rem; }
+    .panel td:first-child { width: 44%; }
+    .app-list { font-size: 0.78rem; }
+    .jump-bar { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px; }
+    .device-bar { flex-direction: column; align-items: stretch; }
+    .device-badge { margin-left: 0; }
+    .jump-bar label { white-space: normal; }
+    select#gaugeJump, select#adapterSelect, .signal-input, .copy-btn, .reset-btn { min-height: 42px; }
+    .connect-row { flex-direction: column; align-items: stretch; }
+    .signal-row { grid-template-columns: 1fr; padding: 10px 8px; gap: 8px; }
+    .signal-meta { font-size: 0.74rem; }
+    .hex-output { flex-direction: column; align-items: stretch; }
+    .hex-box { font-size: 0.92rem; text-align: center; }
+    .copy-btn { width: 100%; padding: 10px 14px; }
+    .send-row { flex-direction: column; align-items: stretch; }
+    footer { font-size: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="device-bar">
+  <label for="deviceSelect">Device:</label>
+  <select id="deviceSelect">
+    <option value="realdash">RealDash — Link G4X stream (0x3EF–0x3F1)</option>
+    <option value="cluster">Center Cluster — ESP32-P4 (0x3E8–0x3EE)</option>
+  </select>
+  <span class="device-badge">sending as: <b id="deviceBadge">RealDash</b></span>
+</div>
+
+<h1 id="appTitle">TrackCluster — CAN Live Sender</h1>
+<p class="subtitle" id="appSubtitle"></p>
+
+<div class="panel connect-panel">
+  <h2>Connect to CAN adapter</h2>
+  <div class="connect-row">
+    <label class="continuous-label" style="margin-right:4px;">
+      <input type="checkbox" id="autoConnectChk" checked>
+      Auto-connect on plug-in
+    </label>
+    <label class="continuous-label">Bitrate:
+      <select id="bitrateSelect" style="min-width:120px;">
+        <option value="1000000" selected>1 Mbit/s</option>
+        <option value="500000">500 kbit/s</option>
+        <option value="250000">250 kbit/s</option>
+        <option value="125000">125 kbit/s</option>
+      </select>
+    </label>
+    <button id="refreshBtn" class="copy-btn" disabled>Rescan</button>
+    <select id="adapterSelect" disabled><option value="">— starting… —</option></select>
+    <button id="connectBtn" class="copy-btn btn-primary" disabled>Connect</button>
+    <button id="disconnectBtn" class="copy-btn" disabled>Disconnect</button>
+    <button id="stopAllBtn" class="copy-btn">Stop all continuous sends</button>
+  </div>
+  <div class="connect-status">
+    <span id="statusDot" class="status-dot"></span>
+    <span id="statusText">Starting native bridge…</span>
+  </div>
+  <div class="app-list">
+    <b>Auto-connects the moment a supported adapter is plugged in</b> — it opens the bus but never
+    transmits until you press Send / enable "Send continuously". Detects
+    <b>gs_usb/candleLight</b> (CANable, CANtact, Innomaker), <b>slcan</b> COM-port adapters,
+    <b>Seeed USB-CAN Analyzer</b>, and <b>PEAK / Kvaser / Vector</b> when their vendor driver is
+    installed. Older candleLight firmware may still need the WinUSB driver bound via Zadig once.
+    The adapter is shared across both device profiles — switching device does not drop the link.
+  </div>
+</div>
+
+<div class="top-grid">
+  <div class="panel">
+    <h2>Bus settings (fixed, same for every frame)</h2>
+    <table>
+      <tr><td>Bitrate</td><td><b>1,000,000 bps</b> (1 Mbit/s)</td></tr>
+      <tr><td>ID type</td><td><b>Standard / 11&#8209;bit</b> (every ID below is &lt; 0x800)</td></tr>
+      <tr><td>Frame type</td><td>Data frame (not RTR)</td></tr>
+      <tr><td>DLC (data length)</td><td><b>8 bytes</b>, always</td></tr>
+      <tr><td>Byte order</td><td>Big&#8209;endian — already baked into the bytes shown</td></tr>
+    </table>
+  </div>
+  <div class="panel">
+    <h2>What this covers</h2>
+    <table id="whatCovers"></table>
+  </div>
+</div>
+
+<div class="jump-bar">
+  <label for="gaugeJump">Jump to a gauge:</label>
+  <select id="gaugeJump"></select>
+</div>
+
+<div id="frames"></div>
+
+<div class="panel log-panel">
+  <h2>Live send log</h2>
+  <div id="logBox" class="log-box"></div>
+</div>
+
+<footer id="appFooter"></footer>
+
+<script>
+/* ============================================================================
+   DEVICE PROFILES
+   Each profile's `frames` array is a BYTE-FOR-BYTE copy of the original
+   per-device app (RealDash: apps/st185 canbus-live-sender; Cluster:
+   center-cluster-esp32-p4 canbus-live-sender). CAN IDs, byte offsets, lengths,
+   signed/bitmask handling, scale and offset are unchanged.
+   ============================================================================ */
+
+const FRAMES_REALDASH = [
+  {
+    id: '0x3EF', dec: 1007, period: 50,
+    note: 'Drive Assist & Status — target lambda, throttle, TC setting/intervention, boost map, cruise, and A/C all live in this one frame. Bytes 3 (TC) and 5 (boost map) are ECU echoes of the cluster selections.',
+    signals: [
+      { key:'lambda', label:'Target Lambda', gauge:'RealDash: Target Lambda tile', byte:0, len:2,
+        unit:'λ (dimensionless)', wire:'u16, ×0.001, +0 (decode raw×0.001)',
+        rangeNote:'tune target · typical 0.78–0.95 λ under boost · 1.00 = stoich',
+        min:0.60, max:1.30, step:0.01, default:0.90,
+        toRaw:(v)=> Math.round(v*1000) },
+      { key:'throttle', label:'Throttle', gauge:'RealDash: Throttle bar', byte:2, len:1,
+        unit:'%', wire:'u8, ×1, +0',
+        rangeNote:'0–100% driver input (no alarm)',
+        min:0, max:100, step:1, default:0,
+        toRaw:(v)=> Math.round(v) },
+      { key:'tc', label:'TC Setting', gauge:'RealDash: TC Setting tile (ECU echo of 0x3ED)', byte:3, len:1,
+        unit:'index 0–4', wire:'u8, ×1, +0',
+        rangeNote:'higher index = looser/lower TC per tune',
+        isSelect:true, options:[['0',0],['1',1],['2',2],['3',3],['4',4]], default:3,
+        toRaw:(v)=> Number(v) },
+      { key:'tcint', label:'TC Intervention', gauge:'RealDash: TC intervention bar', byte:4, len:1,
+        unit:'%', wire:'u8, ×1, +0',
+        rangeNote:'good <10 · caution 10–40 · alarm >40 (low grip)',
+        min:0, max:100, step:1, default:0,
+        toRaw:(v)=> Math.round(v) },
+      { key:'boostmap', label:'Boost Map', gauge:'RealDash: Boost Map tile (ECU echo of 0x3EC)', byte:5, len:1,
+        unit:'index 0–3', wire:'u8, ×1, +0',
+        rangeNote:'0=LOW 1=MID 2=HIGH 3=MAX',
+        isSelect:true, options:[['0 — LOW',0],['1 — MID',1],['2 — HIGH',2],['3 — MAX',3]], default:2,
+        toRaw:(v)=> Number(v) },
+      { key:'cruise', label:'Cruise State', gauge:'RealDash: Cruise tile', byte:6, len:1,
+        unit:'enum', wire:'u8 enum',
+        rangeNote:'0=OFF 1=STBY 2=SET 3=RES 4=OVR',
+        isSelect:true, options:[['OFF',0],['STBY',1],['SET',2],['RES',3],['OVR',4]], default:0,
+        toRaw:(v)=> Number(v) },
+      { key:'ac', label:'AC Status', gauge:'RealDash: A/C tile', byte:7, len:1,
+        unit:'enum', wire:'u8 enum',
+        rangeNote:'0=OFF 1=REQ 2=ON 3=FLT',
+        isSelect:true, options:[['OFF',0],['REQ',1],['ON',2],['FLT',3]], default:0,
+        toRaw:(v)=> Number(v) },
+    ]
+  },
+  {
+    id: '0x3F0', dec: 1008, period: 100,
+    note: 'Extended Sensors — fuel temp, engine load, coolant pressure (u16), ethanol, charge-pipe IAT, turbo speed, and trigger errors all live in this one frame. Cabin temp was dropped to make room for 2-byte coolant pressure. Temp bytes use the +50 offset (raw − 50 = °C).',
+    signals: [
+      { key:'fueltemp', label:'Fuel Temp', gauge:'RealDash: Fuel Temp gauge', byte:0, len:1,
+        unit:'°C (sent as °C+50)', wire:'u8, ×1, +50 (decode raw−50)',
+        rangeNote:'ok <55 · caution 55–70 · alarm >70 °C',
+        min:-40, max:150, step:1, default:40,
+        toRaw:(v)=> Math.round(v + 50) },
+      { key:'load', label:'Engine Load', gauge:'RealDash: Engine Load bar', byte:1, len:1,
+        unit:'%', wire:'u8, ×1, +0',
+        rangeNote:'0–100% (informational)',
+        min:0, max:100, step:1, default:0,
+        toRaw:(v)=> Math.round(v) },
+      { key:'coolp', label:'Coolant Pressure', gauge:'RealDash: Coolant Pressure gauge', byte:2, len:2,
+        unit:'kPa', wire:'u16, ×1, +0',
+        rangeNote:'ok 50–150 · caution 150–200 · alarm >200 kPa (2-byte headroom)',
+        min:0, max:1000, step:1, default:100,
+        toRaw:(v)=> Math.round(v) },
+      { key:'ethanol', label:'Ethanol', gauge:'RealDash: Ethanol bar (E-blend)', byte:4, len:1,
+        unit:'% ethanol', wire:'u8, ×1, +0',
+        rangeNote:'0–100% flex-blend reference',
+        min:0, max:100, step:1, default:30,
+        toRaw:(v)=> Math.round(v) },
+      { key:'chargeiat', label:'Charge-Pipe IAT', gauge:'RealDash: Charge-Pipe IAT gauge', byte:5, len:1,
+        unit:'°C (sent as °C+50)', wire:'u8, ×1, +50 (decode raw−50)',
+        rangeNote:'ok <50 · caution 50–60 · alarm >60 °C (heat soak)',
+        min:-40, max:150, step:1, default:40,
+        toRaw:(v)=> Math.round(v + 50) },
+      { key:'turbo', label:'Turbo Speed', gauge:'RealDash: Turbo Speed gauge', byte:6, len:1,
+        unit:'RPM (sent ÷1000)', wire:'u8, ×1000, +0 (decode raw×1000)',
+        rangeNote:'u8×1000 → 0–255,000 RPM (1k resolution); covers the EFR spool range',
+        min:0, max:255000, step:1000, default:0,
+        toRaw:(v)=> Math.round(v / 1000) },
+      { key:'trigerr', label:'Trigger Errors', gauge:'RealDash: Trigger Errors tile', byte:7, len:1,
+        unit:'count', wire:'u8, ×1, +0',
+        rangeNote:'0 = healthy · 1–4 caution · ≥5 alarm (sync loss)',
+        min:0, max:255, step:1, default:0,
+        toRaw:(v)=> Math.round(v) },
+    ]
+  },
+  {
+    id: '0x3F1', dec: 1009, period: 50,
+    note: 'IMU & Extended Warnings — three signed accel axes plus a packed warning byte. Accel are signed int16 (raw÷10 = g). Byte 6 is a bitmask (each warning is one bit); byte 7 is reserved 0x00.',
+    signals: [
+      { key:'accelx', label:'Accel X (long)', gauge:'RealDash: G-ball longitudinal', byte:0, len:2, signed:true,
+        unit:'g (longitudinal)', wire:'i16, ×0.1, +0 (decode raw×0.1)',
+        rangeNote:'+accel / −brake · −3.0…+3.0 g',
+        min:-3.0, max:3.0, step:0.1, default:0.0,
+        toRaw:(v)=> Math.round(v*10) },
+      { key:'accely', label:'Accel Y (lat)', gauge:'RealDash: G-ball lateral', byte:2, len:2, signed:true,
+        unit:'g (lateral)', wire:'i16, ×0.1, +0 (decode raw×0.1)',
+        rangeNote:'left / right cornering · −3.0…+3.0 g',
+        min:-3.0, max:3.0, step:0.1, default:0.0,
+        toRaw:(v)=> Math.round(v*10) },
+      { key:'accelz', label:'Accel Z (vert)', gauge:'RealDash: Vertical bar', byte:4, len:2, signed:true,
+        unit:'g (vertical)', wire:'i16, ×0.1, +0 (decode raw×0.1)',
+        rangeNote:'curb/kerb strike & load · ~1.0 g at rest',
+        min:-3.0, max:3.0, step:0.1, default:1.0,
+        toRaw:(v)=> Math.round(v*10) },
+      { key:'warn_flat',    label:'Flat Shift',        gauge:'RealDash strip: FLAT',      byte:6, len:1, bit:0, isBool:true, default:false, unit:'byte6 bit0', wire:'bitmask bit0', rangeNote:'boolean (info)' },
+      { key:'warn_fan',     label:'Radiator Fan',      gauge:'RealDash strip: FAN',       byte:6, len:1, bit:1, isBool:true, default:false, unit:'byte6 bit1', wire:'bitmask bit1', rangeNote:'boolean (info)' },
+      { key:'warn_lofuel',  label:'Low Fuel',          gauge:'RealDash strip: LOFUEL',    byte:6, len:1, bit:2, isBool:true, default:false, unit:'byte6 bit2', wire:'bitmask bit2', rangeNote:'boolean (caution)' },
+      { key:'warn_coolp',   label:'High Coolant Press',gauge:'RealDash strip: COOLANT P', byte:6, len:1, bit:3, isBool:true, default:false, unit:'byte6 bit3', wire:'bitmask bit3', rangeNote:'boolean (alarm)' },
+      { key:'warn_oilp2',   label:'Low Oil Press (2nd)',gauge:'RealDash strip: OIL P 2',  byte:6, len:1, bit:4, isBool:true, default:false, unit:'byte6 bit4', wire:'bitmask bit4', rangeNote:'boolean (alarm)' },
+      { key:'warn_sbflt',   label:'Switchboard Fault', gauge:'RealDash strip: SBFLT',     byte:6, len:1, bit:5, isBool:true, default:false, unit:'byte6 bit5', wire:'bitmask bit5', rangeNote:'boolean (caution)' },
+    ]
+  }
+];
+
+const FRAMES_CLUSTER = [
+  {
+    id: '0x3E8', dec: 1000, period: 10,
+    note: 'Engine fast group — RPM, Boost/MAP, Coolant, IAT, and Oil Temp all live in this one frame.',
+    signals: [
+      { key:'rpm', label:'RPM', gauge:'Center tach arc + shift LEDs + gear-box tint', byte:0, len:2,
+        unit:'RPM', wire:'u16, ×1, +0',
+        rangeNote:'Full arc 0–8000 RPM · shift LEDs light 5500→6500 · all-red latch ≥7000 (releases <6500) · 7500 = display top reference',
+        min:0, max:8000, step:10, default:850,
+        toRaw:(v)=> Math.round(v) },
+      { key:'boost', label:'Boost', gauge:'Right bar gauge (Boost)', byte:2, len:2,
+        unit:'PSI (typed here; sent as MAP kPa-abs)', wire:'u16, ×1, +0 — MAP absolute kPa; cluster computes (MAP−100)×0.145038',
+        rangeNote:'cyan ≤14 psi · orange ≤20 psi · overboost alarm ≥22 psi (full arc max not defined in this repo)',
+        min:-14, max:30, step:0.1, default:0,
+        toRaw:(v)=> Math.round(v/0.145038 + 100),
+        helper:(v)=> 'MAP absolute ≈ ' + Math.round(v/0.145038 + 100) + ' kPa on the wire' },
+      { key:'ect', label:'Coolant Temp (ECT)', gauge:'Right bar gauge (Coolant)', byte:4, len:1,
+        unit:'°F (typed here; sent as °C+50)', wire:'u8, ×1, +50',
+        rangeNote:'green ≤200°F · yellow ≤215°F · orange ≤230°F · 230°F = gauge max',
+        min:-18, max:302, step:1, default:180,
+        toRaw:(v)=> Math.round((v-32)*5/9 + 50) },
+      { key:'iat', label:'Intake Air Temp (IAT)', gauge:'Right bar gauge (IAT)', byte:5, len:1,
+        unit:'°F (typed here; sent as °C+50)', wire:'u8, ×1, +50',
+        rangeNote:'full range 30–200°F · green ≤100°F · yellow ≤130°F · orange ≤150°F',
+        min:-18, max:302, step:1, default:80,
+        toRaw:(v)=> Math.round((v-32)*5/9 + 50) },
+      { key:'oiltemp', label:'Oil Temp', gauge:'Left mini-arc (Oil Temp)', byte:6, len:1,
+        unit:'°F (typed here; sent as °C+50)', wire:'u8, ×1, +50',
+        rangeNote:'redline 215°F · max 250°F',
+        min:-18, max:302, step:1, default:180,
+        toRaw:(v)=> Math.round((v-32)*5/9 + 50) },
+    ]
+  },
+  {
+    id:'0x3E9', dec:1001, period:10,
+    note:'Speed/pressure/ignition group — Ignition, Speed, Oil Pressure, and Fuel Pressure all live in this one frame.',
+    signals:[
+      { key:'ign', label:'Ignition Angle', gauge:'Right bar gauge (Ignition)', byte:0, len:2,
+        unit:'° advance', wire:'u16, ×0.1, +1000 (decode: value×0.1 −100)',
+        rangeNote:'green band 12–32° (full arc range not defined in this repo)',
+        min:-50, max:60, step:0.1, default:15,
+        toRaw:(v)=> Math.round(v*10 + 1000) },
+      { key:'speed', label:'Vehicle Speed', gauge:'Left speedo arc + digital', byte:2, len:1,
+        unit:'mph (typed here; sent as km/h)', wire:'u8, ×1, +0',
+        rangeNote:'wire ceiling 255 km/h ≈ 158 mph (full gauge range not defined in this repo)',
+        min:0, max:158, step:1, default:0,
+        toRaw:(v)=> Math.round(v/0.621371) },
+      { key:'oilpress', label:'Oil Pressure', gauge:'Left mini-arc (Oil Press)', byte:3, len:2,
+        unit:'PSI (typed here; sent as kPa)', wire:'u16, ×1, +0',
+        rangeNote:'low-pressure alarm 25 psi (<2000 RPM) · redline 125 psi',
+        min:0, max:200, step:1, default:40,
+        toRaw:(v)=> Math.round(v/0.145038) },
+      { key:'fuelpress', label:'Fuel Pressure', gauge:'Left mini-arc (Fuel Press)', byte:5, len:2,
+        unit:'PSI (typed here; sent as kPa)', wire:'u16, ×1, +0',
+        rangeNote:'full range 20–160 psi · low warn 30 psi · redline 125 psi',
+        min:0, max:200, step:1, default:58,
+        toRaw:(v)=> Math.round(v/0.145038) },
+    ]
+  },
+  {
+    id:'0x3EA', dec:1002, period:10,
+    note:'Lambda group.',
+    signals:[
+      { key:'lambda', label:'Lambda 1', gauge:'Right digital readout', byte:0, len:2,
+        unit:'λ (dimensionless)', wire:'u16, ×0.001, +0',
+        rangeNote:'rich alarm ≤0.70 · rich warn ≤0.75 · lean warn ≥1.02 · lean alarm ≥1.05 · 1.00 = stoich',
+        min:0.5, max:1.3, step:0.001, default:1.0,
+        toRaw:(v)=> Math.round(v*1000) },
+    ]
+  },
+  {
+    id:'0x3EB', dec:1003, period:50,
+    note:'Gear/fuel group.',
+    signals:[
+      { key:'gear', label:'Gear Position', gauge:'Center gear glyph', byte:0, len:1,
+        unit:'N / 1–6 / R', wire:'u8, ×1, +0 — wire value 7 = Reverse; cluster remaps it internally',
+        rangeNote:'discrete: N, 1–6, R',
+        isSelect:true,
+        options:[['N',0],['1',1],['2',2],['3',3],['4',4],['5',5],['6',6],['R',7]],
+        default:0,
+        toRaw:(v)=> Number(v) },
+      { key:'fuellevel', label:'Fuel Level', gauge:'Left mini-arc (Fuel Level)', byte:1, len:1,
+        unit:'%', wire:'u8, ×1, +0',
+        rangeNote:'0–100% · low ≤15% · caution ≤30%',
+        min:0, max:100, step:1, default:75,
+        toRaw:(v)=> Math.round(v) },
+    ]
+  },
+  {
+    id:'0x3EE', dec:1006, period:50,
+    note:'Engine-protection warnings — each byte is its own on/off flag (0 = OK, nonzero = active). Drives the right-cluster full-screen "ECU WARNING" overlay. Only needs sending when a state changes.',
+    signals:[
+      { key:'warnknock', label:'Knock', gauge:'Warning overlay', byte:0, len:1, isBool:true, default:false, unit:'0=OK / 1=active', wire:'u8', rangeNote:'boolean' },
+      { key:'warnigncut', label:'Ignition Cut', gauge:'Warning overlay', byte:1, len:1, isBool:true, default:false, unit:'0=OK / 1=active', wire:'u8', rangeNote:'boolean' },
+      { key:'warnfuelcut', label:'Fuel Cut', gauge:'Warning overlay', byte:2, len:1, isBool:true, default:false, unit:'0=OK / 1=active', wire:'u8', rangeNote:'boolean' },
+      { key:'warnboostcut', label:'Boost Cut', gauge:'Warning overlay', byte:3, len:1, isBool:true, default:false, unit:'0=OK / 1=active', wire:'u8', rangeNote:'boolean' },
+      { key:'warnsensor', label:'Sensor Error', gauge:'Warning overlay', byte:4, len:1, isBool:true, default:false, unit:'0=OK / 1=active', wire:'u8', rangeNote:'boolean' },
+      { key:'warnthrottle', label:'Throttle Error', gauge:'Warning overlay', byte:5, len:1, isBool:true, default:false, unit:'0=OK / 1=active', wire:'u8', rangeNote:'boolean' },
+    ]
+  }
+];
+
+const PROFILES = {
+  realdash: {
+    name: 'RealDash',
+    title: 'TrackCluster RealDash — CAN Live Sender',
+    subtitle: 'RealDash device profile — transmits the Link G4X RealDash frames (0x3EF–0x3F1) to a connected CAN-USB adapter via python-can so the RealDash dashboard reacts live on the bench. Signal map matches link_g4x_realdash.xml exactly.',
+    covers: [
+      ['0x3EF (50 ms)', 'Target λ, Throttle, TC setting/intervention, Boost map, Cruise, A/C'],
+      ['0x3F0 (100 ms)', 'Fuel/Charge-IAT temps, Engine load, Coolant P (u16), Ethanol, Turbo speed, Trigger errors'],
+      ['0x3F1 (50 ms)', 'G-force X/Y/Z + 6 extended warning bits (packed in byte 6)'],
+    ],
+    footer: '<b>Send once</b> transmits the frame’s current bytes one time. <b>Send continuously</b> auto-repeats at that frame’s documented period (50/100&#8202;ms) so RealDash keeps seeing fresh values — <code class="inline">link_g4x_realdash.xml</code> sets a 2000&#8202;ms frame timeout that forces every value in a frame to its offline reading if the ECU stops broadcasting. "Stop all continuous sends" and Disconnect both halt every running timer. Formulas mirror <code class="inline">link_g4x_can_setup.json</code> exactly, inverted to compute the raw wire bytes from the display value you type.',
+    frames: FRAMES_REALDASH,
+  },
+  cluster: {
+    name: 'Center Cluster',
+    title: 'TrackCluster Center — CAN Live Sender',
+    subtitle: 'Center Cluster device profile — transmits to the ESP32-P4 center cluster (0x3E8–0x3EE) via python-can so the cluster gauges react live on the bench. Signal map mirrors main/canbus.c exactly.',
+    covers: [
+      ['0x3E8 (10 ms)', 'RPM, Boost/MAP, Coolant, IAT, Oil Temp'],
+      ['0x3E9 (10 ms)', 'Ignition, Speed, Oil Pressure, Fuel Pressure'],
+      ['0x3EA (10 ms)', 'Lambda'],
+      ['0x3EB (50 ms)', 'Gear, Fuel Level'],
+      ['0x3EE (50 ms)', '6 warning flags → right-screen overlay'],
+    ],
+    footer: '<b>Send once</b> transmits the frame’s current bytes one time. <b>Send continuously</b> auto-repeats at that frame’s documented period (10/50&#8202;ms) — matches what <code class="inline">g_dash.last_update_ms</code> needs to stay fresh; a gap over ~500&#8202;ms/2000&#8202;ms trips the UART-bridge staleness handling on the side clusters. "Stop all continuous sends" and Disconnect both halt every running timer. Formulas mirror <code class="inline">main/canbus.c</code> exactly, inverted to compute the raw wire bytes from the display value you type.',
+    frames: FRAMES_CLUSTER,
+  },
+};
+
+const MAX_LOG_LINES = 80;
+const activeStoppers = new Set();
+let connected = false;
+let activeFrames = PROFILES.realdash.frames;
+
+/* ---- encoding helpers (superset: handles u8/u16, signed i16, bitmask, bool) --- */
+function clampByteWidth(raw, len) {
+  const max = len === 1 ? 255 : 65535;
+  if (raw < 0) return 0;
+  if (raw > max) return max;
+  return raw;
+}
+function encodeSigned(raw, len) {
+  const lim = len === 1 ? 128 : 32768;
+  if (raw > lim - 1) raw = lim - 1;
+  if (raw < -lim) raw = -lim;
+  return raw & (len === 1 ? 0xFF : 0xFFFF);
+}
+function packSignal(sig, rawBytes) {
+  let raw;
+  if (sig.isBool) {
+    raw = sig._input.checked ? 1 : 0;
+    if (sig.bit !== undefined) {
+      rawBytes[sig.byte] |= (raw & 1) << sig.bit;
+    } else {
+      rawBytes[sig.byte] = raw & 0xFF;
+    }
+    return;
+  }
+  if (sig.isSelect) {
+    raw = Number(sig._input.value);
+  } else {
+    let v = parseFloat(sig._input.value);
+    if (Number.isNaN(v)) v = sig.default;
+    raw = sig.toRaw(v);
+    if (sig._helper) sig._helper.textContent = sig.helper(v);
+  }
+  raw = sig.signed ? encodeSigned(raw, sig.len) : clampByteWidth(raw, sig.len);
+  if (sig.len === 1) {
+    rawBytes[sig.byte] = raw & 0xFF;
+  } else {
+    rawBytes[sig.byte] = (raw >> 8) & 0xFF;
+    rawBytes[sig.byte + 1] = raw & 0xFF;
+  }
+}
+
+function copyText(text, btn) {
+  const done = () => { const old = btn.textContent; btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = old; }, 1200); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else { fallbackCopy(text, done); }
+}
+function fallbackCopy(text, done) {
+  const ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta); done();
+}
+function logLine(text, cls) {
+  const box = document.getElementById('logBox');
+  const line = document.createElement('div');
+  line.className = 'log-line' + (cls ? ' ' + cls : '');
+  const ts = new Date().toLocaleTimeString();
+  line.textContent = '[' + ts + '] ' + text;
+  box.insertBefore(line, box.firstChild);
+  while (box.children.length > MAX_LOG_LINES) box.removeChild(box.lastChild);
+}
+
+function applyConnState() {
+  document.querySelectorAll('.send-btn, .continuous-checkbox').forEach(el => { el.disabled = !connected; });
+  document.getElementById('connectBtn').disabled = connected || !window.pywebview;
+  document.getElementById('disconnectBtn').disabled = !connected;
+}
+function setConnectedUI(state, info) {
+  connected = state;
+  document.getElementById('statusDot').classList.toggle('connected', state);
+  document.getElementById('statusText').textContent = state
+    ? ('Connected — ' + info.backend + ' ' + info.identifier)
+    : 'Not connected';
+  applyConnState();
+  if (!state) { activeStoppers.forEach(fn => fn()); }
+}
+
+function populateAdapters(list) {
+  const sel = document.getElementById('adapterSelect');
+  const prev = sel.value;
+  sel.innerHTML = '';
+  if (!list || list.length === 0) {
+    const opt = document.createElement('option');
+    opt.textContent = 'No adapters found — plug one in'; opt.value = '';
+    sel.appendChild(opt); return;
+  }
+  list.forEach(a => {
+    const opt = document.createElement('option');
+    opt.value = JSON.stringify({ backend: a.backend, identifier: a.identifier });
+    opt.textContent = a.label + (a.auto_ok ? '' : '  [manual only]');
+    sel.appendChild(opt);
+  });
+  for (const o of sel.options) { if (o.value === prev) { sel.value = prev; break; } }
+}
+function refreshAdapters() {
+  window.pywebview.api.scan_adapters().then(list => {
+    populateAdapters(list);
+    logLine(list && list.length ? ('Found ' + list.length + ' adapter(s).') : 'Scan found no adapters.',
+            list && list.length ? '' : 'err');
+  }).catch(err => logLine('Scan failed: ' + err, 'err'));
+}
+
+let _lastConnKey = null;
+function pollState() {
+  if (!window.pywebview) return;
+  window.pywebview.api.get_state().then(st => {
+    populateAdapters(st.adapters);
+    const key = st.connected ? (st.backend + '|' + st.identifier + '|' + st.bitrate) : '';
+    if (key !== _lastConnKey) {
+      _lastConnKey = key;
+      setConnectedUI(st.connected, { backend: st.backend, identifier: st.identifier });
+      if (st.connected) logLine('Connected: ' + st.backend + ' ' + st.identifier + ' @ ' + st.bitrate + ' bps', 'ok');
+    }
+    document.getElementById('autoConnectChk').checked = st.auto;
+    const txt = document.getElementById('statusText');
+    if (st.connected) {
+      txt.textContent = 'Connected — ' + st.backend + ' ' + st.identifier + ' @ ' + st.bitrate + ' bps';
+    } else {
+      txt.textContent = st.message || 'Not connected';
+    }
+  }).catch(() => {});
+}
+
+/* ---- frame rendering (rebuilt on device switch) ---------------------------- */
+function buildUI(frames) {
+  const container = document.getElementById('frames');
+  const jumpSelect = document.getElementById('gaugeJump');
+  container.innerHTML = '';
+  jumpSelect.innerHTML = '';
+
+  const defaultOpt = document.createElement('option');
+  defaultOpt.textContent = '— Jump to a gauge —'; defaultOpt.value = '';
+  jumpSelect.appendChild(defaultOpt);
+
+  frames.forEach(frame => {
+    const rawBytes = new Array(8).fill(0);
+    const card = document.createElement('div');
+    card.className = 'frame-card'; card.id = 'frame-' + frame.id;
+
+    const header = document.createElement('div');
+    header.className = 'frame-header';
+    header.innerHTML = '<span class="frame-id">' + frame.id + '</span> ' +
+      '<span class="frame-dec">(' + frame.dec + ' dec)</span> ' +
+      '<span class="frame-period">— period ' + frame.period + ' ms</span>';
+    card.appendChild(header);
+
+    const noteEl = document.createElement('div');
+    noteEl.className = 'frame-note'; noteEl.textContent = frame.note;
+    card.appendChild(noteEl);
+
+    const grid = document.createElement('div');
+    grid.className = 'signal-grid';
+
+    frame.signals.forEach(sig => {
+      const row = document.createElement('div');
+      row.className = 'signal-row' + (sig.isBool ? ' bool-row' : '');
+      row.id = 'sig-' + sig.key;
+
+      const labelWrap = document.createElement('div');
+      labelWrap.className = 'signal-label';
+      labelWrap.innerHTML = '<strong>' + sig.label + '</strong><br><span class="gauge-name">' + sig.gauge + '</span>';
+      row.appendChild(labelWrap);
+
+      let inputEl;
+      if (sig.isBool) {
+        inputEl = document.createElement('input');
+        inputEl.type = 'checkbox'; inputEl.checked = !!sig.default;
+      } else if (sig.isSelect) {
+        inputEl = document.createElement('select');
+        sig.options.forEach(pair => {
+          const opt = document.createElement('option');
+          opt.textContent = pair[0]; opt.value = pair[1];
+          if (pair[1] === sig.default) opt.selected = true;
+          inputEl.appendChild(opt);
+        });
+      } else {
+        inputEl = document.createElement('input');
+        inputEl.type = 'number';
+        inputEl.min = sig.min; inputEl.max = sig.max; inputEl.step = sig.step; inputEl.value = sig.default;
+      }
+      inputEl.id = 'input-' + sig.key; inputEl.className = 'signal-input';
+      row.appendChild(inputEl);
+
+      const meta = document.createElement('div');
+      meta.className = 'signal-meta';
+      meta.innerHTML = 'Byte ' + sig.byte + (sig.len === 2 ? '–' + (sig.byte + 1) : '') +
+        ' · ' + (sig.wire || ('u' + (sig.len * 8))) + ' · ' + (sig.unit || '') +
+        '<br><span class="range-note">' + (sig.rangeNote || '') + '</span>';
+      row.appendChild(meta);
+
+      if (sig.helper) {
+        const helperEl = document.createElement('div');
+        helperEl.className = 'signal-helper'; helperEl.id = 'helper-' + sig.key;
+        row.appendChild(helperEl); sig._helper = helperEl;
+      }
+
+      inputEl.addEventListener('input', recompute);
+      inputEl.addEventListener('change', recompute);
+      grid.appendChild(row); sig._input = inputEl;
+
+      const jumpOpt = document.createElement('option');
+      jumpOpt.value = 'sig-' + sig.key; jumpOpt.textContent = sig.label + ' — ' + frame.id;
+      jumpSelect.appendChild(jumpOpt);
+    });
+
+    card.appendChild(grid);
+
+    const hexWrap = document.createElement('div');
+    hexWrap.className = 'hex-output';
+    const hexLabel = document.createElement('div');
+    hexLabel.className = 'hex-label'; hexLabel.textContent = 'Frame (ID ' + frame.id + ', DLC 8):';
+    hexWrap.appendChild(hexLabel);
+    const hexBox = document.createElement('code');
+    hexBox.className = 'hex-box'; hexWrap.appendChild(hexBox);
+    const copyBtn = document.createElement('button');
+    copyBtn.textContent = 'Copy bytes'; copyBtn.className = 'copy-btn';
+    copyBtn.addEventListener('click', () => copyText(hexBox.textContent, copyBtn));
+    hexWrap.appendChild(copyBtn); card.appendChild(hexWrap);
+
+    const sendRow = document.createElement('div');
+    sendRow.className = 'send-row';
+    const sendBtn = document.createElement('button');
+    sendBtn.textContent = 'Send once'; sendBtn.className = 'copy-btn send-btn'; sendBtn.disabled = !connected;
+    sendRow.appendChild(sendBtn);
+
+    const contLabel = document.createElement('label');
+    contLabel.className = 'continuous-label';
+    const contCheck = document.createElement('input');
+    contCheck.type = 'checkbox'; contCheck.className = 'continuous-checkbox'; contCheck.disabled = !connected;
+    contLabel.appendChild(contCheck);
+    contLabel.appendChild(document.createTextNode('Send continuously (every ' + frame.period + ' ms)'));
+    sendRow.appendChild(contLabel);
+
+    const lastSent = document.createElement('span');
+    lastSent.className = 'last-sent'; sendRow.appendChild(lastSent);
+    card.appendChild(sendRow); container.appendChild(card);
+
+    let continuousTimer = null;
+    let sendInFlight = false;
+
+    function stopThis() {
+      if (continuousTimer) { clearInterval(continuousTimer); continuousTimer = null; }
+      contCheck.checked = false; activeStoppers.delete(stopThis);
+    }
+    function doSend() {
+      if (sendInFlight) return;
+      sendInFlight = true;
+      window.pywebview.api.send_frame(frame.id, rawBytes.slice()).then(res => {
+        sendInFlight = false;
+        if (res.ok) {
+          lastSent.textContent = 'Sent ' + res.sent_at; lastSent.classList.remove('error');
+          logLine(frame.id + ' -> ' + hexBox.textContent, 'ok');
+        } else {
+          lastSent.textContent = 'Error: ' + res.error; lastSent.classList.add('error');
+          logLine(frame.id + ' FAILED: ' + res.error, 'err'); stopThis();
+        }
+      }).catch(err => {
+        sendInFlight = false;
+        lastSent.textContent = 'Error: ' + err; lastSent.classList.add('error');
+        logLine(frame.id + ' FAILED: ' + err, 'err'); stopThis();
+      });
+    }
+    sendBtn.addEventListener('click', doSend);
+    contCheck.addEventListener('change', () => {
+      if (contCheck.checked) { doSend(); continuousTimer = setInterval(doSend, frame.period); activeStoppers.add(stopThis); }
+      else { stopThis(); }
+    });
+
+    function recompute() {
+      rawBytes.fill(0);
+      frame.signals.forEach(sig => packSignal(sig, rawBytes));
+      hexBox.textContent = rawBytes.map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(' ');
+    }
+    recompute();
+  });
+}
+
+/* ---- device profile switching --------------------------------------------- */
+function applyProfile(key) {
+  const p = PROFILES[key] || PROFILES.realdash;
+  activeStoppers.forEach(fn => fn());       // stop any continuous sends before swapping maps
+  activeFrames = p.frames;
+  document.title = p.title;
+  document.getElementById('appTitle').textContent = p.title;
+  document.getElementById('appSubtitle').textContent = p.subtitle;
+  document.getElementById('deviceBadge').textContent = p.name;
+  const cov = document.getElementById('whatCovers');
+  cov.innerHTML = '';
+  p.covers.forEach(row => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + row[0] + '</td><td>' + row[1] + '</td>';
+    cov.appendChild(tr);
+  });
+  document.getElementById('appFooter').innerHTML = p.footer;
+  buildUI(p.frames);
+  applyConnState();
+  try { localStorage.setItem('tc_device', key); } catch (e) {}
+  logLine('Device profile: ' + p.name + ' (sends ' + p.frames.map(f => f.id).join(', ') + ')');
+}
+
+function wireGaugeJump() {
+  const sel = document.getElementById('gaugeJump');
+  sel.addEventListener('change', () => {
+    if (!sel.value) return;
+    const el = document.getElementById(sel.value);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('flash');
+      setTimeout(() => el.classList.remove('flash'), 1500);
+      const input = el.querySelector('input,select');
+      if (input) input.focus();
+    }
+    sel.value = '';
+  });
+}
+
+function wireConnectPanel() {
+  document.getElementById('refreshBtn').addEventListener('click', refreshAdapters);
+  document.getElementById('connectBtn').addEventListener('click', () => {
+    const sel = document.getElementById('adapterSelect');
+    if (!sel.value) { logLine('Pick an adapter first.', 'err'); return; }
+    const { backend, identifier } = JSON.parse(sel.value);
+    const bitrate = parseInt(document.getElementById('bitrateSelect').value, 10);
+    window.pywebview.api.connect(backend, identifier, bitrate).then(res => {
+      if (res.ok) { setConnectedUI(true, res); logLine('Connected: ' + res.backend + ' ' + res.identifier + ' @ ' + res.bitrate + ' bps', 'ok'); }
+      else { logLine('Connect failed: ' + res.error, 'err'); }
+    });
+  });
+  document.getElementById('disconnectBtn').addEventListener('click', () => {
+    window.pywebview.api.disconnect().then(() => { setConnectedUI(false); logLine('Disconnected.'); });
+  });
+  document.getElementById('stopAllBtn').addEventListener('click', () => {
+    activeStoppers.forEach(fn => fn()); logLine('Stopped all continuous sends.');
+  });
+  document.getElementById('bitrateSelect').addEventListener('change', (e) => {
+    const bps = parseInt(e.target.value, 10);
+    if (window.pywebview) window.pywebview.api.set_bitrate(bps);
+    logLine('Bitrate set to ' + bps + ' bps (applies on next connect).');
+  });
+  document.getElementById('autoConnectChk').addEventListener('change', (e) => {
+    if (window.pywebview) window.pywebview.api.set_auto(e.target.checked);
+    logLine('Auto-connect ' + (e.target.checked ? 'ON' : 'OFF') + '.');
+  });
+  document.getElementById('deviceSelect').addEventListener('change', (e) => applyProfile(e.target.value));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  let start = 'realdash';
+  try { const s = localStorage.getItem('tc_device'); if (s && PROFILES[s]) start = s; } catch (e) {}
+  document.getElementById('deviceSelect').value = start;
+  wireGaugeJump();
+  wireConnectPanel();
+  applyProfile(start);
+});
+
+window.addEventListener('pywebviewready', () => {
+  document.getElementById('refreshBtn').disabled = false;
+  document.getElementById('adapterSelect').disabled = false;
+  document.getElementById('connectBtn').disabled = false;
+  document.getElementById('statusText').textContent = 'Watching for adapters…';
+  const bps = parseInt(document.getElementById('bitrateSelect').value, 10);
+  window.pywebview.api.set_bitrate(bps);
+  window.pywebview.api.set_auto(document.getElementById('autoConnectChk').checked);
+  refreshAdapters();
+  pollState();
+  setInterval(pollState, 1200);
+});
+</script>
+</body>
+</html>
