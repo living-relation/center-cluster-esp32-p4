@@ -177,7 +177,7 @@
   <div class="panel">
     <h2>Bus settings (fixed, same for every frame)</h2>
     <table>
-      <tr><td>Bitrate</td><td><b>1,000,000 bps</b> (1 Mbit/s)</td></tr>
+      <tr><td>Bitrate</td><td><b>1 Mbit/s</b> default — selectable in the Connect panel above</td></tr>
       <tr><td>ID type</td><td><b>Standard / 11&#8209;bit</b> (every ID below is &lt; 0x800)</td></tr>
       <tr><td>Frame type</td><td>Data frame (not RTR)</td></tr>
       <tr><td>DLC (data length)</td><td><b>8 bytes</b>, always</td></tr>
@@ -459,7 +459,6 @@ const PROFILES = {
 const MAX_LOG_LINES = 80;
 const activeStoppers = new Set();
 let connected = false;
-let activeFrames = PROFILES.realdash.frames;
 
 /* ---- encoding helpers (superset: handles u8/u16, signed i16, bitmask, bool) --- */
 function clampByteWidth(raw, len) {
@@ -743,7 +742,6 @@ function buildUI(frames) {
 function applyProfile(key) {
   const p = PROFILES[key] || PROFILES.realdash;
   activeStoppers.forEach(fn => fn());       // stop any continuous sends before swapping maps
-  activeFrames = p.frames;
   document.title = p.title;
   document.getElementById('appTitle').textContent = p.title;
   document.getElementById('appSubtitle').textContent = p.subtitle;

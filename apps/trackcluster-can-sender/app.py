@@ -140,6 +140,8 @@ class Api:
             try:
                 for cfg in can.detect_available_configs(iface):
                     chan = cfg.get("channel")
+                    if chan is None:
+                        continue  # no usable channel -> don't offer a dead adapter
                     adapters.append({
                         "backend": iface, "identifier": str(chan),
                         "label": f"{iface} — channel {chan}",
@@ -181,6 +183,13 @@ class Api:
             self._message = f"Connected — {backend} {identifier} @ {br} bps"
             return {"ok": True, "backend": backend, "identifier": identifier, "bitrate": br}
         except Exception as e:
+            # _open_bus failed: make sure we don't leave stale backend/identifier
+            # (get_state() must report a consistent "disconnected" view).
+            with self._lock:
+                self._bus = None
+                self._backend = None
+                self._identifier = None
+            self._message = f"Connect failed: {e}"
             traceback.print_exc()
             return {"ok": False, "error": str(e)}
 
@@ -216,9 +225,17 @@ class Api:
     # ---- sending -----------------------------------------------------------
     def send_frame(self, can_id_hex, data_bytes):
         try:
+            arb = int(can_id_hex, 16)
+            if not (0 <= arb <= 0x7FF):
+                return {"ok": False,
+                        "error": f"CAN ID {can_id_hex} outside 11-bit range (0x000-0x7FF)"}
+            data = bytes(data_bytes)
+            if len(data) != 8:
+                return {"ok": False,
+                        "error": f"Payload must be 8 bytes, got {len(data)}"}
             msg = can.Message(
-                arbitration_id=int(can_id_hex, 16),
-                data=bytes(data_bytes),
+                arbitration_id=arb,
+                data=data,
                 is_extended_id=False,
             )
             with self._lock:

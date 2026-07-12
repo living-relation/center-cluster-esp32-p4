@@ -14,8 +14,15 @@ Both verified against the committed GitHub configs (the flashed state) — no di
 
 ## Launch
 - **Desktop shortcut "TrackCluster CAN Sender"** → runs the portable exe. Pick device in-app.
-- From source (dev): `pythonw.exe app.py` using the shared venv at
-  `..\canbus-live-sender\.venv`. Deep-link a device for testing with env `TC_DEVICE=cluster`
+- From source (dev), self-contained from a fresh checkout:
+  ```powershell
+  cd apps\trackcluster-can-sender
+  py -3 -m venv .venv
+  .venv\Scripts\python -m pip install -r requirements.txt
+  .venv\Scripts\pythonw app.py
+  ```
+  (Opt-in shortcut: if you already built the sibling `..\canbus-live-sender\.venv`, you can reuse
+  it instead of creating one here.) Deep-link a device for testing with env `TC_DEVICE=cluster`
   or `TC_DEVICE=realdash`.
 
 ## Back end (shared by both profiles)
