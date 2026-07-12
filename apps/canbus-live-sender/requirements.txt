@@ -1,6 +1,0 @@
-# Runtime deps for `python app.py`.
-# python-can[gs_usb] pulls in pyusb + the gs_usb package, which is what
-# actually talks to a CANable-class adapter running candleLight firmware.
-pywebview>=5.1
-python-can[gs_usb]>=4.3.1
-pyserial>=3.5

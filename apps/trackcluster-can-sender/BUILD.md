@@ -21,9 +21,7 @@ Both verified against the committed GitHub configs (the flashed state) — no di
   .venv\Scripts\python -m pip install -r requirements.txt
   .venv\Scripts\pythonw app.py
   ```
-  (Opt-in shortcut: if you already built the sibling `..\canbus-live-sender\.venv`, you can reuse
-  it instead of creating one here.) Deep-link a device for testing with env `TC_DEVICE=cluster`
-  or `TC_DEVICE=realdash`.
+  Deep-link a device for testing with env `TC_DEVICE=cluster` or `TC_DEVICE=realdash`.
 
 ## Back end (shared by both profiles)
 Auto-detects + hot-plug auto-connects (connect-only; never transmits until you press Send /
@@ -33,10 +31,11 @@ that vendor driver is installed. Switching device does NOT drop the adapter link
 any running continuous sends (safety).
 
 ## Portable build (single folder, any Windows PC)
-Run from this folder, using the shared venv's Python (has deps + pyinstaller):
+Run from this folder (uses the local `.venv` created in the Launch step; if you haven't yet,
+`py -3 -m venv .venv && .venv\Scripts\python -m pip install -r requirements.txt`):
 ```powershell
-$py = "..\canbus-live-sender\.venv\Scripts\python.exe"
-& $py -m PyInstaller --noconfirm --clean --windowed ^
+.venv\Scripts\python -m pip install pyinstaller
+.venv\Scripts\python -m PyInstaller --noconfirm --clean --windowed ^
   --name "TrackCluster CAN Sender" --icon app.ico --add-data "ui;ui" ^
   --collect-all libusb_package --collect-all webview --collect-all clr_loader ^
   --collect-all pythonnet --collect-submodules can app.py
@@ -46,5 +45,7 @@ Output: `dist\TrackCluster CAN Sender\` (~30 MB) — copy the whole folder anywh
 one-time Zadig → WinUSB bind for gs_usb.
 
 ## Notes
-- The two original per-device apps remain untouched in their repos as the authoritative sources.
+- This unified app replaced the two standalone per-device sender apps (formerly
+  `apps/canbus-live-sender/`), which have been removed. The signal maps here are verbatim copies of
+  those, verified against `link_g4x_realdash.xml` and `main/canbus.c`.
 - `dist/`, `build/`, `.venv/`, `*.spec` are gitignored.
