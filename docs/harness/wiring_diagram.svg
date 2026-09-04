@@ -1,0 +1,298 @@
+<svg viewBox="0 0 1900 1140" xmlns="http://www.w3.org/2000/svg" font-family="Menlo, Consolas, monospace" role="img">
+<title>Center Cluster ESP32-P4 Wiring Diagram</title>
+<desc>Wiring diagram of the center cluster J8 40-pin GPIO connector, left and right cluster boards, CAN transceiver, buck power converter, three rotary encoders, a push button, the onboard touch/audio I2C bus, and the headlight-sense input. Wires are colored by signal type; text always renders above wires.</desc>
+<rect x="0" y="0" width="1900" height="1140" fill="#0f1115"/>
+<rect x="730" y="175" width="340" height="40" rx="6" fill="#232833" stroke="#4a5266" stroke-width="1.5"/>
+<rect x="770" y="220" width="260" height="520" rx="3" fill="#232833" stroke="#4a5266" stroke-width="1.5"/>
+<line x1="770" y1="246.0" x2="1030" y2="246.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="272.0" x2="1030" y2="272.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="298.0" x2="1030" y2="298.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="324.0" x2="1030" y2="324.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="350.0" x2="1030" y2="350.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="376.0" x2="1030" y2="376.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="402.0" x2="1030" y2="402.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="428.0" x2="1030" y2="428.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="454.0" x2="1030" y2="454.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="480.0" x2="1030" y2="480.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="506.0" x2="1030" y2="506.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="532.0" x2="1030" y2="532.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="558.0" x2="1030" y2="558.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="584.0" x2="1030" y2="584.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="610.0" x2="1030" y2="610.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="636.0" x2="1030" y2="636.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="662.0" x2="1030" y2="662.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="688.0" x2="1030" y2="688.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="714.0" x2="1030" y2="714.0" stroke="#4a5266" stroke-width="0.5"/>
+<line x1="770" y1="740.0" x2="1030" y2="740.0" stroke="#4a5266" stroke-width="0.5"/>
+<rect x="830" y="60" width="140" height="70" rx="6" fill="#171a21" stroke="#4a5266" stroke-width="1.5"/>
+<rect x="830" y="900" width="140" height="70" rx="6" fill="#171a21" stroke="#4a5266" stroke-width="1.5"/>
+<rect x="100" y="350" width="210" height="170" rx="6" fill="#171a21" stroke="#4a5266" stroke-width="1.5"/>
+<rect x="250" y="408" width="50" height="90" rx="4" fill="#232833" stroke="#4a5266" stroke-width="1.5"/>
+<rect x="1590" y="350" width="210" height="170" rx="6" fill="#171a21" stroke="#4a5266" stroke-width="1.5"/>
+<rect x="1600" y="408" width="50" height="90" rx="4" fill="#232833" stroke="#4a5266" stroke-width="1.5"/>
+<rect x="100" y="900" width="160" height="75" rx="6" fill="#171a21" stroke="#4a5266" stroke-width="1.5"/>
+<rect x="100" y="990" width="160" height="75" rx="6" fill="#171a21" stroke="#4a5266" stroke-width="1.5"/>
+<rect x="1640" y="900" width="160" height="75" rx="6" fill="#171a21" stroke="#4a5266" stroke-width="1.5"/>
+<rect x="1640" y="990" width="160" height="55" rx="6" fill="#171a21" stroke="#4a5266" stroke-width="1.5"/>
+<rect x="350" y="235" width="160" height="65" rx="6" fill="#171a21" stroke="#4a5266" stroke-width="1.5"/>
+<rect x="350" y="478" width="160" height="62" rx="6" fill="#171a21" stroke="#4a5266" stroke-width="1.5"/>
+<path d="M846,130 L846,144 L700,144 L700,233.0 L770,233.0" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+<path d="M882,130 L882,154 L705,154 A5,5 0 0,0 695,154 L694,154 L694,259.0 L770,259.0" fill="none" stroke="#f5f5f7" stroke-width="2" stroke-linecap="round"/>
+<path d="M918,130 L918,164 L949,164 A5,5 0 0,1 959,164 L1130,164 L1130,233.0 L1030,233.0" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+<path d="M954,130 L954,174 L1125,174 A5,5 0 0,1 1135,174 L1140,174 L1140,259.0 L1030,259.0" fill="none" stroke="#eab308" stroke-width="2" stroke-linecap="round"/>
+<path d="M880,900 L880,886 L688,886 L688,415.0 L770,415.0" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+<path d="M920,900 L920,872 L1150,872 L1150,415.0 L1030,415.0" fill="none" stroke="#f5f5f7" stroke-width="2" stroke-linecap="round"/>
+<path d="M310,390 L611,390 A5,5 0 0,1 621,390 L682,390 L682,337.0 L770,337.0" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+<path d="M310,430 L611,430 A5,5 0 0,1 621,430 L676,430 L676,918 L830,918" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+<path d="M310,474 L611,474 A5,5 0 0,1 621,474 L653,474 A5,5 0 0,1 663,474 L659,474 A5,5 0 0,1 669,474 L670,474 L670,942 L830,942" fill="none" stroke="#f5f5f7" stroke-width="2" stroke-linecap="round"/>
+<path d="M1590,390 L1160,390 L1160,337.0 L1030,337.0" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+<path d="M1590,430 L1170,430 L1170,918 L970,918" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+<path d="M1590,474 L1205,474 A5,5 0 0,0 1195,474 L1195,474 A5,5 0 0,0 1185,474 L1180,474 L1180,942 L970,942" fill="none" stroke="#f5f5f7" stroke-width="2" stroke-linecap="round"/>
+<path d="M260,920 L629,920 A5,5 0 0,1 639,920 L635,920 A5,5 0 0,1 645,920 L641,920 A5,5 0 0,1 651,920 L647,920 A5,5 0 0,1 657,920 L653,920 A5,5 0 0,1 663,920 L664,920 L664,467.0 L671,467.0 A5,5 0 0,1 681,467.0 L683,467.0 A5,5 0 0,1 693,467.0 L770,467.0" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+<path d="M260,940 L629,940 A5,5 0 0,1 639,940 L635,940 A5,5 0 0,1 645,940 L641,940 A5,5 0 0,1 651,940 L647,940 A5,5 0 0,1 657,940 L658,940 L658,441.0 L671,441.0 A5,5 0 0,1 681,441.0 L683,441.0 A5,5 0 0,1 693,441.0 L770,441.0" fill="none" stroke="#d946ef" stroke-width="2" stroke-linecap="round"/>
+<path d="M260,960 L629,960 A5,5 0 0,1 639,960 L635,960 A5,5 0 0,1 645,960 L641,960 A5,5 0 0,1 651,960 L652,960 L652,493.0 L653,493.0 A5,5 0 0,1 663,493.0 L659,493.0 A5,5 0 0,1 669,493.0 L665,493.0 A5,5 0 0,1 675,493.0 L671,493.0 A5,5 0 0,1 681,493.0 L683,493.0 A5,5 0 0,1 693,493.0 L770,493.0" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round"/>
+<path d="M260,1010 L629,1010 A5,5 0 0,1 639,1010 L635,1010 A5,5 0 0,1 645,1010 L646,1010 L646,519.0 L647,519.0 A5,5 0 0,1 657,519.0 L653,519.0 A5,5 0 0,1 663,519.0 L659,519.0 A5,5 0 0,1 669,519.0 L665,519.0 A5,5 0 0,1 675,519.0 L671,519.0 A5,5 0 0,1 681,519.0 L683,519.0 A5,5 0 0,1 693,519.0 L770,519.0" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+<path d="M260,1030 L629,1030 A5,5 0 0,1 639,1030 L640,1030 L640,545.0 L641,545.0 A5,5 0 0,1 651,545.0 L647,545.0 A5,5 0 0,1 657,545.0 L653,545.0 A5,5 0 0,1 663,545.0 L659,545.0 A5,5 0 0,1 669,545.0 L665,545.0 A5,5 0 0,1 675,545.0 L671,545.0 A5,5 0 0,1 681,545.0 L683,545.0 A5,5 0 0,1 693,545.0 L770,545.0" fill="none" stroke="#d946ef" stroke-width="2" stroke-linecap="round"/>
+<path d="M260,1050 L634,1050 L634,571.0 L635,571.0 A5,5 0 0,1 645,571.0 L641,571.0 A5,5 0 0,1 651,571.0 L647,571.0 A5,5 0 0,1 657,571.0 L653,571.0 A5,5 0 0,1 663,571.0 L659,571.0 A5,5 0 0,1 669,571.0 L665,571.0 A5,5 0 0,1 675,571.0 L671,571.0 A5,5 0 0,1 681,571.0 L683,571.0 A5,5 0 0,1 693,571.0 L770,571.0" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round"/>
+<path d="M1640,920 L1225,920 A5,5 0 0,0 1215,920 L1215,920 A5,5 0 0,0 1205,920 L1205,920 A5,5 0 0,0 1195,920 L1190,920 L1190,441.0 L1175,441.0 A5,5 0 0,0 1165,441.0 L1155,441.0 A5,5 0 0,0 1145,441.0 L1030,441.0" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+<path d="M1640,940 L1225,940 A5,5 0 0,0 1215,940 L1215,940 A5,5 0 0,0 1205,940 L1200,940 L1200,467.0 L1195,467.0 A5,5 0 0,0 1185,467.0 L1175,467.0 A5,5 0 0,0 1165,467.0 L1155,467.0 A5,5 0 0,0 1145,467.0 L1030,467.0" fill="none" stroke="#d946ef" stroke-width="2" stroke-linecap="round"/>
+<path d="M1640,960 L1225,960 A5,5 0 0,0 1215,960 L1210,960 L1210,493.0 L1205,493.0 A5,5 0 0,0 1195,493.0 L1195,493.0 A5,5 0 0,0 1185,493.0 L1185,493.0 A5,5 0 0,0 1175,493.0 L1175,493.0 A5,5 0 0,0 1165,493.0 L1155,493.0 A5,5 0 0,0 1145,493.0 L1030,493.0" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round"/>
+<path d="M1640,1017 L1220,1017 L1220,519.0 L1215,519.0 A5,5 0 0,0 1205,519.0 L1205,519.0 A5,5 0 0,0 1195,519.0 L1195,519.0 A5,5 0 0,0 1185,519.0 L1185,519.0 A5,5 0 0,0 1175,519.0 L1175,519.0 A5,5 0 0,0 1165,519.0 L1155,519.0 A5,5 0 0,0 1145,519.0 L1030,519.0" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round"/>
+<path d="M510,259 L628,259 L628,285.0 L770,285.0" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round"/>
+<path d="M510,285 L622,285 L622,311.0 L770,311.0" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round"/>
+<path d="M510,507 L616,507 L616,363.0 L677,363.0 A5,5 0 0,1 687,363.0 L770,363.0" fill="none" stroke="#14b8a6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="770" cy="233.0" r="4" fill="#e6e9ef"/>
+<circle cx="1030" cy="233.0" r="4" fill="#e6e9ef"/>
+<circle cx="770" cy="259.0" r="4" fill="#3a4152"/>
+<circle cx="1030" cy="259.0" r="4" fill="#e6e9ef"/>
+<circle cx="770" cy="285.0" r="4" fill="#e6e9ef"/>
+<circle cx="1030" cy="285.0" r="4" fill="#3a4152"/>
+<circle cx="770" cy="311.0" r="4" fill="#e6e9ef"/>
+<circle cx="1030" cy="311.0" r="4" fill="#3a4152"/>
+<circle cx="770" cy="337.0" r="4" fill="#e6e9ef"/>
+<circle cx="1030" cy="337.0" r="4" fill="#e6e9ef"/>
+<circle cx="770" cy="363.0" r="4" fill="#e6e9ef"/>
+<circle cx="1030" cy="363.0" r="4" fill="#3a4152"/>
+<circle cx="770" cy="389.0" r="4" fill="#e6e9ef"/>
+<circle cx="1030" cy="389.0" r="4" fill="#3a4152"/>
+<circle cx="770" cy="415.0" r="4" fill="#e6e9ef"/>
+<circle cx="1030" cy="415.0" r="4" fill="#3a4152"/>
+<circle cx="770" cy="441.0" r="4" fill="#e6e9ef"/>
+<circle cx="1030" cy="441.0" r="4" fill="#e6e9ef"/>
+<circle cx="770" cy="467.0" r="4" fill="#e6e9ef"/>
+<circle cx="1030" cy="467.0" r="4" fill="#e6e9ef"/>
+<circle cx="770" cy="493.0" r="4" fill="#e6e9ef"/>
+<circle cx="1030" cy="493.0" r="4" fill="#e6e9ef"/>
+<circle cx="770" cy="519.0" r="4" fill="#e6e9ef"/>
+<circle cx="1030" cy="519.0" r="4" fill="#e6e9ef"/>
+<circle cx="770" cy="545.0" r="4" fill="#e6e9ef"/>
+<circle cx="1030" cy="545.0" r="4" fill="#3a4152"/>
+<circle cx="770" cy="571.0" r="4" fill="#e6e9ef"/>
+<circle cx="1030" cy="571.0" r="4" fill="#3a4152"/>
+<circle cx="770" cy="597.0" r="4" fill="#3a4152"/>
+<circle cx="1030" cy="597.0" r="4" fill="#3a4152"/>
+<circle cx="770" cy="623.0" r="4" fill="#3a4152"/>
+<circle cx="1030" cy="623.0" r="4" fill="#3a4152"/>
+<circle cx="770" cy="649.0" r="4" fill="#3a4152"/>
+<circle cx="1030" cy="649.0" r="4" fill="#3a4152"/>
+<circle cx="770" cy="675.0" r="4" fill="#3a4152"/>
+<circle cx="1030" cy="675.0" r="4" fill="#3a4152"/>
+<circle cx="770" cy="701.0" r="4" fill="#3a4152"/>
+<circle cx="1030" cy="701.0" r="4" fill="#3a4152"/>
+<circle cx="770" cy="727.0" r="4" fill="#3a4152"/>
+<circle cx="1030" cy="727.0" r="4" fill="#3a4152"/>
+<circle cx="846" cy="130" r="3.5" fill="#e6e9ef"/>
+<circle cx="882" cy="130" r="3.5" fill="#e6e9ef"/>
+<circle cx="918" cy="130" r="3.5" fill="#e6e9ef"/>
+<circle cx="954" cy="130" r="3.5" fill="#e6e9ef"/>
+<circle cx="880" cy="900" r="3.5" fill="#e6e9ef"/>
+<circle cx="920" cy="900" r="3.5" fill="#e6e9ef"/>
+<circle cx="880" cy="970" r="3.5" fill="#e6e9ef"/>
+<circle cx="920" cy="970" r="3.5" fill="#e6e9ef"/>
+<circle cx="830" cy="918" r="3" fill="#e6e9ef"/>
+<circle cx="830" cy="942" r="3" fill="#e6e9ef"/>
+<circle cx="970" cy="918" r="3" fill="#e6e9ef"/>
+<circle cx="970" cy="942" r="3" fill="#e6e9ef"/>
+<circle cx="310" cy="390" r="3.5" fill="#e6e9ef"/>
+<circle cx="310" cy="430" r="3.5" fill="#e6e9ef"/>
+<circle cx="310" cy="474" r="3.5" fill="#e6e9ef"/>
+<circle cx="1590" cy="390" r="3.5" fill="#e6e9ef"/>
+<circle cx="1590" cy="430" r="3.5" fill="#e6e9ef"/>
+<circle cx="1590" cy="474" r="3.5" fill="#e6e9ef"/>
+<circle cx="260" cy="920" r="3.5" fill="#e6e9ef"/>
+<circle cx="260" cy="940" r="3.5" fill="#e6e9ef"/>
+<circle cx="260" cy="960" r="3.5" fill="#e6e9ef"/>
+<circle cx="260" cy="1010" r="3" fill="#e6e9ef"/>
+<circle cx="260" cy="1030" r="3" fill="#e6e9ef"/>
+<circle cx="260" cy="1050" r="3" fill="#e6e9ef"/>
+<circle cx="1640" cy="920" r="3.5" fill="#e6e9ef"/>
+<circle cx="1640" cy="940" r="3.5" fill="#e6e9ef"/>
+<circle cx="1640" cy="960" r="3.5" fill="#e6e9ef"/>
+<circle cx="1640" cy="1017" r="3.5" fill="#e6e9ef"/>
+<circle cx="510" cy="259" r="3.5" fill="#e6e9ef"/>
+<circle cx="510" cy="285" r="3.5" fill="#e6e9ef"/>
+<circle cx="510" cy="507" r="3.5" fill="#e6e9ef"/>
+<circle cx="100" cy="16" r="4" fill="#ef4444"/>
+<circle cx="283.20000000000005" cy="16" r="4" fill="#f5f5f7"/>
+<circle cx="338.40000000000003" cy="16" r="4" fill="#3b82f6"/>
+<circle cx="470.40000000000003" cy="16" r="4" fill="#eab308"/>
+<circle cx="557.6" cy="16" r="4" fill="#22c55e"/>
+<circle cx="689.6" cy="16" r="4" fill="#d946ef"/>
+<circle cx="815.2" cy="16" r="4" fill="#8b5cf6"/>
+<circle cx="1030.4" cy="16" r="4" fill="#f97316"/>
+<circle cx="1111.2" cy="16" r="4" fill="#22d3ee"/>
+<circle cx="1192.0" cy="16" r="4" fill="#14b8a6"/>
+<text x="900.0" y="201" font-size="14" fill="#e6e9ef" text-anchor="middle" font-weight="bold">J8 -- CENTER 40-PIN GPIO CONNECTOR (ESP32-P4)</text>
+<text x="760" y="237.0" font-size="12" fill="#e6e9ef" text-anchor="end" font-weight="bold">3V3</text>
+<text x="760" y="249.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin17</text>
+<text x="1040" y="237.0" font-size="12" fill="#e6e9ef" text-anchor="start" font-weight="bold">5</text>
+<text x="1040" y="249.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin16</text>
+<text x="760" y="263.0" font-size="12" fill="#3a4152" text-anchor="end" font-weight="normal">GND</text>
+<text x="760" y="275.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin14</text>
+<text x="1040" y="263.0" font-size="12" fill="#e6e9ef" text-anchor="start" font-weight="bold">4</text>
+<text x="1040" y="275.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin18</text>
+<text x="760" y="289.0" font-size="12" fill="#e6e9ef" text-anchor="end" font-weight="bold">SDA</text>
+<text x="760" y="301.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin3</text>
+<text x="1040" y="289.0" font-size="12" fill="#3a4152" text-anchor="start" font-weight="normal">3V3</text>
+<text x="1040" y="301.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin1</text>
+<text x="760" y="315.0" font-size="12" fill="#e6e9ef" text-anchor="end" font-weight="bold">SCL</text>
+<text x="760" y="327.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin5</text>
+<text x="1040" y="315.0" font-size="12" fill="#3a4152" text-anchor="start" font-weight="normal">TXD</text>
+<text x="1040" y="327.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin8</text>
+<text x="760" y="341.0" font-size="12" fill="#e6e9ef" text-anchor="end" font-weight="bold">20</text>
+<text x="760" y="353.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin13</text>
+<text x="1040" y="341.0" font-size="12" fill="#e6e9ef" text-anchor="start" font-weight="bold">21</text>
+<text x="1040" y="353.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin11</text>
+<text x="760" y="367.0" font-size="12" fill="#e6e9ef" text-anchor="end" font-weight="bold">28</text>
+<text x="760" y="379.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin15</text>
+<text x="1040" y="367.0" font-size="12" fill="#3a4152" text-anchor="start" font-weight="normal">GND</text>
+<text x="1040" y="379.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin9</text>
+<text x="760" y="393.0" font-size="12" fill="#e6e9ef" text-anchor="end" font-weight="bold">5V</text>
+<text x="760" y="405.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin4</text>
+<text x="1040" y="393.0" font-size="12" fill="#3a4152" text-anchor="start" font-weight="normal">RXD</text>
+<text x="1040" y="405.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin10</text>
+<text x="760" y="419.0" font-size="12" fill="#e6e9ef" text-anchor="end" font-weight="bold">5V</text>
+<text x="760" y="431.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin2</text>
+<text x="1040" y="419.0" font-size="12" fill="#3a4152" text-anchor="start" font-weight="normal">GND</text>
+<text x="1040" y="431.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin6</text>
+<text x="760" y="445.0" font-size="12" fill="#e6e9ef" text-anchor="end" font-weight="bold">50</text>
+<text x="760" y="457.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin23</text>
+<text x="1040" y="445.0" font-size="12" fill="#e6e9ef" text-anchor="start" font-weight="bold">30</text>
+<text x="1040" y="457.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin40</text>
+<text x="760" y="471.0" font-size="12" fill="#e6e9ef" text-anchor="end" font-weight="bold">49</text>
+<text x="760" y="483.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin26</text>
+<text x="1040" y="471.0" font-size="12" fill="#e6e9ef" text-anchor="start" font-weight="bold">31</text>
+<text x="1040" y="483.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin36</text>
+<text x="760" y="497.0" font-size="12" fill="#e6e9ef" text-anchor="end" font-weight="bold">51</text>
+<text x="760" y="509.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin29</text>
+<text x="1040" y="497.0" font-size="12" fill="#e6e9ef" text-anchor="start" font-weight="bold">32</text>
+<text x="1040" y="509.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin31</text>
+<text x="760" y="523.0" font-size="12" fill="#e6e9ef" text-anchor="end" font-weight="bold">24</text>
+<text x="760" y="535.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin27</text>
+<text x="1040" y="523.0" font-size="12" fill="#e6e9ef" text-anchor="start" font-weight="bold">29</text>
+<text x="1040" y="535.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin7</text>
+<text x="760" y="549.0" font-size="12" fill="#e6e9ef" text-anchor="end" font-weight="bold">25</text>
+<text x="760" y="561.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin28</text>
+<text x="1040" y="549.0" font-size="12" fill="#3a4152" text-anchor="start" font-weight="normal">22</text>
+<text x="1040" y="561.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin12</text>
+<text x="760" y="575.0" font-size="12" fill="#e6e9ef" text-anchor="end" font-weight="bold">2</text>
+<text x="760" y="587.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin21</text>
+<text x="1040" y="575.0" font-size="12" fill="#3a4152" text-anchor="start" font-weight="normal">3</text>
+<text x="1040" y="587.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin19</text>
+<text x="760" y="601.0" font-size="12" fill="#3a4152" text-anchor="end" font-weight="normal">GND</text>
+<text x="760" y="613.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin20</text>
+<text x="1040" y="601.0" font-size="12" fill="#3a4152" text-anchor="start" font-weight="normal">35</text>
+<text x="1040" y="613.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin22</text>
+<text x="760" y="627.0" font-size="12" fill="#3a4152" text-anchor="end" font-weight="normal">36</text>
+<text x="760" y="639.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin24</text>
+<text x="1040" y="627.0" font-size="12" fill="#3a4152" text-anchor="start" font-weight="normal">GND</text>
+<text x="1040" y="639.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin25</text>
+<text x="760" y="653.0" font-size="12" fill="#3a4152" text-anchor="end" font-weight="normal">GND</text>
+<text x="760" y="665.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin30</text>
+<text x="1040" y="653.0" font-size="12" fill="#3a4152" text-anchor="start" font-weight="normal">34</text>
+<text x="1040" y="665.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin32</text>
+<text x="760" y="679.0" font-size="12" fill="#3a4152" text-anchor="end" font-weight="normal">48</text>
+<text x="760" y="691.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin33</text>
+<text x="1040" y="679.0" font-size="12" fill="#3a4152" text-anchor="start" font-weight="normal">GND</text>
+<text x="1040" y="691.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin34</text>
+<text x="760" y="705.0" font-size="12" fill="#3a4152" text-anchor="end" font-weight="normal">52</text>
+<text x="760" y="717.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin35</text>
+<text x="1040" y="705.0" font-size="12" fill="#3a4152" text-anchor="start" font-weight="normal">47</text>
+<text x="1040" y="717.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin37</text>
+<text x="760" y="731.0" font-size="12" fill="#3a4152" text-anchor="end" font-weight="normal">46</text>
+<text x="760" y="743.0" font-size="8" fill="#8b93a5" text-anchor="end" font-weight="normal">pin38</text>
+<text x="1040" y="731.0" font-size="12" fill="#3a4152" text-anchor="start" font-weight="normal">GND</text>
+<text x="1040" y="743.0" font-size="8" fill="#8b93a5" text-anchor="start" font-weight="normal">pin39</text>
+<text x="900.0" y="762" font-size="10.5" fill="#8b93a5" text-anchor="middle" font-weight="normal">Pin order is schematic (grouped by device), not physical header order -- see PINOUT.md for the real 2x20 layout. Labels/numbers/wiring match firmware.</text>
+<text x="900.0" y="80" font-size="13" fill="#e6e9ef" text-anchor="middle" font-weight="bold">CAN TRANSCEIVER</text>
+<text x="900.0" y="95" font-size="10" fill="#8b93a5" text-anchor="middle" font-weight="normal">SN65HVD230</text>
+<text x="900.0" y="52" font-size="10" fill="#8b93a5" text-anchor="middle" font-weight="normal">CANH / CANL to CAN Bus (Link G4X ECU, 1 Mbit/s, 120 ohm term.)</text>
+<text x="846" y="144" font-size="9" fill="#e6e9ef" text-anchor="middle" font-weight="normal">VCC</text>
+<text x="882" y="144" font-size="9" fill="#e6e9ef" text-anchor="middle" font-weight="normal">GND</text>
+<text x="918" y="144" font-size="9" fill="#e6e9ef" text-anchor="middle" font-weight="normal">CTX/TXD</text>
+<text x="954" y="144" font-size="9" fill="#e6e9ef" text-anchor="middle" font-weight="normal">CRX/RXD</text>
+<text x="900.0" y="920" font-size="13" fill="#e6e9ef" text-anchor="middle" font-weight="bold">BUC -- BUCK CONVERTER</text>
+<text x="900.0" y="935" font-size="10" fill="#8b93a5" text-anchor="middle" font-weight="normal">12V to 5V, Pololu D36V50F5</text>
+<text x="900.0" y="1004" font-size="10" fill="#8b93a5" text-anchor="middle" font-weight="normal">VIN / GND from Vehicle 12V harness (switched / IGN)</text>
+<text x="880" y="892" font-size="9" fill="#e6e9ef" text-anchor="middle" font-weight="normal">VOUT 5V</text>
+<text x="920" y="892" font-size="9" fill="#e6e9ef" text-anchor="middle" font-weight="normal">GND</text>
+<text x="880" y="988" font-size="9" fill="#e6e9ef" text-anchor="middle" font-weight="normal">VIN 12V</text>
+<text x="920" y="988" font-size="9" fill="#e6e9ef" text-anchor="middle" font-weight="normal">GND</text>
+<text x="822" y="921" font-size="7.5" fill="#e6e9ef" text-anchor="end" font-weight="normal">VOUT</text>
+<text x="822" y="945" font-size="7.5" fill="#e6e9ef" text-anchor="end" font-weight="normal">GND</text>
+<text x="978" y="921" font-size="7.5" fill="#e6e9ef" text-anchor="start" font-weight="normal">VOUT</text>
+<text x="978" y="945" font-size="7.5" fill="#e6e9ef" text-anchor="start" font-weight="normal">GND</text>
+<text x="205.0" y="372" font-size="13" fill="#e6e9ef" text-anchor="middle" font-weight="bold">LEFT CLUSTER</text>
+<text x="205.0" y="388" font-size="9" fill="#8b93a5" text-anchor="middle" font-weight="normal">ESP32-S3-Touch-LCD-2.8C</text>
+<text x="275" y="422" font-size="8" fill="#8b93a5" text-anchor="middle" font-weight="normal">MAIN</text>
+<text x="275" y="432" font-size="8" fill="#8b93a5" text-anchor="middle" font-weight="normal">CONN</text>
+<text x="296" y="394" font-size="9" fill="#e6e9ef" text-anchor="end" font-weight="normal">RX (GPIO44)</text>
+<text x="296" y="434" font-size="9" fill="#e6e9ef" text-anchor="end" font-weight="normal">5V/VIN</text>
+<text x="296" y="478" font-size="9" fill="#e6e9ef" text-anchor="end" font-weight="normal">GND</text>
+<text x="205.0" y="538" font-size="8.5" fill="#8b93a5" text-anchor="middle" font-weight="normal">Note: physical connector pinout unverified on this rev (see CONNECTOR_BOM_AND_HARNESS.md)</text>
+<text x="1695.0" y="372" font-size="13" fill="#e6e9ef" text-anchor="middle" font-weight="bold">RIGHT CLUSTER</text>
+<text x="1695.0" y="388" font-size="9" fill="#8b93a5" text-anchor="middle" font-weight="normal">ESP32-S3-Touch-LCD-2.8C</text>
+<text x="1625" y="422" font-size="8" fill="#8b93a5" text-anchor="middle" font-weight="normal">MAIN</text>
+<text x="1625" y="432" font-size="8" fill="#8b93a5" text-anchor="middle" font-weight="normal">CONN</text>
+<text x="1604" y="394" font-size="9" fill="#e6e9ef" text-anchor="start" font-weight="normal">RX (GPIO44)</text>
+<text x="1604" y="434" font-size="9" fill="#e6e9ef" text-anchor="start" font-weight="normal">5V/VIN</text>
+<text x="1604" y="478" font-size="9" fill="#e6e9ef" text-anchor="start" font-weight="normal">GND</text>
+<text x="1695.0" y="538" font-size="8.5" fill="#8b93a5" text-anchor="middle" font-weight="normal">Note: physical connector pinout unverified on this rev (see CONNECTOR_BOM_AND_HARNESS.md)</text>
+<text x="180.0" y="918" font-size="12" fill="#e6e9ef" text-anchor="middle" font-weight="bold">ENCODER 2</text>
+<text x="180.0" y="932" font-size="9" fill="#8b93a5" text-anchor="middle" font-weight="normal">TC Slip Angle</text>
+<text x="250" y="924" font-size="8.5" fill="#e6e9ef" text-anchor="end" font-weight="normal">A / CLK</text>
+<text x="250" y="944" font-size="8.5" fill="#e6e9ef" text-anchor="end" font-weight="normal">B / DT</text>
+<text x="250" y="964" font-size="8.5" fill="#e6e9ef" text-anchor="end" font-weight="normal">SW / push</text>
+<text x="180.0" y="1008" font-size="12" fill="#e6e9ef" text-anchor="middle" font-weight="bold">ENCODER 3</text>
+<text x="180.0" y="1022" font-size="9" fill="#8b93a5" text-anchor="middle" font-weight="normal">Backlight Dim</text>
+<text x="250" y="1013" font-size="8" fill="#e6e9ef" text-anchor="end" font-weight="normal">A / CLK</text>
+<text x="250" y="1033" font-size="8" fill="#e6e9ef" text-anchor="end" font-weight="normal">B / DT</text>
+<text x="250" y="1053" font-size="8" fill="#e6e9ef" text-anchor="end" font-weight="normal">SW / push</text>
+<text x="1720.0" y="918" font-size="12" fill="#e6e9ef" text-anchor="middle" font-weight="bold">ENCODER 1</text>
+<text x="1720.0" y="932" font-size="9" fill="#8b93a5" text-anchor="middle" font-weight="normal">Boost Map</text>
+<text x="1650" y="924" font-size="8.5" fill="#e6e9ef" text-anchor="start" font-weight="normal">A / CLK</text>
+<text x="1650" y="944" font-size="8.5" fill="#e6e9ef" text-anchor="start" font-weight="normal">B / DT</text>
+<text x="1650" y="964" font-size="8.5" fill="#e6e9ef" text-anchor="start" font-weight="normal">SW / push</text>
+<text x="1720.0" y="1008" font-size="12" fill="#e6e9ef" text-anchor="middle" font-weight="bold">PUSH BUTTON</text>
+<text x="1720.0" y="1022" font-size="9" fill="#8b93a5" text-anchor="middle" font-weight="normal">ODO / Trip</text>
+<text x="1650" y="1021" font-size="8.5" fill="#e6e9ef" text-anchor="start" font-weight="normal">SW</text>
+<text x="430.0" y="253" font-size="11" fill="#e6e9ef" text-anchor="middle" font-weight="bold">TOUCH PANEL + AUDIO CODEC</text>
+<text x="430.0" y="267" font-size="8.5" fill="#8b93a5" text-anchor="middle" font-weight="normal">on-board I2C (GT911 + codec)</text>
+<text x="500" y="263" font-size="8.5" fill="#e6e9ef" text-anchor="end" font-weight="normal">SDA</text>
+<text x="500" y="289" font-size="8.5" fill="#e6e9ef" text-anchor="end" font-weight="normal">SCL</text>
+<text x="430.0" y="496" font-size="12" fill="#e6e9ef" text-anchor="middle" font-weight="bold">HEADLIGHT SENSE</text>
+<text x="430.0" y="510" font-size="8.5" fill="#8b93a5" text-anchor="middle" font-weight="normal">vehicle relay/opto, active-low</text>
+<text x="500" y="511" font-size="8.5" fill="#e6e9ef" text-anchor="end" font-weight="normal">SENSE</text>
+<text x="430.0" y="556" font-size="8" fill="#8b93a5" text-anchor="middle" font-weight="normal">Switch-to-GND when headlights on. Do NOT feed +12V to this pin.</text>
+<text x="110" y="20" font-size="10" fill="#e6e9ef" text-anchor="start" font-weight="normal">Power (5V/3V3/VOUT/VIN)</text>
+<text x="293.20000000000005" y="20" font-size="10" fill="#e6e9ef" text-anchor="start" font-weight="normal">GND</text>
+<text x="348.40000000000003" y="20" font-size="10" fill="#e6e9ef" text-anchor="start" font-weight="normal">TX (UART / CAN)</text>
+<text x="480.40000000000003" y="20" font-size="10" fill="#e6e9ef" text-anchor="start" font-weight="normal">RX (CAN)</text>
+<text x="567.6" y="20" font-size="10" fill="#e6e9ef" text-anchor="start" font-weight="normal">Encoder A / CLK</text>
+<text x="699.6" y="20" font-size="10" fill="#e6e9ef" text-anchor="start" font-weight="normal">Encoder B / DT</text>
+<text x="825.2" y="20" font-size="10" fill="#e6e9ef" text-anchor="start" font-weight="normal">Switch (encoder SW / button)</text>
+<text x="1040.4" y="20" font-size="10" fill="#e6e9ef" text-anchor="start" font-weight="normal">I2C SDA</text>
+<text x="1121.2" y="20" font-size="10" fill="#e6e9ef" text-anchor="start" font-weight="normal">I2C SCL</text>
+<text x="1202.0" y="20" font-size="10" fill="#e6e9ef" text-anchor="start" font-weight="normal">Headlight sense</text>
+<text x="950.0" y="1130" font-size="10" fill="#8b93a5" text-anchor="middle" font-weight="normal">Wiring per PINOUT.md / WIRING.md / Kconfig.projbuild (matches firmware). Harness CSV/HTML use different J8 pin numbers for the same GPIOs -- flagged as stale, not used here.</text>
+</svg>
