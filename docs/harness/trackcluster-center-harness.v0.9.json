@@ -1,0 +1,436 @@
+{
+  "version": 0.9,
+  "currency": "$",
+  "lengthUnit": "mm",
+  "gaugeUnit": "AWG",
+  "wireParts": [
+    {
+      "id": "wp_18rd",
+      "partNumber": "TXL-18-RD",
+      "manufacturer": "Generic TXL",
+      "description": "18 AWG TXL — +5 V power feeds (center + left + right)",
+      "color": "Red",
+      "gauge": { "value": 18, "unit": "AWG" },
+      "pricePerLength": { "price": 0.45, "unit": "m" }
+    },
+    {
+      "id": "wp_18bk",
+      "partNumber": "TXL-18-BK",
+      "manufacturer": "Generic TXL",
+      "description": "18 AWG TXL — power / chassis ground",
+      "color": "Black",
+      "gauge": { "value": 18, "unit": "AWG" },
+      "pricePerLength": { "price": 0.45, "unit": "m" }
+    },
+    {
+      "id": "wp_20rd",
+      "partNumber": "TXL-20-RD",
+      "manufacturer": "Generic TXL",
+      "description": "20 AWG TXL — vehicle 12 V illumination / buck input",
+      "color": "Red",
+      "gauge": { "value": 20, "unit": "AWG" },
+      "pricePerLength": { "price": 0.35, "unit": "m" }
+    },
+    {
+      "id": "wp_22yl",
+      "partNumber": "TXL-22-YL",
+      "manufacturer": "Generic TXL",
+      "description": "22 AWG TXL — UART TX",
+      "color": "Yellow",
+      "gauge": { "value": 22, "unit": "AWG" },
+      "pricePerLength": { "price": 0.28, "unit": "m" }
+    },
+    {
+      "id": "wp_22gn",
+      "partNumber": "TXL-22-GN",
+      "manufacturer": "Generic TXL",
+      "description": "22 AWG TXL — CAN L",
+      "color": "Green",
+      "gauge": { "value": 22, "unit": "AWG" },
+      "pricePerLength": { "price": 0.28, "unit": "m" }
+    },
+    {
+      "id": "wp_22wh",
+      "partNumber": "TXL-22-WH",
+      "manufacturer": "Generic TXL",
+      "description": "22 AWG TXL — CAN H",
+      "color": "White",
+      "gauge": { "value": 22, "unit": "AWG" },
+      "pricePerLength": { "price": 0.28, "unit": "m" }
+    },
+    {
+      "id": "wp_22or",
+      "partNumber": "TXL-22-OR",
+      "manufacturer": "Generic TXL",
+      "description": "22 AWG TXL — encoder / button signals",
+      "color": "Orange",
+      "gauge": { "value": 22, "unit": "AWG" },
+      "pricePerLength": { "price": 0.28, "unit": "m" }
+    },
+    {
+      "id": "wp_22bu",
+      "partNumber": "TXL-22-BU",
+      "manufacturer": "Generic TXL",
+      "description": "22 AWG TXL — encoder B / DT",
+      "color": "Blue",
+      "gauge": { "value": 22, "unit": "AWG" },
+      "pricePerLength": { "price": 0.28, "unit": "m" }
+    },
+    {
+      "id": "wp_22vt",
+      "partNumber": "TXL-22-VT",
+      "manufacturer": "Generic TXL",
+      "description": "22 AWG TXL — encoder push / headlight sense",
+      "color": "Violet",
+      "gauge": { "value": 22, "unit": "AWG" },
+      "pricePerLength": { "price": 0.28, "unit": "m" }
+    },
+    {
+      "id": "wp_22bk",
+      "partNumber": "TXL-22-BK",
+      "manufacturer": "Generic TXL",
+      "description": "22 AWG TXL — signal ground / UART return",
+      "color": "Black",
+      "gauge": { "value": 22, "unit": "AWG" },
+      "pricePerLength": { "price": 0.28, "unit": "m" }
+    },
+    {
+      "id": "wp_24or",
+      "partNumber": "TXL-24-OR",
+      "manufacturer": "Generic TXL",
+      "description": "24 AWG TXL — CAN logic TXD/RXD / 3V3 logic",
+      "color": "Orange",
+      "gauge": { "value": 24, "unit": "AWG" },
+      "pricePerLength": { "price": 0.22, "unit": "m" }
+    },
+    {
+      "id": "wp_24bu",
+      "partNumber": "TXL-24-BU",
+      "manufacturer": "Generic TXL",
+      "description": "24 AWG TXL — CAN logic RXD",
+      "color": "Blue",
+      "gauge": { "value": 24, "unit": "AWG" },
+      "pricePerLength": { "price": 0.22, "unit": "m" }
+    },
+    {
+      "id": "wp_24rd",
+      "partNumber": "TXL-24-RD",
+      "manufacturer": "Generic TXL",
+      "description": "24 AWG TXL — 3V3 to CAN transceiver VCC",
+      "color": "Red",
+      "gauge": { "value": 24, "unit": "AWG" },
+      "pricePerLength": { "price": 0.22, "unit": "m" }
+    }
+  ],
+  "terminalParts": [
+    {
+      "id": "tp_ferrule",
+      "partNumber": "AI 0,5-8 WH",
+      "manufacturer": "Phoenix Contact",
+      "description": "Ferrule 22–20 AWG white — screw-terminal / board pad landing",
+      "type": "Ferrule",
+      "size": "0.5 mm²",
+      "minGauge": { "value": 24, "unit": "AWG" },
+      "maxGauge": { "value": 18, "unit": "AWG" },
+      "price": 0.08
+    },
+    {
+      "id": "tp_ferrule18",
+      "partNumber": "AI 1-8 RD",
+      "manufacturer": "Phoenix Contact",
+      "description": "Ferrule 18 AWG red — power screw terminals",
+      "type": "Ferrule",
+      "size": "1.0 mm²",
+      "minGauge": { "value": 18, "unit": "AWG" },
+      "maxGauge": { "value": 18, "unit": "AWG" },
+      "price": 0.1
+    },
+    {
+      "id": "tp_loose",
+      "partNumber": "LOOSE-END",
+      "manufacturer": "Harness",
+      "description": "Loose / soldered board pad or module pin (no crimp housing)",
+      "type": "Loose",
+      "minGauge": { "value": 24, "unit": "AWG" },
+      "maxGauge": { "value": 18, "unit": "AWG" },
+      "price": 0
+    }
+  ],
+  "resistorParts": [
+    {
+      "id": "rp_1k2",
+      "partNumber": "CFR-25JB-52-1K2",
+      "manufacturer": "Yageo",
+      "description": "1.2 kΩ 1/4 W — PC817 LED current limit from 12 V illumination",
+      "resistance": 1.2,
+      "resistanceUnit": "kohm",
+      "power": 0.25,
+      "powerUnit": "W",
+      "price": 0.05
+    },
+    {
+      "id": "rp_120",
+      "partNumber": "CFR-25JB-52-120R",
+      "manufacturer": "Yageo",
+      "description": "120 Ω 1/4 W — CAN bus termination at transceiver end",
+      "resistance": 120,
+      "resistanceUnit": "ohm",
+      "power": 0.25,
+      "powerUnit": "W",
+      "price": 0.05
+    }
+  ],
+  "groupParts": [
+    {
+      "id": "gp_center",
+      "partNumber": "ESP32-P4-WIFI6-Touch-LCD-XC",
+      "manufacturer": "Waveshare",
+      "description": "Center 800×800 MIPI cluster — J8 40-pin 2.54 mm header",
+      "url": "https://www.waveshare.com/esp32-p4-wifi6-touch-lcd-xc.htm",
+      "price": 79
+    },
+    {
+      "id": "gp_j8_adapter",
+      "partNumber": "SM-A-001",
+      "manufacturer": "Sequent Microsystems",
+      "description": "40-pos screw-terminal breakout for center J8 (T01–T40 = pins 1–40)",
+      "url": "https://sequentmicrosystems.com/products/breakout-card-screw-mount-for-raspberry-pi",
+      "price": 18
+    },
+    {
+      "id": "gp_left",
+      "partNumber": "ESP32-S3-Touch-LCD-2.8C",
+      "manufacturer": "Waveshare",
+      "description": "Left 480×480 side cluster",
+      "url": "https://www.waveshare.com/esp32-s3-touch-lcd-2.8c.htm",
+      "price": 35
+    },
+    {
+      "id": "gp_right",
+      "partNumber": "ESP32-S3-Touch-LCD-2.8C",
+      "manufacturer": "Waveshare",
+      "description": "Right 480×480 side cluster",
+      "url": "https://www.waveshare.com/esp32-s3-touch-lcd-2.8c.htm",
+      "price": 35
+    },
+    {
+      "id": "gp_buck",
+      "partNumber": "D36V50F5",
+      "manufacturer": "Pololu",
+      "description": "12 V→5 V buck ≥5 A continuous (cluster power)",
+      "url": "https://www.pololu.com/product/4091",
+      "price": 29.95
+    },
+    {
+      "id": "gp_canxcvr",
+      "partNumber": "SN65HVD230 CAN Board",
+      "manufacturer": "Waveshare / TI",
+      "description": "3.3 V CAN transceiver — CTX/CRX/CANH/CANL/VCC/GND",
+      "url": "https://www.waveshare.com/sn65hvd230-can-board.htm",
+      "price": 5.99
+    },
+    {
+      "id": "gp_ecu",
+      "partNumber": "G4X XtremeX",
+      "manufacturer": "Link Engine Management",
+      "description": "ECU CAN1 bus endpoint (1 Mbit/s) — external to harness",
+      "price": 0
+    },
+    {
+      "id": "gp_enc1",
+      "partNumber": "EC11",
+      "manufacturer": "Generic",
+      "description": "Rotary encoder 1 — Boost map (A/B/SW + common)",
+      "price": 2.5
+    },
+    {
+      "id": "gp_enc2",
+      "partNumber": "EC11",
+      "manufacturer": "Generic",
+      "description": "Rotary encoder 2 — TC slip angle (A/B/SW + common)",
+      "price": 2.5
+    },
+    {
+      "id": "gp_enc3",
+      "partNumber": "EC11",
+      "manufacturer": "Generic",
+      "description": "Rotary encoder 3 — Backlight dim (A/B/SW + common); SW resets night level to 40%",
+      "price": 2.5
+    },
+    {
+      "id": "gp_odo",
+      "partNumber": "SPST-NO",
+      "manufacturer": "Generic",
+      "description": "Momentary push-button — ODO / Trip cycle (active-low to GND)",
+      "price": 1.2
+    },
+    {
+      "id": "gp_pc817",
+      "partNumber": "PC817",
+      "manufacturer": "Sharp / Everlight",
+      "description": "Opto isolator — headlight sense (12 V LED → collector pulls GPIO28 to GND)",
+      "price": 0.25
+    }
+  ],
+  "terminals": [
+    { "id": "veh_12v", "type": "Loose", "signal": "VEH +12V IGN", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 720, "y": 30 }, "layoutPosition": { "x": 720, "y": 30 } },
+    { "id": "veh_gnd", "type": "Loose", "signal": "VEH GND", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 1020, "y": 30 }, "layoutPosition": { "x": 1020, "y": 30 } },
+
+    { "id": "buck_vin", "type": "Loose", "signal": "BUCK VIN +12V", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 720, "y": 150 }, "layoutPosition": { "x": 720, "y": 150 } },
+    { "id": "buck_gnd_in", "type": "Loose", "signal": "BUCK GND IN", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 1020, "y": 150 }, "layoutPosition": { "x": 1020, "y": 150 } },
+    { "id": "buck_5v", "type": "Loose", "signal": "BUCK +5V OUT", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 720, "y": 240 }, "layoutPosition": { "x": 720, "y": 240 } },
+    { "id": "buck_gnd_out", "type": "Loose", "signal": "BUCK GND OUT", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 1020, "y": 240 }, "layoutPosition": { "x": 1020, "y": 240 } },
+
+    { "id": "ctr_5v", "type": "Ferrule", "signal": "CENTER J8·T02 +5V", "partId": "tp_ferrule18", "width": 270, "schematicPosition": { "x": 900, "y": 420 }, "layoutPosition": { "x": 900, "y": 420 } },
+    { "id": "ctr_3v3", "type": "Ferrule", "signal": "CENTER J8·T01 3V3", "partId": "tp_ferrule", "width": 270, "schematicPosition": { "x": 900, "y": 480 }, "layoutPosition": { "x": 900, "y": 480 } },
+    { "id": "ctr_gnd", "type": "Ferrule", "signal": "CENTER J8·T39 GND", "partId": "tp_ferrule18", "width": 270, "schematicPosition": { "x": 900, "y": 540 }, "layoutPosition": { "x": 900, "y": 540 } },
+    { "id": "ctr_can_tx", "type": "Ferrule", "signal": "CENTER GPIO5 CAN TXD", "partId": "tp_ferrule", "width": 270, "schematicPosition": { "x": 900, "y": 630 }, "layoutPosition": { "x": 900, "y": 630 } },
+    { "id": "ctr_can_rx", "type": "Ferrule", "signal": "CENTER GPIO4 CAN RXD", "partId": "tp_ferrule", "width": 270, "schematicPosition": { "x": 900, "y": 690 }, "layoutPosition": { "x": 900, "y": 690 } },
+    { "id": "ctr_uart_l", "type": "Ferrule", "signal": "CENTER GPIO20 UART1 TX→L", "partId": "tp_ferrule", "width": 270, "schematicPosition": { "x": 900, "y": 780 }, "layoutPosition": { "x": 900, "y": 780 } },
+    { "id": "ctr_uart_r", "type": "Ferrule", "signal": "CENTER GPIO21 UART2 TX→R", "partId": "tp_ferrule", "width": 270, "schematicPosition": { "x": 900, "y": 840 }, "layoutPosition": { "x": 900, "y": 840 } },
+    { "id": "ctr_odo", "type": "Ferrule", "signal": "CENTER GPIO29 ODO/TRIP", "partId": "tp_ferrule", "width": 270, "schematicPosition": { "x": 900, "y": 930 }, "layoutPosition": { "x": 900, "y": 930 } },
+    { "id": "ctr_e1a", "type": "Ferrule", "signal": "CENTER GPIO30 ENC1 A", "partId": "tp_ferrule", "width": 270, "schematicPosition": { "x": 900, "y": 990 }, "layoutPosition": { "x": 900, "y": 990 } },
+    { "id": "ctr_e1b", "type": "Ferrule", "signal": "CENTER GPIO31 ENC1 B", "partId": "tp_ferrule", "width": 270, "schematicPosition": { "x": 900, "y": 1050 }, "layoutPosition": { "x": 900, "y": 1050 } },
+    { "id": "ctr_e1sw", "type": "Ferrule", "signal": "CENTER GPIO32 ENC1 SW", "partId": "tp_ferrule", "width": 270, "schematicPosition": { "x": 900, "y": 1110 }, "layoutPosition": { "x": 900, "y": 1110 } },
+    { "id": "ctr_e2a", "type": "Ferrule", "signal": "CENTER GPIO49 ENC2 A", "partId": "tp_ferrule", "width": 270, "schematicPosition": { "x": 900, "y": 1200 }, "layoutPosition": { "x": 900, "y": 1200 } },
+    { "id": "ctr_e2b", "type": "Ferrule", "signal": "CENTER GPIO50 ENC2 B", "partId": "tp_ferrule", "width": 270, "schematicPosition": { "x": 900, "y": 1260 }, "layoutPosition": { "x": 900, "y": 1260 } },
+    { "id": "ctr_e2sw", "type": "Ferrule", "signal": "CENTER GPIO51 ENC2 SW", "partId": "tp_ferrule", "width": 270, "schematicPosition": { "x": 900, "y": 1320 }, "layoutPosition": { "x": 900, "y": 1320 } },
+    { "id": "ctr_e3a", "type": "Ferrule", "signal": "CENTER GPIO24 ENC3 A", "partId": "tp_ferrule", "width": 270, "schematicPosition": { "x": 900, "y": 1410 }, "layoutPosition": { "x": 900, "y": 1410 } },
+    { "id": "ctr_e3b", "type": "Ferrule", "signal": "CENTER GPIO25 ENC3 B", "partId": "tp_ferrule", "width": 270, "schematicPosition": { "x": 900, "y": 1470 }, "layoutPosition": { "x": 900, "y": 1470 } },
+    { "id": "ctr_e3sw", "type": "Ferrule", "signal": "CENTER GPIO2 ENC3 SW", "partId": "tp_ferrule", "width": 270, "schematicPosition": { "x": 900, "y": 1530 }, "layoutPosition": { "x": 900, "y": 1530 } },
+    { "id": "ctr_hl", "type": "Ferrule", "signal": "CENTER GPIO28 HEADLIGHT", "partId": "tp_ferrule", "width": 270, "schematicPosition": { "x": 900, "y": 1620 }, "layoutPosition": { "x": 900, "y": 1620 } },
+
+    { "id": "left_5v", "type": "Loose", "signal": "LEFT VIN +5V", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 480 }, "layoutPosition": { "x": 30, "y": 480 } },
+    { "id": "left_gnd", "type": "Loose", "signal": "LEFT GND", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 540 }, "layoutPosition": { "x": 30, "y": 540 } },
+    { "id": "left_rx", "type": "Loose", "signal": "LEFT GPIO44 UART RX", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 780 }, "layoutPosition": { "x": 30, "y": 780 } },
+
+    { "id": "right_5v", "type": "Loose", "signal": "RIGHT VIN +5V", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 1680, "y": 480 }, "layoutPosition": { "x": 1680, "y": 480 } },
+    { "id": "right_gnd", "type": "Loose", "signal": "RIGHT GND", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 1680, "y": 540 }, "layoutPosition": { "x": 1680, "y": 540 } },
+    { "id": "right_rx", "type": "Loose", "signal": "RIGHT GPIO44 UART RX", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 1680, "y": 840 }, "layoutPosition": { "x": 1680, "y": 840 } },
+
+    { "id": "can_vcc", "type": "Loose", "signal": "CAN XCVR VCC 3V3", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 1440, "y": 420 }, "layoutPosition": { "x": 1440, "y": 420 } },
+    { "id": "can_gnd", "type": "Loose", "signal": "CAN XCVR GND", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 1440, "y": 480 }, "layoutPosition": { "x": 1440, "y": 480 } },
+    { "id": "can_txd", "type": "Loose", "signal": "CAN XCVR CTX←TXD", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 1440, "y": 630 }, "layoutPosition": { "x": 1440, "y": 630 } },
+    { "id": "can_rxd", "type": "Loose", "signal": "CAN XCVR CRX→RXD", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 1440, "y": 690 }, "layoutPosition": { "x": 1440, "y": 690 } },
+    { "id": "can_h", "type": "Loose", "signal": "CAN XCVR CANH", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 1440, "y": 780 }, "layoutPosition": { "x": 1440, "y": 780 } },
+    { "id": "can_l", "type": "Loose", "signal": "CAN XCVR CANL", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 1440, "y": 840 }, "layoutPosition": { "x": 1440, "y": 840 } },
+
+    { "id": "ecu_canh", "type": "Loose", "signal": "ECU CAN1 HI", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 1980, "y": 780 }, "layoutPosition": { "x": 1980, "y": 780 } },
+    { "id": "ecu_canl", "type": "Loose", "signal": "ECU CAN1 LO", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 1980, "y": 840 }, "layoutPosition": { "x": 1980, "y": 840 } },
+    { "id": "ecu_gnd", "type": "Loose", "signal": "ECU CAN GND REF", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 1980, "y": 900 }, "layoutPosition": { "x": 1980, "y": 900 } },
+
+    { "id": "e1_a", "type": "Loose", "signal": "ENC1 BOOST A/CLK", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 990 }, "layoutPosition": { "x": 30, "y": 990 } },
+    { "id": "e1_b", "type": "Loose", "signal": "ENC1 BOOST B/DT", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 1050 }, "layoutPosition": { "x": 30, "y": 1050 } },
+    { "id": "e1_sw", "type": "Loose", "signal": "ENC1 BOOST SW", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 1110 }, "layoutPosition": { "x": 30, "y": 1110 } },
+    { "id": "e1_com", "type": "Loose", "signal": "ENC1 COMMON→GND", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 1170 }, "layoutPosition": { "x": 30, "y": 1170 } },
+
+    { "id": "e2_a", "type": "Loose", "signal": "ENC2 TC A/CLK", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 1290 }, "layoutPosition": { "x": 30, "y": 1290 } },
+    { "id": "e2_b", "type": "Loose", "signal": "ENC2 TC B/DT", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 1350 }, "layoutPosition": { "x": 30, "y": 1350 } },
+    { "id": "e2_sw", "type": "Loose", "signal": "ENC2 TC SW", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 1410 }, "layoutPosition": { "x": 30, "y": 1410 } },
+    { "id": "e2_com", "type": "Loose", "signal": "ENC2 COMMON→GND", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 1470 }, "layoutPosition": { "x": 30, "y": 1470 } },
+
+    { "id": "e3_a", "type": "Loose", "signal": "ENC3 DIM A/CLK", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 1590 }, "layoutPosition": { "x": 30, "y": 1590 } },
+    { "id": "e3_b", "type": "Loose", "signal": "ENC3 DIM B/DT", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 1650 }, "layoutPosition": { "x": 30, "y": 1650 } },
+    { "id": "e3_sw", "type": "Loose", "signal": "ENC3 DIM SW (reset 40%)", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 1710 }, "layoutPosition": { "x": 30, "y": 1710 } },
+    { "id": "e3_com", "type": "Loose", "signal": "ENC3 COMMON→GND", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 1770 }, "layoutPosition": { "x": 30, "y": 1770 } },
+
+    { "id": "odo_sw", "type": "Loose", "signal": "ODO BTN NO", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 900 }, "layoutPosition": { "x": 30, "y": 900 } },
+    { "id": "odo_com", "type": "Loose", "signal": "ODO BTN→GND", "partId": "tp_loose", "width": 210, "schematicPosition": { "x": 30, "y": 840 }, "layoutPosition": { "x": 30, "y": 840 } },
+
+    { "id": "illum_12v", "type": "Loose", "signal": "ILLUM +12V (switched)", "partId": "tp_loose", "width": 270, "schematicPosition": { "x": 1440, "y": 1290 }, "layoutPosition": { "x": 1440, "y": 1290 } },
+    { "id": "illum_gnd", "type": "Loose", "signal": "ILLUM GND", "partId": "tp_loose", "width": 270, "schematicPosition": { "x": 1440, "y": 1350 }, "layoutPosition": { "x": 1440, "y": 1350 } },
+    { "id": "opto_1", "type": "Loose", "signal": "PC817 PIN1 ANODE", "partId": "tp_loose", "width": 270, "schematicPosition": { "x": 1680, "y": 1470 }, "layoutPosition": { "x": 1680, "y": 1470 } },
+    { "id": "opto_2", "type": "Loose", "signal": "PC817 PIN2 CATHODE", "partId": "tp_loose", "width": 270, "schematicPosition": { "x": 1680, "y": 1530 }, "layoutPosition": { "x": 1680, "y": 1530 } },
+    { "id": "opto_3", "type": "Loose", "signal": "PC817 PIN3 COLLECTOR", "partId": "tp_loose", "width": 270, "schematicPosition": { "x": 1440, "y": 1620 }, "layoutPosition": { "x": 1440, "y": 1620 } },
+    { "id": "opto_4", "type": "Loose", "signal": "PC817 PIN4 EMITTER", "partId": "tp_loose", "width": 270, "schematicPosition": { "x": 1440, "y": 1680 }, "layoutPosition": { "x": 1440, "y": 1680 } }
+  ],
+  "splices": [
+    { "id": "spl_5v", "schematicPosition": { "x": 600, "y": 420 }, "layoutPosition": { "x": 600, "y": 420 } },
+    { "id": "spl_gnd", "schematicPosition": { "x": 600, "y": 540 }, "layoutPosition": { "x": 600, "y": 540 } }
+  ],
+  "resistors": [
+    { "id": "r_1k2", "partId": "rp_1k2", "schematicPosition": { "x": 1560, "y": 1410 }, "layoutPosition": { "x": 1560, "y": 1410 } },
+    { "id": "r_120", "partId": "rp_120", "schematicPosition": { "x": 1620, "y": 810 }, "layoutPosition": { "x": 1620, "y": 810 }, "rotated": true }
+  ],
+  "twistedWires": [
+    {
+      "id": "tw_uart_l",
+      "schematicPosition": { "x": 480, "y": 780 },
+      "wires": [
+        { "id": "tw_uart_l_tx", "color": "Yellow", "partId": "wp_22yl", "source": { "id": "ctr_uart_l", "handle": "Terminal" }, "target": { "id": "left_rx", "handle": "Terminal" } },
+        { "id": "tw_uart_l_gnd", "color": "Black", "partId": "wp_22bk", "source": { "id": "left_gnd", "handle": "Terminal" }, "target": { "id": "spl_gnd", "handle": "Splice" } }
+      ]
+    },
+    {
+      "id": "tw_uart_r",
+      "schematicPosition": { "x": 1320, "y": 840 },
+      "wires": [
+        { "id": "tw_uart_r_tx", "color": "Yellow", "partId": "wp_22yl", "source": { "id": "ctr_uart_r", "handle": "Terminal" }, "target": { "id": "right_rx", "handle": "Terminal" } },
+        { "id": "tw_uart_r_gnd", "color": "Black", "partId": "wp_22bk", "source": { "id": "right_gnd", "handle": "Terminal" }, "target": { "id": "spl_gnd", "handle": "Splice" } }
+      ]
+    },
+    {
+      "id": "tw_can",
+      "schematicPosition": { "x": 1740, "y": 780 },
+      "wires": [
+        { "id": "tw_can_h", "color": "White", "partId": "wp_22wh", "source": { "id": "can_h", "handle": "Terminal" }, "target": { "id": "ecu_canh", "handle": "Terminal" } },
+        { "id": "tw_can_l", "color": "Green", "partId": "wp_22gn", "source": { "id": "can_l", "handle": "Terminal" }, "target": { "id": "ecu_canl", "handle": "Terminal" } }
+      ]
+    }
+  ],
+  "wires": [
+    { "id": "w_veh_vin", "color": "Red", "partId": "wp_20rd", "source": { "id": "veh_12v", "handle": "Terminal" }, "target": { "id": "buck_vin", "handle": "Terminal" } },
+    { "id": "w_veh_gnd", "color": "Black", "partId": "wp_18bk", "source": { "id": "veh_gnd", "handle": "Terminal" }, "target": { "id": "buck_gnd_in", "handle": "Terminal" } },
+    { "id": "w_buck_gnd_tie", "color": "Black", "partId": "wp_18bk", "source": { "id": "buck_gnd_in", "handle": "Terminal" }, "target": { "id": "buck_gnd_out", "handle": "Terminal" } },
+    { "id": "w_buck_5v", "color": "Red", "partId": "wp_18rd", "source": { "id": "buck_5v", "handle": "Terminal" }, "target": { "id": "spl_5v", "handle": "Splice" } },
+    { "id": "w_buck_gnd", "color": "Black", "partId": "wp_18bk", "source": { "id": "buck_gnd_out", "handle": "Terminal" }, "target": { "id": "spl_gnd", "handle": "Splice" } },
+
+    { "id": "w_5v_ctr", "color": "Red", "partId": "wp_18rd", "source": { "id": "spl_5v", "handle": "Splice" }, "target": { "id": "ctr_5v", "handle": "Terminal" } },
+    { "id": "w_5v_left", "color": "Red", "partId": "wp_18rd", "source": { "id": "spl_5v", "handle": "Splice" }, "target": { "id": "left_5v", "handle": "Terminal" } },
+    { "id": "w_5v_right", "color": "Red", "partId": "wp_18rd", "source": { "id": "spl_5v", "handle": "Splice" }, "target": { "id": "right_5v", "handle": "Terminal" } },
+
+    { "id": "w_gnd_ctr", "color": "Black", "partId": "wp_18bk", "source": { "id": "spl_gnd", "handle": "Splice" }, "target": { "id": "ctr_gnd", "handle": "Terminal" } },
+    { "id": "w_gnd_can", "color": "Black", "partId": "wp_22bk", "source": { "id": "spl_gnd", "handle": "Splice" }, "target": { "id": "can_gnd", "handle": "Terminal" } },
+    { "id": "w_gnd_ecu", "color": "Black", "partId": "wp_22bk", "source": { "id": "spl_gnd", "handle": "Splice" }, "target": { "id": "ecu_gnd", "handle": "Terminal" } },
+    { "id": "w_gnd_e1", "color": "Black", "partId": "wp_22bk", "source": { "id": "spl_gnd", "handle": "Splice" }, "target": { "id": "e1_com", "handle": "Terminal" } },
+    { "id": "w_gnd_e2", "color": "Black", "partId": "wp_22bk", "source": { "id": "spl_gnd", "handle": "Splice" }, "target": { "id": "e2_com", "handle": "Terminal" } },
+    { "id": "w_gnd_e3", "color": "Black", "partId": "wp_22bk", "source": { "id": "spl_gnd", "handle": "Splice" }, "target": { "id": "e3_com", "handle": "Terminal" } },
+    { "id": "w_gnd_odo", "color": "Black", "partId": "wp_22bk", "source": { "id": "spl_gnd", "handle": "Splice" }, "target": { "id": "odo_com", "handle": "Terminal" } },
+    { "id": "w_gnd_illum", "color": "Black", "partId": "wp_18bk", "source": { "id": "veh_gnd", "handle": "Terminal" }, "target": { "id": "illum_gnd", "handle": "Terminal" } },
+
+    { "id": "w_3v3_can", "color": "Red", "partId": "wp_24rd", "source": { "id": "ctr_3v3", "handle": "Terminal" }, "target": { "id": "can_vcc", "handle": "Terminal" } },
+    { "id": "w_can_tx", "color": "Orange", "partId": "wp_24or", "source": { "id": "ctr_can_tx", "handle": "Terminal" }, "target": { "id": "can_txd", "handle": "Terminal" } },
+    { "id": "w_can_rx", "color": "Blue", "partId": "wp_24bu", "source": { "id": "can_rxd", "handle": "Terminal" }, "target": { "id": "ctr_can_rx", "handle": "Terminal" } },
+
+    { "id": "w_term_h", "color": "White", "partId": "wp_22wh", "source": { "id": "can_h", "handle": "Terminal" }, "target": { "id": "r_120", "handle": "Left" } },
+    { "id": "w_term_l", "color": "Green", "partId": "wp_22gn", "source": { "id": "r_120", "handle": "Right" }, "target": { "id": "can_l", "handle": "Terminal" } },
+
+    { "id": "w_odo", "color": "Violet", "partId": "wp_22vt", "source": { "id": "ctr_odo", "handle": "Terminal" }, "target": { "id": "odo_sw", "handle": "Terminal" } },
+    { "id": "w_e1a", "color": "Orange", "partId": "wp_22or", "source": { "id": "ctr_e1a", "handle": "Terminal" }, "target": { "id": "e1_a", "handle": "Terminal" } },
+    { "id": "w_e1b", "color": "Blue", "partId": "wp_22bu", "source": { "id": "ctr_e1b", "handle": "Terminal" }, "target": { "id": "e1_b", "handle": "Terminal" } },
+    { "id": "w_e1sw", "color": "Violet", "partId": "wp_22vt", "source": { "id": "ctr_e1sw", "handle": "Terminal" }, "target": { "id": "e1_sw", "handle": "Terminal" } },
+    { "id": "w_e2a", "color": "Orange", "partId": "wp_22or", "source": { "id": "ctr_e2a", "handle": "Terminal" }, "target": { "id": "e2_a", "handle": "Terminal" } },
+    { "id": "w_e2b", "color": "Blue", "partId": "wp_22bu", "source": { "id": "ctr_e2b", "handle": "Terminal" }, "target": { "id": "e2_b", "handle": "Terminal" } },
+    { "id": "w_e2sw", "color": "Violet", "partId": "wp_22vt", "source": { "id": "ctr_e2sw", "handle": "Terminal" }, "target": { "id": "e2_sw", "handle": "Terminal" } },
+    { "id": "w_e3a", "color": "Orange", "partId": "wp_22or", "source": { "id": "ctr_e3a", "handle": "Terminal" }, "target": { "id": "e3_a", "handle": "Terminal" } },
+    { "id": "w_e3b", "color": "Blue", "partId": "wp_22bu", "source": { "id": "ctr_e3b", "handle": "Terminal" }, "target": { "id": "e3_b", "handle": "Terminal" } },
+    { "id": "w_e3sw", "color": "Violet", "partId": "wp_22vt", "source": { "id": "ctr_e3sw", "handle": "Terminal" }, "target": { "id": "e3_sw", "handle": "Terminal" } },
+
+    { "id": "w_illum_r", "color": "Red", "partId": "wp_20rd", "source": { "id": "illum_12v", "handle": "Terminal" }, "target": { "id": "r_1k2", "handle": "Left" } },
+    { "id": "w_r_to_opto", "color": "Red", "partId": "wp_20rd", "source": { "id": "r_1k2", "handle": "Right" }, "target": { "id": "opto_1", "handle": "Terminal" } },
+    { "id": "w_opto_cath", "color": "Black", "partId": "wp_22bk", "source": { "id": "opto_2", "handle": "Terminal" }, "target": { "id": "illum_gnd", "handle": "Terminal" } },
+    { "id": "w_opto_col", "color": "Violet", "partId": "wp_22vt", "source": { "id": "opto_3", "handle": "Terminal" }, "target": { "id": "ctr_hl", "handle": "Terminal" } },
+    { "id": "w_opto_em", "color": "Black", "partId": "wp_22bk", "source": { "id": "opto_4", "handle": "Terminal" }, "target": { "id": "spl_gnd", "handle": "Splice" } }
+  ],
+  "schematicNotes": [
+    { "id": "n_title", "text": "TrackCluster center assembly — pins/wires only (no connectors). Center J8 at middle; peripherals around. From WIRING.md + CONNECTOR_BOM_AND_HARNESS.md.", "schematicPosition": { "x": 30, "y": 30 }, "width": 390, "color": "Light Blue", "alignment": "Left" },
+    { "id": "n_power", "text": "POWER — Pololu D36V50F5\n12V IGN → buck → +5V star to Center/Left/Right\nCommon GND with vehicle", "schematicPosition": { "x": 1260, "y": 30 }, "width": 270, "color": "Yellow" },
+    { "id": "n_center", "text": "CENTER — Waveshare ESP32-P4\nJ8 screw-terminal adapter SM-A-001\nFerrules on T# landings", "schematicPosition": { "x": 1200, "y": 420 }, "width": 210, "color": "Light Green" },
+    { "id": "n_left", "text": "LEFT S3 — 480×480\nUART TX-only 921600\nFlash via USB-C (not GPIO43/44)", "schematicPosition": { "x": 30, "y": 360 }, "width": 210, "color": "Light Blue" },
+    { "id": "n_right", "text": "RIGHT S3 — 480×480\nUART TX-only 921600\nFlash via USB-C", "schematicPosition": { "x": 1680, "y": 360 }, "width": 210, "color": "Light Blue" },
+    { "id": "n_can", "text": "CAN — SN65HVD230 @ 3V3\n1 Mbit/s · twisted CANH/CANL\n120Ω term at xcvr end\nECU usually has other 120Ω", "schematicPosition": { "x": 1440, "y": 300 }, "width": 270, "color": "Orange" },
+    { "id": "n_ctrl", "text": "CONTROLS — active-low to GND\nEnc1 Boost · Enc2 TC · Enc3 Dim\nEnc3 SW resets night brightness to 40%\nODO cycles trip modes", "schematicPosition": { "x": 30, "y": 1860 }, "width": 270, "color": "Pink" },
+    { "id": "n_hl", "text": "HEADLIGHT SENSE — PC817 opto\nGPIO28 LOW = lights ON = dim\nNEVER feed +12V to GPIO28\nCollector → GPIO28 · Emitter → GND", "schematicPosition": { "x": 1680, "y": 1290 }, "width": 270, "color": "Violet" },
+    { "id": "n_groups", "text": "In the app: group terminals by device and assign Group Parts (Center / Left / Right / Buck / CAN xcvr / Enc1–3 / ODO / PC817 / ECU).", "schematicPosition": { "x": 720, "y": 1860 }, "width": 390, "color": "Gray" }
+  ]
+}
