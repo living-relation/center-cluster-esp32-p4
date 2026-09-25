@@ -1,15 +1,16 @@
 # Center cluster — J8 40-pin GPIO header pinout
 <!-- Revised 2026-09-25 · feature/center-cluster-harness-design · Cowork: center-cluster doc cleanup + archive · PR# n/a -->
 <!-- SOT-REF: repo=living-relation/center-cluster-esp32-p4 path=main/Kconfig.projbuild -->
+<!-- SOT-REF: repo=living-relation/center-cluster-esp32-p4 path=docs/datasheets/waveshare-esp32-p4-xc-j8-silkscreen.png -->
 
 **Board:** Waveshare **ESP32-P4-WIFI6-Touch-LCD-XC**, 40-pin header **J8**.
 This is the **only** J8 pin table in this repo. Any other doc points here;
 none restates it.
 
 **Sources:** GPIO assignments = `main/Kconfig.projbuild` (what is flashed).
-Silk names and positions = the board silkscreen (Daniel's photo, 2026-09-25,
-matched this table 40/40; photo to be committed at
-`docs/datasheets/waveshare-esp32-p4-xc-j8-silkscreen.png`) and the
+Silk names and positions = the board silkscreen image
+`docs/datasheets/waveshare-esp32-p4-xc-j8-silkscreen.png` (Waveshare product
+image, committed 2026-09-25; matches this table 40/40) and the
 [Waveshare XC schematic](https://files.waveshare.com/wiki/ESP32-P4-WIFI6-Touch-LCD-XC/ESP32-P4-WIFI6-Touch-LCD-XC-Schematic.pdf).
 I²C GPIOs = Waveshare's
 [XC HARDWARE.md](https://github.com/waveshareteam/ESP32-P4-WIFI6-Touch-LCD-XC/blob/main/docs/HARDWARE.md).
