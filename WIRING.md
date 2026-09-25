@@ -1,4 +1,5 @@
 # TrackCluster — Wiring & Pinout (physical install)
+<!-- Revised 2026-09-25 · feature/center-cluster-harness-design · Cowork: center-cluster doc cleanup + archive · PR# n/a -->
 
 **Reference only — NOT flashed.** Lives at the center repo root so it's immediately visible.
 Everything below is GPIO/connector-validated against the ESP32-P4 / ESP32-S3
@@ -23,7 +24,9 @@ Each board regulates its own 3V3 on-board; **feed them 5 V**, never 3V3 directly
 - **Buck converter:** 12 V in → **5 V** out, **≥3 A** (≈2.5 A peak all-3 with backlights; size up for margin).
   Common ground with the vehicle/ECU.
 - **Center 5 V input:** J8 **pin 2 = 5V**, **pin 39 = GND** (or the board's USB-C 5V — but use J8 for the install).
-- **Harness drawing:** `docs/harness/HARNESS_WIRING_DIAGRAM.html` (11×17 landscape print, Phoenix screw-terminal J8 adapter, Deutsch DT, shopping links).
+- **J8 pin numbers:** `PINOUT.md` only. Wires land directly on J8 (no adapter).
+  **Parts to buy:** `docs/harness/PURCHASE-LIST.csv`. The old harness drawing
+  was archived 2026-09-25 (wrong pin numbers) — see `archive/2026-09-25-wiring/`.
 - **Side 5 V input:** each S3 board's **VIN / 5V** pad and **GND** (USB-C VBUS is the same net; the
   PH1.25 2-pin "BAT" connector is for an optional Li-ion only — do not feed 5 V there).
 - Add a common-mode choke / 100 µF bulk cap near each board if you see backlight flicker on engine crank.
@@ -78,52 +81,19 @@ twisted; common ground required.
 
 ## 4. Buttons & encoders — Center only (active-low to GND)
 
-All inputs use internal pull-ups; wire the common side to **GND**. 44 kΩ… use the chip pull-ups
-(no external resistor needed); add 100 nF across each contact for debounce if noisy.
-
-| Control | Signal | Center GPIO (J8) |
-|---|---|---|
-| Push-button (ODO / Trip) | to GND | **29** |
-| Encoder 1 — Boost map | A / CLK | **30** |
-| | B / DT | **31** |
-| | push (to GND) | **32** |
-| Encoder 2 — TC slip | A / CLK | **49** |
-| | B / DT | **50** |
-| | push (to GND) | **51** |
-| Encoder 3 — Backlight dim | A / CLK | **24** |
-| | B / DT | **25** |
-| | push (to GND) | **2** |
-| Headlight sense | **active-low to GND** | **28** |
-
-**Backlight dimming:** the **headlight sense** (GPIO28) must **switch to GND** when the
-headlights/illumination are on — use a **relay, opto-isolator, or open-collector**, and **do not
-feed +12 V** to the pin (active-low = no divider, but still a ground-switch, not raw 12 V).
-Headlights on → all three clusters dim to the night level; encoder 3 adjusts that level (only while
-headlights are on; its push resets to the default). The center broadcasts the level to the sides
-over the UART bridge, so left/right dim in step.
+Pins, GPIOs, encoder wiring steps and the headlight-sense input rules live in
+`PINOUT.md` (Wired connections summary + Encoders section). Not repeated here.
+<!-- SOT-REF: repo=living-relation/center-cluster-esp32-p4 path=PINOUT.md anchor=Wired connections summary -->
 
 ---
 
 ## 5. Full GPIO reference (all three displays)
 
 ### Center — ESP32-P4 (J8 40-pin header)
-| Function | GPIO | Notes |
-|---|---:|---|
-| CAN TX → transceiver | 5 | TWAI |
-| CAN RX ← transceiver | 4 | TWAI, 1 Mbit/s |
-| LCD backlight PWM | 26 | firmware-driven LEDC |
-| LCD reset | 27 | panel reset line |
-| Shared board I²C SDA | 6 | touch/peripheral bus |
-| Shared board I²C SCL | 7 | touch/peripheral bus |
-| UART1 TX → Left | 20 | → Left GPIO44 (TX-only; no center RX) |
-| UART2 TX → Right | 21 | → Right GPIO44 (TX-only; no center RX) |
-| J8 `RXD`/`TXD` silk pins | — | ESP32-C6 co-processor UART0 — **not P4 GPIO**, not usable for the inter-cluster link |
-| Button (ODO/Trip) | 29 | active-low |
-| Encoder 1 A/B/SW | 30 / 31 / 32 | |
-| Encoder 2 A/B/SW | 49 / 50 / 51 | |
-| Encoder 3 A/B/SW (backlight dim) | 24 / 25 / 2 | active on headlights only |
-| Headlight sense | 28 | active-low; switch-to-GND (relay/opto), **not** +12 V |
-| **Reserved — do not use** | 37,38 (PSRAM) · 39–44 (microSD) · 34,35,36 (strapping) · DSI pads | |
+See `PINOUT.md` (J8 table) and `main/Kconfig.projbuild` (firmware pin map and
+board-reserved GPIOs). Not repeated here.
+<!-- SOT-REF: repo=living-relation/center-cluster-esp32-p4 path=PINOUT.md -->
+<!-- SOT-REF: repo=living-relation/center-cluster-esp32-p4 path=main/Kconfig.projbuild -->
 
 ### Left & Right — ESP32-S3 (identical)
 | Function | GPIO | Notes |
@@ -142,6 +112,7 @@ over the UART bridge, so left/right dim in step.
 |---|---|
 | Center CAN 4/5, buttons 29, encoders 30/31/32/49/50/51 | ✅ all on J8, clear of strapping/PSRAM/USB/microSD |
 | Center UART link | ✅ **TX-only:** center transmits on GPIO20 (Left) / GPIO21 (Right); no center RX pin is claimed. The previously "reserved" RX pins were removed entirely — the side-board-TX → center-RX link is not used. |
+| Center Encoder 3 A/B | ⚠️ **Open:** on the P4's USB PHY pins (routed to the USB-C port). Works on the bench; move pending Daniel's pin pick. See `PINOUT.md`. |
 | Center "available" list | ⚠️ Annotated: GPIO34/35/36 are **strapping** pins — removed from the free list in Kconfig |
 | Side I²C 7/15 | ✅ free, not strapping/USB/flash |
 | Side UART RX 44 | ✅ valid (default UART0 console pin) — **flash via USB-C** so console doesn't fight the link. Only GPIO44/RX is used; GPIO43/TX is left unconnected on the center end. |

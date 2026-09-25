@@ -1,0 +1,14 @@
+qty,part,description,link
+1,SN65HVD230 CAN Board,Waveshare CAN transceiver,https://www.waveshare.com/sn65hvd230-can-board.htm
+1,D36V50F5,12V to 5V buck,https://www.pololu.com/product/4091
+1,DT04-3P,CAN receptacle (C1),https://www.mouser.com/ProductDetail/TE-Connectivity/DT04-3P
+1,DT06-3S,CAN plug (C1),https://www.mouser.com/ProductDetail/TE-Connectivity/DT06-3S
+1/1,W3P / W3S,DT 3-way wedgelocks,
+5,DT04-2P,TX-only serial (C2/C3) + 5V feed (C4 x3) receptacles,https://www.mouser.com/ProductDetail/TE-Connectivity/DT04-2P
+5,DT06-2S,TX-only serial (C2/C3) + 5V feed (C4 x3) plugs,https://www.mouser.com/ProductDetail/TE-Connectivity/DT06-2S
+2,DT04-4P,Encoder receptacles C6/C7,https://www.mouser.com/ProductDetail/TE-Connectivity/DT04-4P
+2,DT06-4S,Encoder plugs C6/C7,https://www.mouser.com/ProductDetail/TE-Connectivity/DT06-4S
+5/5,W2P / W2S,DT 2-way wedgelocks,
+2/2,W4P / W4S,DT 4-way wedgelocks,
+50,0460-202-16141,DT pin contacts (male),https://www.mouser.com/ProductDetail/TE-Connectivity/0460-202-16141
+50,0462-201-16141,DT socket contacts (female),https://www.mouser.com/ProductDetail/TE-Connectivity/0462-201-16141
