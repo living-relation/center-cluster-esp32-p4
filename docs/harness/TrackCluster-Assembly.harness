@@ -1,0 +1,1476 @@
+{
+  "version": 0.9,
+  "currency": "$",
+  "lengthUnit": "mm",
+  "gaugeUnit": "AWG",
+  "connectors": [
+    {
+      "id": "j8",
+      "label": "CENTER P4 J8",
+      "schematicPosition": {
+        "x": 90,
+        "y": 570
+      },
+      "partId": "cp_gen_254_2x20",
+      "width": 270,
+      "cavities": [
+        {
+          "id": "j8_1",
+          "notConnected": true
+        },
+        {
+          "id": "j8_2",
+          "signal": "+5V"
+        },
+        {
+          "id": "j8_3",
+          "notConnected": true
+        },
+        {
+          "id": "j8_4",
+          "signal": "+5V"
+        },
+        {
+          "id": "j8_5",
+          "notConnected": true
+        },
+        {
+          "id": "j8_6",
+          "signal": "GND (power)"
+        },
+        {
+          "id": "j8_7",
+          "signal": "GPIO29 ODO"
+        },
+        {
+          "id": "j8_8",
+          "notConnected": true
+        },
+        {
+          "id": "j8_9",
+          "signal": "GND (ODO)"
+        },
+        {
+          "id": "j8_10",
+          "notConnected": true
+        },
+        {
+          "id": "j8_11",
+          "signal": "GPIO21 UART2 TX -> RIGHT"
+        },
+        {
+          "id": "j8_12",
+          "notConnected": true
+        },
+        {
+          "id": "j8_13",
+          "signal": "GPIO20 UART1 TX -> LEFT"
+        },
+        {
+          "id": "j8_14",
+          "signal": "GND (opto)"
+        },
+        {
+          "id": "j8_15",
+          "signal": "GPIO28 HEADLIGHT (active-low)"
+        },
+        {
+          "id": "j8_16",
+          "signal": "GPIO5 CAN TX"
+        },
+        {
+          "id": "j8_17",
+          "signal": "3V3"
+        },
+        {
+          "id": "j8_18",
+          "signal": "GPIO4 CAN RX"
+        },
+        {
+          "id": "j8_19",
+          "notConnected": true
+        },
+        {
+          "id": "j8_20",
+          "signal": "GND (CAN)"
+        },
+        {
+          "id": "j8_21",
+          "signal": "GPIO2 ENC3 SW"
+        },
+        {
+          "id": "j8_22",
+          "notConnected": true
+        },
+        {
+          "id": "j8_23",
+          "signal": "GPIO50 ENC2 B"
+        },
+        {
+          "id": "j8_24",
+          "notConnected": true
+        },
+        {
+          "id": "j8_25",
+          "signal": "GND (ENC3)"
+        },
+        {
+          "id": "j8_26",
+          "signal": "GPIO49 ENC2 A"
+        },
+        {
+          "id": "j8_27",
+          "signal": "GPIO24 ENC3 A"
+        },
+        {
+          "id": "j8_28",
+          "signal": "GPIO25 ENC3 B"
+        },
+        {
+          "id": "j8_29",
+          "signal": "GPIO51 ENC2 SW"
+        },
+        {
+          "id": "j8_30",
+          "signal": "GND (ENC2)"
+        },
+        {
+          "id": "j8_31",
+          "signal": "GPIO32 ENC1 SW"
+        },
+        {
+          "id": "j8_32",
+          "notConnected": true
+        },
+        {
+          "id": "j8_33",
+          "notConnected": true
+        },
+        {
+          "id": "j8_34",
+          "signal": "GND (ENC1)"
+        },
+        {
+          "id": "j8_35",
+          "notConnected": true
+        },
+        {
+          "id": "j8_36",
+          "signal": "GPIO31 ENC1 B"
+        },
+        {
+          "id": "j8_37",
+          "notConnected": true
+        },
+        {
+          "id": "j8_38",
+          "notConnected": true
+        },
+        {
+          "id": "j8_39",
+          "signal": "GND (power)"
+        },
+        {
+          "id": "j8_40",
+          "signal": "GPIO30 ENC1 A"
+        }
+      ]
+    },
+    {
+      "id": "buck",
+      "label": "BUCK D36V50F5",
+      "schematicPosition": {
+        "x": 1170,
+        "y": 60
+      },
+      "partId": "cp_gen_254_1x6",
+      "width": 210,
+      "cavities": [
+        {
+          "id": "buck_1",
+          "notConnected": true
+        },
+        {
+          "id": "buck_2",
+          "notConnected": true
+        },
+        {
+          "id": "buck_3",
+          "signal": "VIN"
+        },
+        {
+          "id": "buck_4",
+          "notConnected": true
+        },
+        {
+          "id": "buck_5",
+          "signal": "VOUT"
+        },
+        {
+          "id": "buck_6",
+          "signal": "GND"
+        }
+      ]
+    },
+    {
+      "id": "l5v",
+      "label": "LEFT 5V IN (as installed)",
+      "schematicPosition": {
+        "x": 1170,
+        "y": 360
+      },
+      "partId": "cp_gen_254_1x2",
+      "width": 210,
+      "cavities": [
+        {
+          "id": "l5v_1",
+          "signal": "+5V"
+        },
+        {
+          "id": "l5v_2",
+          "signal": "GND"
+        }
+      ]
+    },
+    {
+      "id": "r5v",
+      "label": "RIGHT 5V IN (as installed)",
+      "schematicPosition": {
+        "x": 1170,
+        "y": 510
+      },
+      "partId": "cp_gen_254_1x2",
+      "width": 210,
+      "cavities": [
+        {
+          "id": "r5v_1",
+          "signal": "+5V"
+        },
+        {
+          "id": "r5v_2",
+          "signal": "GND"
+        }
+      ]
+    },
+    {
+      "id": "canb",
+      "label": "CAN XCVR (SN65HVD230)",
+      "schematicPosition": {
+        "x": 1170,
+        "y": 660
+      },
+      "partId": "cp_gen_254_1x4",
+      "width": 210,
+      "cavities": [
+        {
+          "id": "canb_1",
+          "signal": "CTX"
+        },
+        {
+          "id": "canb_2",
+          "signal": "CRX"
+        },
+        {
+          "id": "canb_3",
+          "signal": "GND"
+        },
+        {
+          "id": "canb_4",
+          "signal": "3V3"
+        }
+      ]
+    },
+    {
+      "id": "luart",
+      "label": "LEFT UART (S3)",
+      "schematicPosition": {
+        "x": 1170,
+        "y": 870
+      },
+      "partId": "cp_gen_254_1x4",
+      "width": 210,
+      "cavities": [
+        {
+          "id": "luart_1",
+          "notConnected": true
+        },
+        {
+          "id": "luart_2",
+          "notConnected": true
+        },
+        {
+          "id": "luart_3",
+          "notConnected": true
+        },
+        {
+          "id": "luart_4",
+          "signal": "RXD GPIO44"
+        }
+      ]
+    },
+    {
+      "id": "ruart",
+      "label": "RIGHT UART (S3)",
+      "schematicPosition": {
+        "x": 1170,
+        "y": 1080
+      },
+      "partId": "cp_gen_254_1x4",
+      "width": 210,
+      "cavities": [
+        {
+          "id": "ruart_1",
+          "notConnected": true
+        },
+        {
+          "id": "ruart_2",
+          "notConnected": true
+        },
+        {
+          "id": "ruart_3",
+          "notConnected": true
+        },
+        {
+          "id": "ruart_4",
+          "signal": "RXD GPIO44"
+        }
+      ]
+    },
+    {
+      "id": "enc1",
+      "label": "ENC1 (BOOST)",
+      "schematicPosition": {
+        "x": 1170,
+        "y": 1290
+      },
+      "partId": "cp_gen_254_1x5",
+      "width": 210,
+      "cavities": [
+        {
+          "id": "enc1_1",
+          "signal": "A"
+        },
+        {
+          "id": "enc1_2",
+          "signal": "C (GND)"
+        },
+        {
+          "id": "enc1_3",
+          "signal": "B"
+        },
+        {
+          "id": "enc1_4",
+          "signal": "SW"
+        },
+        {
+          "id": "enc1_5",
+          "signal": "SW GND"
+        }
+      ]
+    },
+    {
+      "id": "enc2",
+      "label": "ENC2 (TC SLIP)",
+      "schematicPosition": {
+        "x": 1170,
+        "y": 1530
+      },
+      "partId": "cp_gen_254_1x5",
+      "width": 210,
+      "cavities": [
+        {
+          "id": "enc2_1",
+          "signal": "A"
+        },
+        {
+          "id": "enc2_2",
+          "signal": "C (GND)"
+        },
+        {
+          "id": "enc2_3",
+          "signal": "B"
+        },
+        {
+          "id": "enc2_4",
+          "signal": "SW"
+        },
+        {
+          "id": "enc2_5",
+          "signal": "SW GND"
+        }
+      ]
+    },
+    {
+      "id": "enc3",
+      "label": "ENC3 (BACKLIGHT DIM)",
+      "schematicPosition": {
+        "x": 1170,
+        "y": 1770
+      },
+      "partId": "cp_gen_254_1x5",
+      "width": 210,
+      "cavities": [
+        {
+          "id": "enc3_1",
+          "signal": "A"
+        },
+        {
+          "id": "enc3_2",
+          "signal": "C (GND)"
+        },
+        {
+          "id": "enc3_3",
+          "signal": "B"
+        },
+        {
+          "id": "enc3_4",
+          "signal": "SW"
+        },
+        {
+          "id": "enc3_5",
+          "signal": "SW GND"
+        }
+      ]
+    },
+    {
+      "id": "odo",
+      "label": "ODO BUTTON",
+      "schematicPosition": {
+        "x": 1170,
+        "y": 2010
+      },
+      "partId": "cp_gen_254_1x2",
+      "width": 210,
+      "cavities": [
+        {
+          "id": "odo_1",
+          "signal": "SW"
+        },
+        {
+          "id": "odo_2",
+          "signal": "GND"
+        }
+      ]
+    },
+    {
+      "id": "opto",
+      "label": "HEADLIGHT OPTO (PC817)",
+      "schematicPosition": {
+        "x": 1170,
+        "y": 2160
+      },
+      "partId": "cp_gen_254_1x4",
+      "width": 210,
+      "cavities": [
+        {
+          "id": "opto_1",
+          "signal": "ANODE"
+        },
+        {
+          "id": "opto_2",
+          "signal": "CATHODE"
+        },
+        {
+          "id": "opto_3",
+          "signal": "EMITTER"
+        },
+        {
+          "id": "opto_4",
+          "signal": "COLLECTOR"
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "t_ign",
+      "type": "Loose",
+      "partId": "tp_flying_lead",
+      "signal": "+12V IGN (fused, vehicle)",
+      "schematicPosition": {
+        "x": 90,
+        "y": 60
+      },
+      "width": 270
+    },
+    {
+      "id": "t_gnd",
+      "type": "Ring",
+      "partId": "tp_ring_m6",
+      "signal": "CHASSIS GND",
+      "schematicPosition": {
+        "x": 90,
+        "y": 150
+      },
+      "width": 270
+    },
+    {
+      "id": "t_ill",
+      "type": "Loose",
+      "partId": "tp_flying_lead",
+      "signal": "ILLUMINATION +12V (vehicle)",
+      "schematicPosition": {
+        "x": 90,
+        "y": 240
+      },
+      "width": 270
+    }
+  ],
+  "splices": [
+    {
+      "id": "sp_5v",
+      "partId": "spp_solder_26_14",
+      "schematicPosition": {
+        "x": 750,
+        "y": 180
+      }
+    },
+    {
+      "id": "sp_pgnd",
+      "partId": "spp_solder_26_14",
+      "schematicPosition": {
+        "x": 750,
+        "y": 420
+      }
+    },
+    {
+      "id": "sp_e1",
+      "partId": "spp_solder_26_14",
+      "schematicPosition": {
+        "x": 750,
+        "y": 1380
+      }
+    },
+    {
+      "id": "sp_e2",
+      "partId": "spp_solder_26_14",
+      "schematicPosition": {
+        "x": 750,
+        "y": 1620
+      }
+    },
+    {
+      "id": "sp_e3",
+      "partId": "spp_solder_26_14",
+      "schematicPosition": {
+        "x": 750,
+        "y": 1860
+      }
+    }
+  ],
+  "resistors": [
+    {
+      "id": "r_ill",
+      "partId": "rp_1k5",
+      "schematicPosition": {
+        "x": 750,
+        "y": 2250
+      }
+    }
+  ],
+  "wires": [
+    {
+      "id": "w1",
+      "source": {
+        "id": "t_ign",
+        "handle": "Terminal"
+      },
+      "target": {
+        "id": "buck",
+        "handle": "buck_3"
+      },
+      "color": "Red",
+      "partId": "wp22_red"
+    },
+    {
+      "id": "w2",
+      "source": {
+        "id": "buck",
+        "handle": "buck_5"
+      },
+      "target": {
+        "id": "sp_5v",
+        "handle": "Splice"
+      },
+      "color": "Orange",
+      "partId": "wp_orange"
+    },
+    {
+      "id": "w3",
+      "source": {
+        "id": "sp_5v",
+        "handle": "Splice"
+      },
+      "target": {
+        "id": "j8",
+        "handle": "j8_2"
+      },
+      "color": "Orange",
+      "partId": "wp_orange"
+    },
+    {
+      "id": "w4",
+      "source": {
+        "id": "sp_5v",
+        "handle": "Splice"
+      },
+      "target": {
+        "id": "j8",
+        "handle": "j8_4"
+      },
+      "color": "Orange",
+      "partId": "wp_orange"
+    },
+    {
+      "id": "w5",
+      "source": {
+        "id": "sp_5v",
+        "handle": "Splice"
+      },
+      "target": {
+        "id": "l5v",
+        "handle": "l5v_1"
+      },
+      "color": "Orange",
+      "partId": "wp_orange"
+    },
+    {
+      "id": "w6",
+      "source": {
+        "id": "sp_5v",
+        "handle": "Splice"
+      },
+      "target": {
+        "id": "r5v",
+        "handle": "r5v_1"
+      },
+      "color": "Orange",
+      "partId": "wp_orange"
+    },
+    {
+      "id": "w7",
+      "source": {
+        "id": "buck",
+        "handle": "buck_6"
+      },
+      "target": {
+        "id": "sp_pgnd",
+        "handle": "Splice"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w8",
+      "source": {
+        "id": "sp_pgnd",
+        "handle": "Splice"
+      },
+      "target": {
+        "id": "j8",
+        "handle": "j8_6"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w9",
+      "source": {
+        "id": "sp_pgnd",
+        "handle": "Splice"
+      },
+      "target": {
+        "id": "j8",
+        "handle": "j8_39"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w10",
+      "source": {
+        "id": "sp_pgnd",
+        "handle": "Splice"
+      },
+      "target": {
+        "id": "l5v",
+        "handle": "l5v_2"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w11",
+      "source": {
+        "id": "sp_pgnd",
+        "handle": "Splice"
+      },
+      "target": {
+        "id": "r5v",
+        "handle": "r5v_2"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w12",
+      "source": {
+        "id": "sp_pgnd",
+        "handle": "Splice"
+      },
+      "target": {
+        "id": "t_gnd",
+        "handle": "Terminal"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w13",
+      "source": {
+        "id": "j8",
+        "handle": "j8_16"
+      },
+      "target": {
+        "id": "canb",
+        "handle": "canb_1"
+      },
+      "color": "Yellow",
+      "partId": "wp_yellow"
+    },
+    {
+      "id": "w14",
+      "source": {
+        "id": "j8",
+        "handle": "j8_18"
+      },
+      "target": {
+        "id": "canb",
+        "handle": "canb_2"
+      },
+      "color": "Pink",
+      "partId": "wp_pink"
+    },
+    {
+      "id": "w15",
+      "source": {
+        "id": "j8",
+        "handle": "j8_20"
+      },
+      "target": {
+        "id": "canb",
+        "handle": "canb_3"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w16",
+      "source": {
+        "id": "j8",
+        "handle": "j8_17"
+      },
+      "target": {
+        "id": "canb",
+        "handle": "canb_4"
+      },
+      "color": "Orange",
+      "partId": "wp22_org_wht",
+      "stripeColor": "White"
+    },
+    {
+      "id": "w17",
+      "source": {
+        "id": "j8",
+        "handle": "j8_13"
+      },
+      "target": {
+        "id": "luart",
+        "handle": "luart_4"
+      },
+      "color": "Violet",
+      "partId": "wp_violet"
+    },
+    {
+      "id": "w18",
+      "source": {
+        "id": "j8",
+        "handle": "j8_11"
+      },
+      "target": {
+        "id": "ruart",
+        "handle": "ruart_4"
+      },
+      "color": "Violet",
+      "partId": "wp22_vio_wht",
+      "stripeColor": "White"
+    },
+    {
+      "id": "w19",
+      "source": {
+        "id": "j8",
+        "handle": "j8_40"
+      },
+      "target": {
+        "id": "enc1",
+        "handle": "enc1_1"
+      },
+      "color": "White",
+      "partId": "wp_white"
+    },
+    {
+      "id": "w20",
+      "source": {
+        "id": "j8",
+        "handle": "j8_36"
+      },
+      "target": {
+        "id": "enc1",
+        "handle": "enc1_3"
+      },
+      "color": "Green",
+      "partId": "wp_green"
+    },
+    {
+      "id": "w21",
+      "source": {
+        "id": "j8",
+        "handle": "j8_31"
+      },
+      "target": {
+        "id": "enc1",
+        "handle": "enc1_4"
+      },
+      "color": "Blue",
+      "partId": "wp_blue"
+    },
+    {
+      "id": "w22",
+      "source": {
+        "id": "enc1",
+        "handle": "enc1_2"
+      },
+      "target": {
+        "id": "sp_e1",
+        "handle": "Splice"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w23",
+      "source": {
+        "id": "enc1",
+        "handle": "enc1_5"
+      },
+      "target": {
+        "id": "sp_e1",
+        "handle": "Splice"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w24",
+      "source": {
+        "id": "sp_e1",
+        "handle": "Splice"
+      },
+      "target": {
+        "id": "j8",
+        "handle": "j8_34"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w25",
+      "source": {
+        "id": "j8",
+        "handle": "j8_26"
+      },
+      "target": {
+        "id": "enc2",
+        "handle": "enc2_1"
+      },
+      "color": "White",
+      "partId": "wp_white"
+    },
+    {
+      "id": "w26",
+      "source": {
+        "id": "j8",
+        "handle": "j8_23"
+      },
+      "target": {
+        "id": "enc2",
+        "handle": "enc2_3"
+      },
+      "color": "Green",
+      "partId": "wp_green"
+    },
+    {
+      "id": "w27",
+      "source": {
+        "id": "j8",
+        "handle": "j8_29"
+      },
+      "target": {
+        "id": "enc2",
+        "handle": "enc2_4"
+      },
+      "color": "Blue",
+      "partId": "wp_blue"
+    },
+    {
+      "id": "w28",
+      "source": {
+        "id": "enc2",
+        "handle": "enc2_2"
+      },
+      "target": {
+        "id": "sp_e2",
+        "handle": "Splice"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w29",
+      "source": {
+        "id": "enc2",
+        "handle": "enc2_5"
+      },
+      "target": {
+        "id": "sp_e2",
+        "handle": "Splice"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w30",
+      "source": {
+        "id": "sp_e2",
+        "handle": "Splice"
+      },
+      "target": {
+        "id": "j8",
+        "handle": "j8_30"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w31",
+      "source": {
+        "id": "j8",
+        "handle": "j8_27"
+      },
+      "target": {
+        "id": "enc3",
+        "handle": "enc3_1"
+      },
+      "color": "White",
+      "partId": "wp_white"
+    },
+    {
+      "id": "w32",
+      "source": {
+        "id": "j8",
+        "handle": "j8_28"
+      },
+      "target": {
+        "id": "enc3",
+        "handle": "enc3_3"
+      },
+      "color": "Green",
+      "partId": "wp_green"
+    },
+    {
+      "id": "w33",
+      "source": {
+        "id": "j8",
+        "handle": "j8_21"
+      },
+      "target": {
+        "id": "enc3",
+        "handle": "enc3_4"
+      },
+      "color": "Blue",
+      "partId": "wp_blue"
+    },
+    {
+      "id": "w34",
+      "source": {
+        "id": "enc3",
+        "handle": "enc3_2"
+      },
+      "target": {
+        "id": "sp_e3",
+        "handle": "Splice"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w35",
+      "source": {
+        "id": "enc3",
+        "handle": "enc3_5"
+      },
+      "target": {
+        "id": "sp_e3",
+        "handle": "Splice"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w36",
+      "source": {
+        "id": "sp_e3",
+        "handle": "Splice"
+      },
+      "target": {
+        "id": "j8",
+        "handle": "j8_25"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w37",
+      "source": {
+        "id": "j8",
+        "handle": "j8_7"
+      },
+      "target": {
+        "id": "odo",
+        "handle": "odo_1"
+      },
+      "color": "Green",
+      "partId": "wp_green"
+    },
+    {
+      "id": "w38",
+      "source": {
+        "id": "odo",
+        "handle": "odo_2"
+      },
+      "target": {
+        "id": "j8",
+        "handle": "j8_9"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w39",
+      "source": {
+        "id": "t_ill",
+        "handle": "Terminal"
+      },
+      "target": {
+        "id": "r_ill",
+        "handle": "Left"
+      },
+      "color": "Red",
+      "partId": "wp22_red_wht",
+      "stripeColor": "White"
+    },
+    {
+      "id": "w40",
+      "source": {
+        "id": "r_ill",
+        "handle": "Right"
+      },
+      "target": {
+        "id": "opto",
+        "handle": "opto_1"
+      },
+      "color": "Red",
+      "partId": "wp22_red_wht",
+      "stripeColor": "White"
+    },
+    {
+      "id": "w41",
+      "source": {
+        "id": "opto",
+        "handle": "opto_2"
+      },
+      "target": {
+        "id": "t_gnd",
+        "handle": "Terminal"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w42",
+      "source": {
+        "id": "opto",
+        "handle": "opto_3"
+      },
+      "target": {
+        "id": "j8",
+        "handle": "j8_14"
+      },
+      "color": "Black",
+      "partId": "wp22_blk"
+    },
+    {
+      "id": "w43",
+      "source": {
+        "id": "opto",
+        "handle": "opto_4"
+      },
+      "target": {
+        "id": "j8",
+        "handle": "j8_15"
+      },
+      "color": "Blue",
+      "partId": "wp_blue"
+    }
+  ],
+  "schematicNotes": [
+    {
+      "id": "n1",
+      "schematicPosition": {
+        "x": 390,
+        "y": 2400
+      },
+      "text": "TrackCluster Assembly — created 2026-09-25 (Cowork). J8 pinout SoT: center-cluster-esp32-p4/PINOUT.md + docs/datasheets/waveshare-esp32-p4-xc-j8-silkscreen.png. CAN H/L is NOT drawn here: owned by st185-link-ecu-config ST185-CAN.harness (cluster drop T1). Flash center board via 'USB TO UART' port only (Enc3 on GPIO24/25). No in-pod disconnects (decision 2026-09-25): 22 AWG, generic 2.54 housings. Side-board 5V as installed.",
+      "width": 390
+    }
+  ],
+  "wireParts": [
+    {
+      "id": "wp22_red",
+      "color": "Red",
+      "gauge": {
+        "unit": "AWG",
+        "value": 22
+      },
+      "partNumber": "EW-1C22-RED",
+      "description": "WIRE, 22 AWG, RED — switched 12V (low current)"
+    },
+    {
+      "id": "wp22_blk",
+      "color": "Black",
+      "gauge": {
+        "unit": "AWG",
+        "value": 22
+      },
+      "partNumber": "EW-1C22-BLK",
+      "description": "WIRE, 22 AWG, BLACK — ground"
+    },
+    {
+      "id": "wp_orange",
+      "color": "Orange",
+      "gauge": {
+        "unit": "AWG",
+        "value": 22
+      },
+      "partNumber": "EW-1C22-ORG",
+      "description": "+5V Out"
+    },
+    {
+      "id": "wp22_org_wht",
+      "color": "Orange",
+      "gauge": {
+        "unit": "AWG",
+        "value": 22
+      },
+      "partNumber": "EW-1C22-ORG-WHT",
+      "description": "WIRE, 22 AWG, ORANGE/WHITE — 3V3",
+      "stripeColor": "White"
+    },
+    {
+      "id": "wp_yellow",
+      "color": "Yellow",
+      "gauge": {
+        "unit": "AWG",
+        "value": 22
+      },
+      "partNumber": "EW-1C22-YEL",
+      "description": "Temp"
+    },
+    {
+      "id": "wp_pink",
+      "color": "Pink",
+      "gauge": {
+        "unit": "AWG",
+        "value": 22
+      },
+      "partNumber": "EW-1C22-PNK",
+      "description": "Aux out"
+    },
+    {
+      "id": "wp_violet",
+      "color": "Violet",
+      "gauge": {
+        "unit": "AWG",
+        "value": 22
+      },
+      "partNumber": "EW-1C22-VIO",
+      "description": "Ignition"
+    },
+    {
+      "id": "wp22_vio_wht",
+      "color": "Violet",
+      "gauge": {
+        "unit": "AWG",
+        "value": 22
+      },
+      "partNumber": "EW-1C22-VIO-WHT",
+      "description": "WIRE, 22 AWG, VIOLET/WHITE",
+      "stripeColor": "White"
+    },
+    {
+      "id": "wp_green",
+      "color": "Green",
+      "gauge": {
+        "unit": "AWG",
+        "value": 22
+      },
+      "partNumber": "EW-1C22-GRN",
+      "description": "Digital / CAN L"
+    },
+    {
+      "id": "wp_blue",
+      "color": "Blue",
+      "gauge": {
+        "unit": "AWG",
+        "value": 22
+      },
+      "partNumber": "EW-1C22-BLU",
+      "description": "Trigger / CAN H"
+    },
+    {
+      "id": "wp_white",
+      "color": "White",
+      "gauge": {
+        "unit": "AWG",
+        "value": 22
+      },
+      "partNumber": "EW-1C22-WHT",
+      "description": "Analog in"
+    },
+    {
+      "id": "wp22_red_wht",
+      "color": "Red",
+      "gauge": {
+        "unit": "AWG",
+        "value": 22
+      },
+      "partNumber": "EW-1C22-RED-WHT",
+      "description": "WIRE, 22 AWG, RED/WHITE — illumination +12V",
+      "stripeColor": "White"
+    }
+  ],
+  "connectorParts": [
+    {
+      "id": "cp_gen_254_1x2",
+      "partNumber": "GENERIC 2.54 1x2 HOUSING",
+      "description": "HOUSING, 2.54mm, 1x2, FEMALE — generic dummy",
+      "manufacturer": "generic",
+      "gender": "Female",
+      "hasShell": false,
+      "numberOfCavities": 2,
+      "configurations": [
+        {
+          "id": "cfg",
+          "contactPartId": "ct_gen_254_skt"
+        }
+      ]
+    },
+    {
+      "id": "cp_gen_254_1x4",
+      "partNumber": "GENERIC 2.54 1x4 HOUSING",
+      "description": "HOUSING, 2.54mm, 1x4, FEMALE — generic dummy",
+      "manufacturer": "generic",
+      "gender": "Female",
+      "hasShell": false,
+      "numberOfCavities": 4,
+      "configurations": [
+        {
+          "id": "cfg",
+          "contactPartId": "ct_gen_254_skt"
+        }
+      ]
+    },
+    {
+      "id": "cp_gen_254_1x5",
+      "partNumber": "GENERIC 2.54 1x5 HOUSING",
+      "description": "HOUSING, 2.54mm, 1x5, FEMALE — generic dummy (EC11 encoder)",
+      "manufacturer": "generic",
+      "gender": "Female",
+      "hasShell": false,
+      "numberOfCavities": 5,
+      "configurations": [
+        {
+          "id": "cfg",
+          "contactPartId": "ct_gen_254_skt"
+        }
+      ]
+    },
+    {
+      "id": "cp_gen_254_1x6",
+      "partNumber": "GENERIC 2.54 1x6 HOUSING",
+      "description": "HOUSING, 2.54mm, 1x6, FEMALE — generic dummy (Pololu D36V50F5 edge)",
+      "manufacturer": "generic",
+      "gender": "Female",
+      "hasShell": false,
+      "numberOfCavities": 6,
+      "configurations": [
+        {
+          "id": "cfg",
+          "contactPartId": "ct_gen_254_skt"
+        }
+      ]
+    },
+    {
+      "id": "cp_gen_254_2x20",
+      "partNumber": "GENERIC 2.54 2x20 HOUSING",
+      "description": "HOUSING, 2.54mm, 2x20 (40-way), FEMALE — generic dummy for Waveshare P4-XC J8",
+      "manufacturer": "generic",
+      "gender": "Female",
+      "hasShell": false,
+      "numberOfCavities": 40,
+      "configurations": [
+        {
+          "id": "cfg",
+          "contactPartId": "ct_gen_254_skt"
+        }
+      ]
+    }
+  ],
+  "contactParts": [
+    {
+      "id": "ct_gen_254_skt",
+      "partNumber": "GENERIC 2.54 CRIMP SOCKET 22-28",
+      "description": "CONTACT, SOCKET, 2.54mm (Dupont-style) CRIMP, 22-28 AWG — generic",
+      "manufacturer": "generic",
+      "type": "Crimp",
+      "gender": "Socket",
+      "minGauge": {
+        "value": 28,
+        "unit": "AWG"
+      },
+      "maxGauge": {
+        "value": 22,
+        "unit": "AWG"
+      }
+    }
+  ],
+  "spliceParts": [
+    {
+      "id": "spp_solder_26_14",
+      "partNumber": "GENERIC SOLDER SLEEVE 26-14",
+      "description": "SPLICE, SOLDER SLEEVE W/ HEATSHRINK, combined 26-14 AWG",
+      "manufacturer": "generic",
+      "minGauge": {
+        "unit": "AWG",
+        "value": 26
+      },
+      "maxGauge": {
+        "unit": "AWG",
+        "value": 14
+      }
+    }
+  ],
+  "terminalParts": [
+    {
+      "id": "tp_flying_lead",
+      "type": "Loose",
+      "partNumber": "GENERIC FLYING LEAD",
+      "description": "Flying lead, joined to vehicle circuit at install (butt splice / solder sleeve)",
+      "manufacturer": "generic",
+      "minGauge": {
+        "unit": "AWG",
+        "value": 22
+      },
+      "maxGauge": {
+        "unit": "AWG",
+        "value": 16
+      }
+    },
+    {
+      "id": "tp_ring_m6",
+      "type": "Ring",
+      "maxGauge": {
+        "unit": "AWG",
+        "value": 16
+      },
+      "minGauge": {
+        "unit": "AWG",
+        "value": 22
+      },
+      "partNumber": "GENERIC RING M6 22-16",
+      "description": "TERMINAL, RING, INSULATED, M6 STUD, 22-16 AWG",
+      "manufacturer": "generic"
+    }
+  ],
+  "resistorParts": [
+    {
+      "id": "rp_1k5",
+      "partNumber": "1.5k 1/4W",
+      "description": "1.5k ohm series resistor, headlight-sense PC817 LED from illumination +12V",
+      "manufacturer": "Generic",
+      "resistance": 1.5,
+      "resistanceUnit": "kohm",
+      "power": 0.25,
+      "powerUnit": "W"
+    }
+  ],
+  "groupParts": [
+    {
+      "id": "gp_ws_p4_xc",
+      "partNumber": "ESP32-P4-WIFI6-Touch-LCD-XC",
+      "manufacturer": "Waveshare",
+      "description": "Center cluster board (3.4in 800x800), 40-pin header J8",
+      "url": "https://docs.waveshare.com/ESP32-P4-WIFI6-Touch-LCD-XC"
+    },
+    {
+      "id": "gp_ws_s3_28c",
+      "partNumber": "ESP32-S3-Touch-LCD-2.8C",
+      "manufacturer": "Waveshare",
+      "description": "Left/right cluster board (2.8in 480x480); 4-pin UART header GND/3V3/TXD/RXD(GPIO44)",
+      "url": "https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-2.8C"
+    },
+    {
+      "id": "gp_ws_sn65",
+      "partNumber": "SN65HVD230 CAN Board",
+      "manufacturer": "Waveshare",
+      "description": "3.3V CAN transceiver board. Signals: CTX, CRX, GND, 3V3; CANH/CANL. Installed board has a 120R termination jumper.",
+      "url": "https://www.waveshare.com/wiki/SN65HVD230_CAN_Board"
+    },
+    {
+      "id": "gp_pololu_d36v50f5",
+      "partNumber": "D36V50F5",
+      "manufacturer": "Pololu",
+      "description": "5V 5.5A step-down regulator. Edge pins: PG, EN, VIN, VRP, VOUT, GND",
+      "url": "https://www.pololu.com/product/4091"
+    },
+    {
+      "id": "gp_pc817",
+      "partNumber": "PC817",
+      "manufacturer": "Sharp",
+      "description": "Optocoupler, headlight sense. 1 anode, 2 cathode, 3 emitter, 4 collector",
+      "url": "https://global.sharp/products/device/lineup/data/pdf/datasheet/PC817XxNSZ1B_e.pdf"
+    },
+    {
+      "id": "gp_gen_ec11",
+      "partNumber": "GENERIC EC11 ENCODER W/ SWITCH",
+      "manufacturer": "generic",
+      "description": "Rotary encoder, EC11-style, A/C/B + push switch (2 pins)"
+    },
+    {
+      "id": "gp_gen_pb_no",
+      "partNumber": "GENERIC MOMENTARY PUSHBUTTON NO",
+      "manufacturer": "generic",
+      "description": "Momentary normally-open pushbutton (ODO/Trip)"
+    }
+  ]
+}

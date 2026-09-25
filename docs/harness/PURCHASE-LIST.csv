@@ -1,14 +1,16 @@
 qty,part,description,link
-1,SN65HVD230 CAN Board,Waveshare CAN transceiver,https://www.waveshare.com/sn65hvd230-can-board.htm
+1,SN65HVD230 CAN Board,CAN transceiver (installed board has 120R jumper),https://www.waveshare.com/sn65hvd230-can-board.htm
 1,D36V50F5,12V to 5V buck,https://www.pololu.com/product/4091
-1,DT04-3P,CAN receptacle (C1),https://www.mouser.com/ProductDetail/TE-Connectivity/DT04-3P
-1,DT06-3S,CAN plug (C1),https://www.mouser.com/ProductDetail/TE-Connectivity/DT06-3S
-1/1,W3P / W3S,DT 3-way wedgelocks,
-5,DT04-2P,TX-only serial (C2/C3) + 5V feed (C4 x3) receptacles,https://www.mouser.com/ProductDetail/TE-Connectivity/DT04-2P
-5,DT06-2S,TX-only serial (C2/C3) + 5V feed (C4 x3) plugs,https://www.mouser.com/ProductDetail/TE-Connectivity/DT06-2S
-2,DT04-4P,Encoder receptacles C6/C7,https://www.mouser.com/ProductDetail/TE-Connectivity/DT04-4P
-2,DT06-4S,Encoder plugs C6/C7,https://www.mouser.com/ProductDetail/TE-Connectivity/DT06-4S
-5/5,W2P / W2S,DT 2-way wedgelocks,
-2/2,W4P / W4S,DT 4-way wedgelocks,
-50,0460-202-16141,DT pin contacts (male),https://www.mouser.com/ProductDetail/TE-Connectivity/0460-202-16141
-50,0462-201-16141,DT socket contacts (female),https://www.mouser.com/ProductDetail/TE-Connectivity/0462-201-16141
+1,PC817,Optocoupler - headlight sense,https://global.sharp/products/device/lineup/data/pdf/datasheet/PC817XxNSZ1B_e.pdf
+1,1.5k 1/4W,Resistor - PC817 LED from illumination +12V,
+3,GENERIC EC11 ENCODER W/ SWITCH,Rotary encoders ENC1-3,
+1,GENERIC MOMENTARY PUSHBUTTON NO,ODO/Trip button,
+1,GENERIC 2.54 2x20 HOUSING,J8 mating housing,
+6,GENERIC 2.54 1x2 HOUSING,Side 5V in x2 / ODO / spares,
+5,GENERIC 2.54 1x4 HOUSING,CAN xcvr / L+R UART / opto / spare,
+3,GENERIC 2.54 1x5 HOUSING,Encoders,
+1,GENERIC 2.54 1x6 HOUSING,Buck,
+60,GENERIC 2.54 CRIMP SOCKET 22-28,Crimp sockets (incl. spares),
+5,GENERIC SOLDER SLEEVE 26-14,Splices (5V / power GND / encoder GNDs),
+1,GENERIC RING M6 22-16,Chassis ground,
+2,GENERIC FLYING LEAD,+12V IGN and illumination leads (butt splice at install),
