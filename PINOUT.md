@@ -46,7 +46,7 @@ Legend: **[wired]** = a wire is landed on this pin in the firmware/harness ·
 | 21 | 2 | GPIO2 — **Encoder 3 SW / push** **[wired]** | 22 | 35 | GPIO35 — strapping **[reserved]** |
 | 23 | 50 | GPIO50 — **Encoder 2 B / DT** **[wired]** | 24 | 36 | GPIO36 — strapping **[reserved]** |
 | 25 | GND | Ground | 26 | 49 | GPIO49 — **Encoder 2 A / CLK** **[wired]** |
-| 27 | 24 | GPIO24 — **Encoder 3 A / CLK** **[wired]** ⚠ USB PHY, move pending | 28 | 25 | GPIO25 — **Encoder 3 B / DT** **[wired]** ⚠ USB PHY, move pending |
+| 27 | 24 | GPIO24 — **Encoder 3 A / CLK** **[wired]** ⚠ see USB note | 28 | 25 | GPIO25 — **Encoder 3 B / DT** **[wired]** ⚠ see USB note |
 | 29 | 51 | GPIO51 — **Encoder 2 SW / push** **[wired]** | 30 | GND | Ground |
 | 31 | 32 | GPIO32 — **Encoder 1 SW / push** **[wired]** | 32 | 34 | GPIO34 — strapping (JTAG) **[reserved]** |
 | 33 | 48 | GPIO48 **[free]** | 34 | GND | Ground |
@@ -101,11 +101,22 @@ if you see bounce).
   brightness, and only does anything **while headlights are on**; the push resets
   the night level to the default. Same EC11 wiring (common legs to GND).
 
+> **USB note (decision 2026-09-25: keep Enc 3 on GPIO24/25).** Per the Waveshare
+> XC schematic, GPIO24/25 run through 0 Ω R32/R30 to the USB-C port silkscreened
+> **"USB"** (H1). The port silkscreened **"USB TO UART"** (H5) goes through the
+> CH343P bridge and does not use them. **Flash and monitor through "USB TO UART"
+> only. Never plug a cable into the "USB" port while the encoder is wired.**
+> Firmware claiming 24/25 as GPIO also disables the P4's USB-JTAG on that port
+> (ESP-IDF P4 GPIO docs).
+
 **Headlight sense input (backlight dimming):**
 - **GPIO28**, **active-low** with the chip's internal pull-up. Wire it to **switch
-  to GND** when the headlights/illumination are on (via a relay, opto-isolator, or
-  open-collector output). **Do not connect +12 V to the pin** — active-low means no
-  divider is needed, but it still requires a ground-switch, not a raw 12 V feed.
+  to GND** when the headlights/illumination are on. **Do not connect +12 V to the pin.**
+- **Device (decision 2026-09-25): optocoupler, Sharp PC817.** Illumination +12 V →
+  1.5 kΩ ¼ W → LED anode (pin 1); cathode (pin 2) → GND. Transistor collector
+  (pin 4) → GPIO28; emitter (pin 3) → GND. Sized from the Sharp PC817 datasheet
+  (IF max 50 mA, VF 1.2 V typ, CTR ≥ 50 % at 5 mA): ~6.5–9 mA LED current over
+  11–14.8 V.
 - Headlights **on** → all three clusters dim to the night level (the center
   broadcasts the level to the sides over the UART bridge). Headlights **off** →
   full brightness.

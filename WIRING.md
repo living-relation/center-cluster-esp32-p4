@@ -51,8 +51,11 @@ The ESP32-P4 TWAI controller is logic-level; it needs an **external CAN transcei
   hardware — **no firmware or programming**. Wire **VCC→3V3**, **GND→GND**, **CTX→GPIO5 (TWAI TX)**,
   **CRX→GPIO4 (TWAI RX)**, **CANH/CANL** to the ECU bus. Supports up to **1 Mbit/s** (matches Link G4X).
   Do not short CANH and CANL.
-- **Bus:** 1 Mbit/s, 120 Ω termination at both physical ends of the CAN backbone (one is usually in
-  the ECU; add one 120 Ω at the transceiver end if it's the far end).
+- **Bus:** 1 Mbit/s. The cluster is a **mid-bus drop, not an end** — bus ends and termination are
+  owned by `st185-link-ecu-config/docs/harness/rebuild/ST185-CAN.harness`.
+  <!-- SOT-REF: repo=living-relation/st185-link-ecu-config path=docs/harness/rebuild/ST185-CAN.harness -->
+- **⚠ Remove R2 (120 Ω) from the Waveshare SN65HVD230 board.** Its schematic shows R2 hard-wired
+  across CANH/CANL (no jumper). Left in, it is a third termination on the bus.
 - ECU broadcast IDs 0x3E8–0x3EB + status 0x3EE; dash→ECU TX 0x3EC/0x3ED. See `CANBUS-ENCODE-DECODE-REFERENCE.html`.
 
 ---
@@ -112,7 +115,7 @@ board-reserved GPIOs). Not repeated here.
 |---|---|
 | Center CAN 4/5, buttons 29, encoders 30/31/32/49/50/51 | ✅ all on J8, clear of strapping/PSRAM/USB/microSD |
 | Center UART link | ✅ **TX-only:** center transmits on GPIO20 (Left) / GPIO21 (Right); no center RX pin is claimed. The previously "reserved" RX pins were removed entirely — the side-board-TX → center-RX link is not used. |
-| Center Encoder 3 A/B | ⚠️ **Open:** on the P4's USB PHY pins (routed to the USB-C port). Works on the bench; move pending Daniel's pin pick. See `PINOUT.md`. |
+| Center Encoder 3 A/B | ⚠️ Accepted 2026-09-25: shares pins with the "USB" USB-C port. Flash via "USB TO UART" only. See `PINOUT.md` USB note. |
 | Center "available" list | ⚠️ Annotated: GPIO34/35/36 are **strapping** pins — removed from the free list in Kconfig |
 | Side I²C 7/15 | ✅ free, not strapping/USB/flash |
 | Side UART RX 44 | ✅ valid (default UART0 console pin) — **flash via USB-C** so console doesn't fight the link. Only GPIO44/RX is used; GPIO43/TX is left unconnected on the center end. |
