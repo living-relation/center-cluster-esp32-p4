@@ -51,11 +51,9 @@ The ESP32-P4 TWAI controller is logic-level; it needs an **external CAN transcei
   hardware — **no firmware or programming**. Wire **VCC→3V3**, **GND→GND**, **CTX→GPIO5 (TWAI TX)**,
   **CRX→GPIO4 (TWAI RX)**, **CANH/CANL** to the ECU bus. Supports up to **1 Mbit/s** (matches Link G4X).
   Do not short CANH and CANL.
-- **Bus:** 1 Mbit/s. The cluster is a **mid-bus drop, not an end** — bus ends and termination are
-  owned by `st185-link-ecu-config/docs/harness/rebuild/ST185-CAN.harness`.
+- **Bus:** 1 Mbit/s. CAN H/L wiring and termination are owned by the ST185 CAN harness (the
+  installed transceiver has a 120 Ω jumper, set per that design).
   <!-- SOT-REF: repo=living-relation/st185-link-ecu-config path=docs/harness/rebuild/ST185-CAN.harness -->
-- **⚠ Remove R2 (120 Ω) from the Waveshare SN65HVD230 board.** Its schematic shows R2 hard-wired
-  across CANH/CANL (no jumper). Left in, it is a third termination on the bus.
 - ECU broadcast IDs 0x3E8–0x3EB + status 0x3EE; dash→ECU TX 0x3EC/0x3ED. See `CANBUS-ENCODE-DECODE-REFERENCE.html`.
 
 ---
