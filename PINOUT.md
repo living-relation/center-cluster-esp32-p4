@@ -1,22 +1,26 @@
 # Center cluster — J8 40-pin GPIO header pinout
+<!-- Revised 2026-09-25 · feature/center-cluster-harness-design · Cowork: center-cluster doc cleanup + archive · PR# n/a -->
+<!-- SOT-REF: repo=living-relation/center-cluster-esp32-p4 path=main/Kconfig.projbuild -->
+<!-- SOT-REF: repo=living-relation/center-cluster-esp32-p4 path=docs/datasheets/waveshare-esp32-p4-xc-j8-silkscreen.png -->
 
 **Board:** Waveshare **ESP32-P4-WIFI6-Touch-LCD-XC**, 40-pin header **J8**.
-This table is transcribed from the **board silkscreen** and cross-checked
-against the Waveshare schematic and the firmware pin map in
-`main/Kconfig.projbuild`.
+This is the **only** J8 pin table in this repo. Any other doc points here;
+none restates it.
+
+**Sources:** GPIO assignments = `main/Kconfig.projbuild` (what is flashed).
+Silk names and positions = the board silkscreen image
+`docs/datasheets/waveshare-esp32-p4-xc-j8-silkscreen.png` (Waveshare product
+image, committed 2026-09-25; matches this table 40/40) and the
+[Waveshare XC schematic](https://files.waveshare.com/wiki/ESP32-P4-WIFI6-Touch-LCD-XC/ESP32-P4-WIFI6-Touch-LCD-XC-Schematic.pdf).
+I²C GPIOs = Waveshare's
+[XC HARDWARE.md](https://github.com/waveshareteam/ESP32-P4-WIFI6-Touch-LCD-XC/blob/main/docs/HARDWARE.md).
 
 ## How the pins are numbered
 
-The silkscreen prints **GPIO/function names, not pin numbers**. The physical
-pin numbers below follow the standard 2×20 header convention (each column
-holds one odd + one even pin) and are anchored to the two hardware facts
-already recorded in `WIRING.md`: **J8 pin 2 = 5V** and **J8 pin 39 = GND**.
-Testing the column-pair numbering from the `3V3`/`5V` end reproduces both
-facts, so numbering starts at that end (pin 1 = 3V3, top row = odd pins,
-bottom row = even pins). If you have a Waveshare pin-numbered diagram or a
-pin-1 mark on the connector itself, treat that as authoritative over the
-inferred numbers here — the **silkscreen names and their GPIO/function
-mapping are the part that matters and are not affected by the numbering.**
+The silkscreen prints **GPIO/function names, not pin numbers**. Pin 1 = the
+`3V3` end (standard 2×20: odd pins one row, even pins the other). Confirmed
+2026-09-25 against the silkscreen photo and the Waveshare schematic, and by a
+working install. Wire by pin number **and** check the silk label at the pin.
 
 ## Pinout table
 
@@ -30,8 +34,8 @@ Legend: **[wired]** = a wire is landed on this pin in the firmware/harness ·
 | Pin | Silk | Signal / GPIO | Pin | Silk | Signal / GPIO |
 |---:|:---:|---|---:|:---:|---|
 | 1 | 3V3 | 3.3 V rail | 2 | 5V | 5 V board input **[wired]** |
-| 3 | SDA | GPIO6 — I²C SDA (touch + audio) **[wired]** | 4 | 5V | 5 V board input **[wired]** |
-| 5 | SCL | GPIO7 — I²C SCL (touch + audio) **[wired]** | 6 | GND | Ground |
+| 3 | SDA | GPIO7 — I²C SDA (touch + audio), board bus **[reserved]** | 4 | 5V | 5 V board input **[wired]** |
+| 5 | SCL | GPIO8 — I²C SCL (touch + audio), board bus **[reserved]** | 6 | GND | Ground |
 | 7 | 29 | GPIO29 — **ODO/Trip button** **[wired]** | 8 | TXD | ESP32-C6 co-proc UART0 TX — *not a P4 GPIO* |
 | 9 | GND | Ground | 10 | RXD | ESP32-C6 co-proc UART0 RX — *not a P4 GPIO* |
 | 11 | 21 | GPIO21 — **UART2 TX → RIGHT** **[wired]** | 12 | 22 | GPIO22 **[free]** |
@@ -42,7 +46,7 @@ Legend: **[wired]** = a wire is landed on this pin in the firmware/harness ·
 | 21 | 2 | GPIO2 — **Encoder 3 SW / push** **[wired]** | 22 | 35 | GPIO35 — strapping **[reserved]** |
 | 23 | 50 | GPIO50 — **Encoder 2 B / DT** **[wired]** | 24 | 36 | GPIO36 — strapping **[reserved]** |
 | 25 | GND | Ground | 26 | 49 | GPIO49 — **Encoder 2 A / CLK** **[wired]** |
-| 27 | 24 | GPIO24 — **Encoder 3 A / CLK** **[wired]** | 28 | 25 | GPIO25 — **Encoder 3 B / DT** **[wired]** |
+| 27 | 24 | GPIO24 — **Encoder 3 A / CLK** **[wired]** ⚠ see USB note | 28 | 25 | GPIO25 — **Encoder 3 B / DT** **[wired]** ⚠ see USB note |
 | 29 | 51 | GPIO51 — **Encoder 2 SW / push** **[wired]** | 30 | GND | Ground |
 | 31 | 32 | GPIO32 — **Encoder 1 SW / push** **[wired]** | 32 | 34 | GPIO34 — strapping (JTAG) **[reserved]** |
 | 33 | 48 | GPIO48 **[free]** | 34 | GND | Ground |
@@ -54,8 +58,8 @@ Legend: **[wired]** = a wire is landed on this pin in the firmware/harness ·
 
 | Function | Center GPIO | J8 pin | Notes |
 |---|---:|---:|---|
-| I²C SDA (touch + audio) | 6 | 3 | fixed by board |
-| I²C SCL (touch + audio) | 7 | 5 | fixed by board |
+| I²C SDA (touch + audio) | 7 | 3 | fixed by board — do not wire |
+| I²C SCL (touch + audio) | 8 | 5 | fixed by board — do not wire |
 | CAN interface (see §CAN) | 5 | 16 | to transceiver |
 | CAN interface (see §CAN) | 4 | 18 | to transceiver |
 | UART1 TX → Left | 20 | 13 | → Left GPIO44 (RX); TX-only, no center RX |
@@ -74,23 +78,13 @@ Legend: **[wired]** = a wire is landed on this pin in the firmware/harness ·
 
 ## CAN — bus wiring (Hi / Lo)
 
-The ESP32-P4 TWAI controller is **logic level** and cannot drive the CAN bus
-directly. GPIO5 and GPIO4 connect to an **external SN65HVD230 transceiver**,
-and the **CAN High / CAN Low** differential pair lives on the *transceiver's
-bus side* — there are no CAN-Hi/Lo pins on J8 itself.
-
-```
-  Center P4 (J8)          SN65HVD230 transceiver          Link G4X ECU
-  GPIO5  (pin 16) ──────► CTX (TXD)      CANH ───────────► CAN Hi
-  GPIO4  (pin 18) ◄────── CRX (RXD)      CANL ───────────► CAN Lo
-  3V3             ──────► VCC            (120 Ω termination at each bus end)
-  GND             ──────► GND
-```
-
-- **CAN Hi / CAN Lo** are the two bus wires you run to the ECU. Twisted pair,
-  120 Ω termination at both physical ends of the backbone (the ECU usually
-  provides one).
-- Bus rate: **1 Mbit/s** (Link G4X). Do not short CANH and CANL.
+There are no CAN Hi/Lo pins on J8 — only the TWAI logic lines (pins 16/18
+above) to an external transceiver. Transceiver hookup, bus rate and
+termination: see `WIRING.md` §2.
+<!-- SOT-REF: repo=living-relation/center-cluster-esp32-p4 path=WIRING.md anchor=§2 CAN -->
+Bus topology and termination for the whole car:
+<!-- SOT-REF: repo=living-relation/st185-link-ecu-config path=CAN-BUS-MASTER-DESIGN.md -->
+`st185-link-ecu-config/CAN-BUS-MASTER-DESIGN.md`.
 
 ## Encoders — wiring and how to determine the correct pins
 
@@ -107,11 +101,22 @@ if you see bounce).
   brightness, and only does anything **while headlights are on**; the push resets
   the night level to the default. Same EC11 wiring (common legs to GND).
 
+> **USB note (decision 2026-09-25: keep Enc 3 on GPIO24/25).** Per the Waveshare
+> XC schematic, GPIO24/25 run through 0 Ω R32/R30 to the USB-C port silkscreened
+> **"USB"** (H1). The port silkscreened **"USB TO UART"** (H5) goes through the
+> CH343P bridge and does not use them. **Flash and monitor through "USB TO UART"
+> only. Never plug a cable into the "USB" port while the encoder is wired.**
+> Firmware claiming 24/25 as GPIO also disables the P4's USB-JTAG on that port
+> (ESP-IDF P4 GPIO docs).
+
 **Headlight sense input (backlight dimming):**
 - **GPIO28**, **active-low** with the chip's internal pull-up. Wire it to **switch
-  to GND** when the headlights/illumination are on (via a relay, opto-isolator, or
-  open-collector output). **Do not connect +12 V to the pin** — active-low means no
-  divider is needed, but it still requires a ground-switch, not a raw 12 V feed.
+  to GND** when the headlights/illumination are on. **Do not connect +12 V to the pin.**
+- **Device (decision 2026-09-25): optocoupler, Sharp PC817.** Illumination +12 V →
+  1.5 kΩ ¼ W → LED anode (pin 1); cathode (pin 2) → GND. Transistor collector
+  (pin 4) → GPIO28; emitter (pin 3) → GND. Sized from the Sharp PC817 datasheet
+  (IF max 50 mA, VF 1.2 V typ, CTR ≥ 50 % at 5 mA): ~6.5–9 mA LED current over
+  11–14.8 V.
 - Headlights **on** → all three clusters dim to the night level (the center
   broadcasts the level to the sides over the UART bridge). Headlights **off** →
   full brightness.

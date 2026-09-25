@@ -1,0 +1,16 @@
+qty,part,description,link
+1,SN65HVD230 CAN Board,CAN transceiver (installed board has 120R jumper),https://www.waveshare.com/sn65hvd230-can-board.htm
+1,D36V50F5,12V to 5V buck,https://www.pololu.com/product/4091
+1,PC817,Optocoupler - headlight sense,https://global.sharp/products/device/lineup/data/pdf/datasheet/PC817XxNSZ1B_e.pdf
+1,1.5k 1/4W,Resistor - PC817 LED from illumination +12V,
+3,GENERIC EC11 ENCODER W/ SWITCH,Rotary encoders ENC1-3,
+1,GENERIC MOMENTARY PUSHBUTTON NO,ODO/Trip button,
+1,GENERIC 2.54 2x20 HOUSING,J8 mating housing,
+6,GENERIC 2.54 1x2 HOUSING,Side 5V in x2 / ODO / spares,
+5,GENERIC 2.54 1x4 HOUSING,CAN xcvr / L+R UART / opto / spare,
+3,GENERIC 2.54 1x5 HOUSING,Encoders,
+1,GENERIC 2.54 1x6 HOUSING,Buck,
+60,GENERIC 2.54 CRIMP SOCKET 22-28,Crimp sockets (incl. spares),
+5,GENERIC SOLDER SLEEVE 26-14,Splices (5V / power GND / encoder GNDs),
+1,GENERIC RING M6 22-16,Chassis ground,
+2,GENERIC FLYING LEAD,+12V IGN and illumination leads (butt splice at install),

@@ -3,8 +3,8 @@
  *
  * Display: MIPI-DSI 2-lane to a round LCD (800×800).
  * Schematic-verified pin assignments (Rev 1.1):
- *   GPIO 6  = ESP_I2C_SDA  (touch, camera, shared bus)
- *   GPIO 7  = ESP_I2C_SCL
+ *   GPIO 7  = ESP_I2C_SDA  (touch, audio codec, shared bus)
+ *   GPIO 8  = ESP_I2C_SCL
  *   GPIO 26 = LCD backlight (LEDC PWM, output_invert=1 per Waveshare BSP)
  *   GPIO 27 = LCD RESET (active-low)
  *   DSI data/clock = dedicated MIPI pads (not GPIO-numbered)
@@ -44,8 +44,11 @@ static const char *TAG = "bsp";
 /* ── Board-fixed GPIO assignments (schematic Rev 1.1) ─────────────────── */
 #define BSP_LCD_BL_GPIO      26
 #define BSP_LCD_RESET_GPIO   27
-#define BSP_I2C_SCL_GPIO      7
-#define BSP_I2C_SDA_GPIO      6
+/* Revised 2026-09-25 · feature/center-cluster-harness-design · Cowork: cluster cleanup ·
+ * I2C was 6/7; corrected to Waveshare XC docs/HARDWARE.md (SDA=7, SCL=8). Touch is not
+ * initialised in this firmware, so these are currently unused (audio_alert.c owns I2C0). */
+#define BSP_I2C_SCL_GPIO      8
+#define BSP_I2C_SDA_GPIO      7
 #define BSP_DSI_LANE_MBPS  1250   /* MIPI bit-rate per lane (Waveshare 3.4" panel default) */
 
 /* ── Backlight (LEDC PWM, matches official Waveshare esp32_p4_wifi6_touch_lcd_xc BSP) ── */
