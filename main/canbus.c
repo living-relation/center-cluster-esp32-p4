@@ -172,9 +172,17 @@ void canbus_task(void *arg)
 
 void canbus_dispatch_frame(uint32_t id, const uint8_t *data)
 {
-    portENTER_CRITICAL(&g_dash_mux);
-    g_dash.last_update_ms = (uint32_t)(xTaskGetTickCount() * portTICK_PERIOD_MS);
-    portEXIT_CRITICAL(&g_dash_mux);
+    /* Only ECU frames the cluster decodes keep the "data is live" timer alive.
+     * Other nodes on the shared bus (e.g. CSBv3 0x640-0x643) must not. */
+    switch (id) {
+        case 0x3E8: case 0x3E9: case 0x3EA: case 0x3EB: case 0x3EE:
+            portENTER_CRITICAL(&g_dash_mux);
+            g_dash.last_update_ms = (uint32_t)(xTaskGetTickCount() * portTICK_PERIOD_MS);
+            portEXIT_CRITICAL(&g_dash_mux);
+            break;
+        default:
+            return;
+    }
 
     switch (id) {
         case 0x3E8: decode_3e8(data); break;
