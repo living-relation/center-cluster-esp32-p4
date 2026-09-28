@@ -302,12 +302,12 @@
     },
     {
       "id": "enc1",
-      "label": "ENC1 (BOOST)",
+      "label": "ENC1 BOOST - generic EC11 encoder",
       "schematicPosition": {
         "x": 1170,
         "y": 1290
       },
-      "partId": "cp_gen_254_1x5",
+      "partId": "cp_ec11",
       "width": 210,
       "cavities": [
         {
@@ -316,7 +316,7 @@
         },
         {
           "id": "enc1_2",
-          "signal": "C (GND)"
+          "signal": "C (common)"
         },
         {
           "id": "enc1_3",
@@ -324,22 +324,22 @@
         },
         {
           "id": "enc1_4",
-          "signal": "SW"
+          "signal": "SW (push)"
         },
         {
           "id": "enc1_5",
-          "signal": "SW GND"
+          "signal": "SW (push)"
         }
       ]
     },
     {
       "id": "enc2",
-      "label": "ENC2 (TC SLIP)",
+      "label": "ENC2 TC SLIP - generic EC11 encoder",
       "schematicPosition": {
         "x": 1170,
         "y": 1530
       },
-      "partId": "cp_gen_254_1x5",
+      "partId": "cp_ec11",
       "width": 210,
       "cavities": [
         {
@@ -348,7 +348,7 @@
         },
         {
           "id": "enc2_2",
-          "signal": "C (GND)"
+          "signal": "C (common)"
         },
         {
           "id": "enc2_3",
@@ -356,22 +356,22 @@
         },
         {
           "id": "enc2_4",
-          "signal": "SW"
+          "signal": "SW (push)"
         },
         {
           "id": "enc2_5",
-          "signal": "SW GND"
+          "signal": "SW (push)"
         }
       ]
     },
     {
       "id": "enc3",
-      "label": "ENC3 (BACKLIGHT DIM)",
+      "label": "ENC3 BACKLIGHT - generic EC11 encoder",
       "schematicPosition": {
         "x": 1170,
         "y": 1770
       },
-      "partId": "cp_gen_254_1x5",
+      "partId": "cp_ec11",
       "width": 210,
       "cavities": [
         {
@@ -380,7 +380,7 @@
         },
         {
           "id": "enc3_2",
-          "signal": "C (GND)"
+          "signal": "C (common)"
         },
         {
           "id": "enc3_3",
@@ -388,31 +388,31 @@
         },
         {
           "id": "enc3_4",
-          "signal": "SW"
+          "signal": "SW (push)"
         },
         {
           "id": "enc3_5",
-          "signal": "SW GND"
+          "signal": "SW (push)"
         }
       ]
     },
     {
       "id": "odo",
-      "label": "ODO BUTTON",
+      "label": "ODO/TRIP - generic pushbutton (NO)",
       "schematicPosition": {
         "x": 1170,
         "y": 2010
       },
-      "partId": "cp_gen_254_1x2",
+      "partId": "cp_pb_no",
       "width": 210,
       "cavities": [
         {
           "id": "odo_1",
-          "signal": "SW"
+          "signal": "Pin 1"
         },
         {
           "id": "odo_2",
-          "signal": "GND"
+          "signal": "Pin 2"
         }
       ]
     },
@@ -1123,7 +1123,7 @@
         "x": 390,
         "y": 2400
       },
-      "text": "Center Cluster harness - Cowork 2026-09-27. Wires to labeled pins only, no device shapes. J8 pinout SoT: center-cluster-esp32-p4/PINOUT.md + docs/datasheets/waveshare-esp32-p4-xc-j8-silkscreen.png. CAN H/L not drawn here. Flash center board via 'USB TO UART' port only (Enc3 on GPIO24/25). Dupont 2.54 housings at boards; buck, CAN transceiver and opto are Phoenix-style screw terminals; splices are plain wire-to-wire joins.",
+      "text": "Center Cluster harness - Cowork 2026-09-27. Wires to labeled pins only, no device shapes. J8 pinout SoT: center-cluster-esp32-p4/PINOUT.md + docs/datasheets/waveshare-esp32-p4-xc-j8-silkscreen.png. CAN H/L not drawn here. Flash center board via 'USB TO UART' port only (Enc3 on GPIO24/25). Dupont 2.54 housings at the boards; encoders and ODO button are generic parts; buck, CAN transceiver and opto are Phoenix-style screw terminals; splices are plain wire-to-wire joins.",
       "width": 390
     }
   ],
@@ -1284,21 +1284,6 @@
       ]
     },
     {
-      "id": "cp_gen_254_1x5",
-      "partNumber": "GENERIC 2.54 1x5 HOUSING",
-      "description": "HOUSING, 2.54mm, 1x5, FEMALE — generic dummy (EC11 encoder)",
-      "manufacturer": "generic",
-      "gender": "Female",
-      "hasShell": false,
-      "numberOfCavities": 5,
-      "configurations": [
-        {
-          "id": "cfg",
-          "contactPartId": "ct_gen_254_skt"
-        }
-      ]
-    },
-    {
       "id": "cp_gen_254_2x20",
       "partNumber": "GENERIC 2.54 2x20 HOUSING",
       "description": "HOUSING, 2.54mm, 2x20 (40-way), FEMALE — generic dummy for Waveshare P4-XC J8",
@@ -1340,6 +1325,36 @@
         {
           "id": "cfg",
           "contactPartId": "ct_phx_screw"
+        }
+      ]
+    },
+    {
+      "id": "cp_ec11",
+      "partNumber": "GENERIC EC11 ROTARY ENCODER W/ SWITCH",
+      "description": "Rotary encoder, A / C / B + 2 push-switch pins - generic",
+      "manufacturer": "generic",
+      "gender": "Male",
+      "hasShell": false,
+      "numberOfCavities": 5,
+      "configurations": [
+        {
+          "id": "cfg",
+          "contactPartId": "ct_gen_254_skt"
+        }
+      ]
+    },
+    {
+      "id": "cp_pb_no",
+      "partNumber": "GENERIC MOMENTARY PUSHBUTTON NO",
+      "description": "Momentary normally-open pushbutton, 2 pins - generic",
+      "manufacturer": "generic",
+      "gender": "Male",
+      "hasShell": false,
+      "numberOfCavities": 2,
+      "configurations": [
+        {
+          "id": "cfg",
+          "contactPartId": "ct_gen_254_skt"
         }
       ]
     }
