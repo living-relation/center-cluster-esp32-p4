@@ -1,5 +1,7 @@
 # TrackCluster — Wiring & Pinout (physical install)
 <!-- Revised 2026-09-25 · feature/center-cluster-harness-design · Cowork: center-cluster doc cleanup + archive · PR# n/a -->
+<!-- Revised 2026-09-27 · chore/wiring-side-sot-refs · Cowork: S3 pin table replaced with SOT-REF pointers · PR# n/a -->
+<!-- Revised 2026-09-27 · feature/center-cluster-dupont-harness · Cowork: Dupont-only, buck soldered direct · PR# n/a -->
 
 **Reference only — NOT flashed.** Lives at the center repo root so it's immediately visible.
 Everything below is GPIO/connector-validated against the ESP32-P4 / ESP32-S3
@@ -23,6 +25,7 @@ Each board regulates its own 3V3 on-board; **feed them 5 V**, never 3V3 directly
 
 - **Buck converter:** 12 V in → **5 V** out, **≥3 A** (≈2.5 A peak all-3 with backlights; size up for margin).
   Common ground with the vehicle/ECU.
+- **Connectors:** Dupont-style 2.54 housings at the boards. The buck, CAN transceiver and headlight opto are drawn as Phoenix-style screw terminals (wires land on labeled pins). Everything else is a plain wire-to-wire splice. Harness drawing: `docs/harness/TrackCluster-Assembly.harness` (also in harness.design, project "Center Cluster").
 - **Center 5 V input:** J8 **pin 2 = 5V**, **pin 39 = GND** (or the board's USB-C 5V — but use J8 for the install).
 - **J8 pin numbers:** `PINOUT.md` only. Wires land directly on J8 (no adapter).
   **Parts to buy:** `docs/harness/PURCHASE-LIST.csv`. The old harness drawing
@@ -96,14 +99,10 @@ board-reserved GPIOs). Not repeated here.
 <!-- SOT-REF: repo=living-relation/center-cluster-esp32-p4 path=PINOUT.md -->
 <!-- SOT-REF: repo=living-relation/center-cluster-esp32-p4 path=main/Kconfig.projbuild -->
 
-### Left & Right — ESP32-S3 (identical)
-| Function | GPIO | Notes |
-|---|---:|---|
-| UART RX ← Center TX | 44 | on UART connector |
-| Shared I²C SCL (TCA9554 + GT911) | 7 | drives panel reset/CS via expander |
-| Shared I²C SDA | 15 | |
-| **Panel RGB (fixed by board)** | R:46,3,8,18,17 · G:14,13,12,11,10,9 · B:5,45,48,47,21 · PCLK 41 · DE 40 · VSYNC 39 · HSYNC 38 · LCD_SDA 1 · LCD_SCK 2 · BL 6 | hard-wired on the Waveshare board — informational only |
-| **Reserved — do not use** | 0,3,45,46 (strapping; 3/45/46 also RGB) · 19,20 (USB) · 26–32 (in-package flash/PSRAM) | |
+### Left & Right - ESP32-S3 (identical)
+No pin data is kept here. I2C and UART pins live in each side repo's Kconfig; panel/RGB pins are fixed by the Waveshare ESP32-S3-Touch-LCD-2.8C schematic.
+<!-- SOT-REF: repo=living-relation/left-side-cluster-esp32s3 path=main/Kconfig.projbuild -->
+<!-- SOT-REF: repo=living-relation/right-side-cluster-esp32s3 path=main/Kconfig.projbuild -->
 
 ---
 
@@ -121,5 +120,3 @@ board-reserved GPIOs). Not repeated here.
 | ESP32-S3 GPIO19/20 startup glitch (datasheet) | ✅ N/A — those pins are USB, not used for our I/O |
 | Errata (S3 + P4) | ✅ no GPIO-level silicon issues affecting this design (entries are cache/secure-boot/PSRAM) |
 
-> Pin values here mirror the firmware `Kconfig.projbuild` of each cluster, which remains authoritative.
-> If you change a pin in menuconfig, update this table to match.

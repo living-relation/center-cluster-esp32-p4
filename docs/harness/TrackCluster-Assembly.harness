@@ -177,42 +177,6 @@
       ]
     },
     {
-      "id": "buck",
-      "label": "BUCK D36V50F5",
-      "schematicPosition": {
-        "x": 1170,
-        "y": 60
-      },
-      "partId": "cp_gen_254_1x6",
-      "width": 210,
-      "cavities": [
-        {
-          "id": "buck_1",
-          "notConnected": true
-        },
-        {
-          "id": "buck_2",
-          "notConnected": true
-        },
-        {
-          "id": "buck_3",
-          "signal": "VIN"
-        },
-        {
-          "id": "buck_4",
-          "notConnected": true
-        },
-        {
-          "id": "buck_5",
-          "signal": "VOUT"
-        },
-        {
-          "id": "buck_6",
-          "signal": "GND"
-        }
-      ]
-    },
-    {
       "id": "l5v",
       "label": "LEFT 5V IN (as installed)",
       "schematicPosition": {
@@ -254,12 +218,12 @@
     },
     {
       "id": "canb",
-      "label": "CAN XCVR (SN65HVD230)",
+      "label": "CAN TRANSCEIVER (screw terminal)",
       "schematicPosition": {
         "x": 1170,
         "y": 660
       },
-      "partId": "cp_gen_254_1x4",
+      "partId": "cp_phx_1x4",
       "width": 210,
       "cavities": [
         {
@@ -338,12 +302,12 @@
     },
     {
       "id": "enc1",
-      "label": "ENC1 (BOOST)",
+      "label": "ENC1 BOOST - generic EC11 encoder",
       "schematicPosition": {
         "x": 1170,
         "y": 1290
       },
-      "partId": "cp_gen_254_1x5",
+      "partId": "cp_ec11",
       "width": 210,
       "cavities": [
         {
@@ -352,7 +316,7 @@
         },
         {
           "id": "enc1_2",
-          "signal": "C (GND)"
+          "signal": "C (common)"
         },
         {
           "id": "enc1_3",
@@ -360,22 +324,22 @@
         },
         {
           "id": "enc1_4",
-          "signal": "SW"
+          "signal": "SW (push)"
         },
         {
           "id": "enc1_5",
-          "signal": "SW GND"
+          "signal": "SW (push)"
         }
       ]
     },
     {
       "id": "enc2",
-      "label": "ENC2 (TC SLIP)",
+      "label": "ENC2 TC SLIP - generic EC11 encoder",
       "schematicPosition": {
         "x": 1170,
         "y": 1530
       },
-      "partId": "cp_gen_254_1x5",
+      "partId": "cp_ec11",
       "width": 210,
       "cavities": [
         {
@@ -384,7 +348,7 @@
         },
         {
           "id": "enc2_2",
-          "signal": "C (GND)"
+          "signal": "C (common)"
         },
         {
           "id": "enc2_3",
@@ -392,22 +356,22 @@
         },
         {
           "id": "enc2_4",
-          "signal": "SW"
+          "signal": "SW (push)"
         },
         {
           "id": "enc2_5",
-          "signal": "SW GND"
+          "signal": "SW (push)"
         }
       ]
     },
     {
       "id": "enc3",
-      "label": "ENC3 (BACKLIGHT DIM)",
+      "label": "ENC3 BACKLIGHT - generic EC11 encoder",
       "schematicPosition": {
         "x": 1170,
         "y": 1770
       },
-      "partId": "cp_gen_254_1x5",
+      "partId": "cp_ec11",
       "width": 210,
       "cavities": [
         {
@@ -416,7 +380,7 @@
         },
         {
           "id": "enc3_2",
-          "signal": "C (GND)"
+          "signal": "C (common)"
         },
         {
           "id": "enc3_3",
@@ -424,42 +388,42 @@
         },
         {
           "id": "enc3_4",
-          "signal": "SW"
+          "signal": "SW (push)"
         },
         {
           "id": "enc3_5",
-          "signal": "SW GND"
+          "signal": "SW (push)"
         }
       ]
     },
     {
       "id": "odo",
-      "label": "ODO BUTTON",
+      "label": "ODO/TRIP - generic pushbutton (NO)",
       "schematicPosition": {
         "x": 1170,
         "y": 2010
       },
-      "partId": "cp_gen_254_1x2",
+      "partId": "cp_pb_no",
       "width": 210,
       "cavities": [
         {
           "id": "odo_1",
-          "signal": "SW"
+          "signal": "Pin 1"
         },
         {
           "id": "odo_2",
-          "signal": "GND"
+          "signal": "Pin 2"
         }
       ]
     },
     {
       "id": "opto",
-      "label": "HEADLIGHT OPTO (PC817)",
+      "label": "HEADLIGHT OPTO PC817 (screw terminal)",
       "schematicPosition": {
         "x": 1170,
         "y": 2160
       },
-      "partId": "cp_gen_254_1x4",
+      "partId": "cp_phx_1x4",
       "width": 210,
       "cavities": [
         {
@@ -477,6 +441,30 @@
         {
           "id": "opto_4",
           "signal": "COLLECTOR"
+        }
+      ]
+    },
+    {
+      "id": "buck",
+      "label": "BUCK 12V>5V (screw terminal)",
+      "schematicPosition": {
+        "x": 1170,
+        "y": -150
+      },
+      "partId": "cp_phx_1x3",
+      "width": 210,
+      "cavities": [
+        {
+          "id": "buck_1",
+          "signal": "VIN (+12V)"
+        },
+        {
+          "id": "buck_2",
+          "signal": "VOUT (+5V)"
+        },
+        {
+          "id": "buck_3",
+          "signal": "GND"
         }
       ]
     }
@@ -519,7 +507,6 @@
   "splices": [
     {
       "id": "sp_5v",
-      "partId": "spp_solder_26_14",
       "schematicPosition": {
         "x": 750,
         "y": 180
@@ -527,7 +514,6 @@
     },
     {
       "id": "sp_pgnd",
-      "partId": "spp_solder_26_14",
       "schematicPosition": {
         "x": 750,
         "y": 420
@@ -535,7 +521,6 @@
     },
     {
       "id": "sp_e1",
-      "partId": "spp_solder_26_14",
       "schematicPosition": {
         "x": 750,
         "y": 1380
@@ -543,7 +528,6 @@
     },
     {
       "id": "sp_e2",
-      "partId": "spp_solder_26_14",
       "schematicPosition": {
         "x": 750,
         "y": 1620
@@ -551,7 +535,6 @@
     },
     {
       "id": "sp_e3",
-      "partId": "spp_solder_26_14",
       "schematicPosition": {
         "x": 750,
         "y": 1860
@@ -577,7 +560,7 @@
       },
       "target": {
         "id": "buck",
-        "handle": "buck_3"
+        "handle": "buck_1"
       },
       "color": "Red",
       "partId": "wp22_red"
@@ -586,7 +569,7 @@
       "id": "w2",
       "source": {
         "id": "buck",
-        "handle": "buck_5"
+        "handle": "buck_2"
       },
       "target": {
         "id": "sp_5v",
@@ -651,7 +634,7 @@
       "id": "w7",
       "source": {
         "id": "buck",
-        "handle": "buck_6"
+        "handle": "buck_3"
       },
       "target": {
         "id": "sp_pgnd",
@@ -1140,7 +1123,7 @@
         "x": 390,
         "y": 2400
       },
-      "text": "TrackCluster Assembly — created 2026-09-25 (Cowork). J8 pinout SoT: center-cluster-esp32-p4/PINOUT.md + docs/datasheets/waveshare-esp32-p4-xc-j8-silkscreen.png. CAN H/L is NOT drawn here: owned by st185-link-ecu-config ST185-CAN.harness (cluster drop T1). Flash center board via 'USB TO UART' port only (Enc3 on GPIO24/25). No in-pod disconnects (decision 2026-09-25): 22 AWG, generic 2.54 housings. Side-board 5V as installed.",
+      "text": "Center Cluster harness - Cowork 2026-09-27. Wires to labeled pins only, no device shapes. J8 pinout SoT: center-cluster-esp32-p4/PINOUT.md + docs/datasheets/waveshare-esp32-p4-xc-j8-silkscreen.png. CAN H/L not drawn here. Flash center board via 'USB TO UART' port only (Enc3 on GPIO24/25). Dupont 2.54 housings at the boards; encoders and ODO button are generic parts; buck, CAN transceiver and opto are Phoenix-style screw terminals; splices are plain wire-to-wire joins.",
       "width": 390
     }
   ],
@@ -1301,11 +1284,56 @@
       ]
     },
     {
-      "id": "cp_gen_254_1x5",
-      "partNumber": "GENERIC 2.54 1x5 HOUSING",
-      "description": "HOUSING, 2.54mm, 1x5, FEMALE — generic dummy (EC11 encoder)",
+      "id": "cp_gen_254_2x20",
+      "partNumber": "GENERIC 2.54 2x20 HOUSING",
+      "description": "HOUSING, 2.54mm, 2x20 (40-way), FEMALE — generic dummy for Waveshare P4-XC J8",
       "manufacturer": "generic",
       "gender": "Female",
+      "hasShell": false,
+      "numberOfCavities": 40,
+      "configurations": [
+        {
+          "id": "cfg",
+          "contactPartId": "ct_gen_254_skt"
+        }
+      ]
+    },
+    {
+      "id": "cp_phx_1x3",
+      "partNumber": "PHOENIX-STYLE SCREW TERMINAL 1x3",
+      "description": "Screw terminal block, 3-pole, Phoenix style - generic",
+      "manufacturer": "generic",
+      "gender": "Female",
+      "hasShell": false,
+      "numberOfCavities": 3,
+      "configurations": [
+        {
+          "id": "cfg",
+          "contactPartId": "ct_phx_screw"
+        }
+      ]
+    },
+    {
+      "id": "cp_phx_1x4",
+      "partNumber": "PHOENIX-STYLE SCREW TERMINAL 1x4",
+      "description": "Screw terminal block, 4-pole, Phoenix style - generic",
+      "manufacturer": "generic",
+      "gender": "Female",
+      "hasShell": false,
+      "numberOfCavities": 4,
+      "configurations": [
+        {
+          "id": "cfg",
+          "contactPartId": "ct_phx_screw"
+        }
+      ]
+    },
+    {
+      "id": "cp_ec11",
+      "partNumber": "GENERIC EC11 ROTARY ENCODER W/ SWITCH",
+      "description": "Rotary encoder, A / C / B + 2 push-switch pins - generic",
+      "manufacturer": "generic",
+      "gender": "Male",
       "hasShell": false,
       "numberOfCavities": 5,
       "configurations": [
@@ -1316,28 +1344,13 @@
       ]
     },
     {
-      "id": "cp_gen_254_1x6",
-      "partNumber": "GENERIC 2.54 1x6 HOUSING",
-      "description": "HOUSING, 2.54mm, 1x6, FEMALE — generic dummy (Pololu D36V50F5 edge)",
+      "id": "cp_pb_no",
+      "partNumber": "GENERIC MOMENTARY PUSHBUTTON NO",
+      "description": "Momentary normally-open pushbutton, 2 pins - generic",
       "manufacturer": "generic",
-      "gender": "Female",
+      "gender": "Male",
       "hasShell": false,
-      "numberOfCavities": 6,
-      "configurations": [
-        {
-          "id": "cfg",
-          "contactPartId": "ct_gen_254_skt"
-        }
-      ]
-    },
-    {
-      "id": "cp_gen_254_2x20",
-      "partNumber": "GENERIC 2.54 2x20 HOUSING",
-      "description": "HOUSING, 2.54mm, 2x20 (40-way), FEMALE — generic dummy for Waveshare P4-XC J8",
-      "manufacturer": "generic",
-      "gender": "Female",
-      "hasShell": false,
-      "numberOfCavities": 40,
+      "numberOfCavities": 2,
       "configurations": [
         {
           "id": "cfg",
@@ -1362,24 +1375,25 @@
         "value": 22,
         "unit": "AWG"
       }
-    }
-  ],
-  "spliceParts": [
+    },
     {
-      "id": "spp_solder_26_14",
-      "partNumber": "GENERIC SOLDER SLEEVE 26-14",
-      "description": "SPLICE, SOLDER SLEEVE W/ HEATSHRINK, combined 26-14 AWG",
+      "id": "ct_phx_screw",
+      "partNumber": "GENERIC SCREW TERMINAL CONTACT",
+      "description": "Screw clamp contact - generic",
       "manufacturer": "generic",
+      "type": "Crimp",
+      "gender": "Socket",
       "minGauge": {
-        "unit": "AWG",
-        "value": 26
+        "value": 28,
+        "unit": "AWG"
       },
       "maxGauge": {
-        "unit": "AWG",
-        "value": 14
+        "value": 16,
+        "unit": "AWG"
       }
     }
   ],
+  "spliceParts": [],
   "terminalParts": [
     {
       "id": "tp_flying_lead",
@@ -1424,53 +1438,5 @@
       "powerUnit": "W"
     }
   ],
-  "groupParts": [
-    {
-      "id": "gp_ws_p4_xc",
-      "partNumber": "ESP32-P4-WIFI6-Touch-LCD-XC",
-      "manufacturer": "Waveshare",
-      "description": "Center cluster board (3.4in 800x800), 40-pin header J8",
-      "url": "https://docs.waveshare.com/ESP32-P4-WIFI6-Touch-LCD-XC"
-    },
-    {
-      "id": "gp_ws_s3_28c",
-      "partNumber": "ESP32-S3-Touch-LCD-2.8C",
-      "manufacturer": "Waveshare",
-      "description": "Left/right cluster board (2.8in 480x480); 4-pin UART header GND/3V3/TXD/RXD(GPIO44)",
-      "url": "https://www.waveshare.com/wiki/ESP32-S3-Touch-LCD-2.8C"
-    },
-    {
-      "id": "gp_ws_sn65",
-      "partNumber": "SN65HVD230 CAN Board",
-      "manufacturer": "Waveshare",
-      "description": "3.3V CAN transceiver board. Signals: CTX, CRX, GND, 3V3; CANH/CANL. Installed board has a 120R termination jumper.",
-      "url": "https://www.waveshare.com/wiki/SN65HVD230_CAN_Board"
-    },
-    {
-      "id": "gp_pololu_d36v50f5",
-      "partNumber": "D36V50F5",
-      "manufacturer": "Pololu",
-      "description": "5V 5.5A step-down regulator. Edge pins: PG, EN, VIN, VRP, VOUT, GND",
-      "url": "https://www.pololu.com/product/4091"
-    },
-    {
-      "id": "gp_pc817",
-      "partNumber": "PC817",
-      "manufacturer": "Sharp",
-      "description": "Optocoupler, headlight sense. 1 anode, 2 cathode, 3 emitter, 4 collector",
-      "url": "https://global.sharp/products/device/lineup/data/pdf/datasheet/PC817XxNSZ1B_e.pdf"
-    },
-    {
-      "id": "gp_gen_ec11",
-      "partNumber": "GENERIC EC11 ENCODER W/ SWITCH",
-      "manufacturer": "generic",
-      "description": "Rotary encoder, EC11-style, A/C/B + push switch (2 pins)"
-    },
-    {
-      "id": "gp_gen_pb_no",
-      "partNumber": "GENERIC MOMENTARY PUSHBUTTON NO",
-      "manufacturer": "generic",
-      "description": "Momentary normally-open pushbutton (ODO/Trip)"
-    }
-  ]
+  "groupParts": []
 }
