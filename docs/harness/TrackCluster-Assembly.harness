@@ -181,7 +181,7 @@
       "label": "LEFT 5V IN (as installed)",
       "schematicPosition": {
         "x": 900,
-        "y": -40
+        "y": -30
       },
       "partId": "cp_gen_254_1x2",
       "width": 210,
@@ -336,8 +336,8 @@
       "id": "enc2",
       "label": "ENC2 TC SLIP - generic EC11 encoder",
       "schematicPosition": {
-        "x": -610,
-        "y": 750
+        "x": -600,
+        "y": 720
       },
       "partId": "cp_ec11",
       "width": 210,
@@ -420,8 +420,8 @@
       "id": "opto",
       "label": "HEADLIGHT OPTO PC817 (screw terminal)",
       "schematicPosition": {
-        "x": -610,
-        "y": 420
+        "x": -600,
+        "y": 450
       },
       "partId": "cp_phx_1x4",
       "width": 210,
@@ -449,7 +449,7 @@
       "label": "BUCK 12V>5V (screw terminal)",
       "schematicPosition": {
         "x": 900,
-        "y": -190
+        "y": -180
       },
       "partId": "cp_phx_1x3",
       "width": 210,
@@ -476,8 +476,8 @@
       "partId": "tp_flying_lead",
       "signal": "+12V IGN (fused, vehicle)",
       "schematicPosition": {
-        "x": 1450,
-        "y": -160
+        "x": 1440,
+        "y": -150
       },
       "width": 270
     },
@@ -540,8 +540,8 @@
     {
       "id": "sp_e2",
       "schematicPosition": {
-        "x": -265,
-        "y": 900
+        "x": -270,
+        "y": 870
       }
     },
     {
@@ -687,8 +687,8 @@
         {
           "id": "w9_p0",
           "schematicPosition": {
-            "x": 1300,
-            "y": 1185
+            "x": 1290,
+            "y": 1170
           }
         }
       ]
@@ -908,7 +908,15 @@
       },
       "color": "White",
       "partId": "wp_white",
-      "layoutPoints": []
+      "layoutPoints": [
+        {
+          "id": "4FTTJf",
+          "schematicPosition": {
+            "x": -210,
+            "y": 780
+          }
+        }
+      ]
     },
     {
       "id": "w26",
@@ -1125,7 +1133,22 @@
       },
       "color": "Black",
       "partId": "wp22_blk",
-      "layoutPoints": []
+      "layoutPoints": [
+        {
+          "id": "w41_p0",
+          "schematicPosition": {
+            "x": -690,
+            "y": 510
+          }
+        },
+        {
+          "id": "w41_p1",
+          "schematicPosition": {
+            "x": -720,
+            "y": 510
+          }
+        }
+      ]
     },
     {
       "id": "w42",
@@ -1160,8 +1183,8 @@
     {
       "id": "n1",
       "schematicPosition": {
-        "x": 330,
-        "y": 1300
+        "x": 480,
+        "y": 1020
       },
       "text": "Center Cluster harness - Cowork 2026-09-27. Wires to labeled pins only. J8 pinout SoT: center-cluster-esp32-p4/PINOUT.md + docs/datasheets/waveshare-esp32-p4-xc-j8-silkscreen.png. CAN H/L not drawn here. Flash center board via 'USB TO UART' port only (Enc3 on GPIO24/25). Dupont 2.54 housings at boards; encoders/ODO are generic parts; buck, CAN transceiver, opto are screw terminals; splices are plain wire-to-wire joins. Two CHASSIS GND ring terminals = same stud.",
       "width": 390
