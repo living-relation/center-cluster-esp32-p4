@@ -177,42 +177,6 @@
       ]
     },
     {
-      "id": "buck",
-      "label": "BUCK D36V50F5",
-      "schematicPosition": {
-        "x": 1170,
-        "y": 60
-      },
-      "partId": "cp_gen_254_1x6",
-      "width": 210,
-      "cavities": [
-        {
-          "id": "buck_1",
-          "notConnected": true
-        },
-        {
-          "id": "buck_2",
-          "notConnected": true
-        },
-        {
-          "id": "buck_3",
-          "signal": "VIN"
-        },
-        {
-          "id": "buck_4",
-          "notConnected": true
-        },
-        {
-          "id": "buck_5",
-          "signal": "VOUT"
-        },
-        {
-          "id": "buck_6",
-          "signal": "GND"
-        }
-      ]
-    },
-    {
       "id": "l5v",
       "label": "LEFT 5V IN (as installed)",
       "schematicPosition": {
@@ -514,6 +478,39 @@
         "y": 240
       },
       "width": 270
+    },
+    {
+      "id": "t_bvin",
+      "type": "Loose",
+      "partId": "tp_flying_lead",
+      "signal": "BUCK VIN pad (soldered lead)",
+      "schematicPosition": {
+        "x": 1170,
+        "y": 60
+      },
+      "width": 270
+    },
+    {
+      "id": "t_bvout",
+      "type": "Loose",
+      "partId": "tp_flying_lead",
+      "signal": "BUCK VOUT pad (soldered lead)",
+      "schematicPosition": {
+        "x": 1170,
+        "y": 150
+      },
+      "width": 270
+    },
+    {
+      "id": "t_bgnd",
+      "type": "Loose",
+      "partId": "tp_flying_lead",
+      "signal": "BUCK GND pad (soldered lead)",
+      "schematicPosition": {
+        "x": 1170,
+        "y": 240
+      },
+      "width": 270
     }
   ],
   "splices": [
@@ -576,8 +573,8 @@
         "handle": "Terminal"
       },
       "target": {
-        "id": "buck",
-        "handle": "buck_3"
+        "id": "t_bvin",
+        "handle": "Terminal"
       },
       "color": "Red",
       "partId": "wp22_red"
@@ -585,8 +582,8 @@
     {
       "id": "w2",
       "source": {
-        "id": "buck",
-        "handle": "buck_5"
+        "id": "t_bvout",
+        "handle": "Terminal"
       },
       "target": {
         "id": "sp_5v",
@@ -650,8 +647,8 @@
     {
       "id": "w7",
       "source": {
-        "id": "buck",
-        "handle": "buck_6"
+        "id": "t_bgnd",
+        "handle": "Terminal"
       },
       "target": {
         "id": "sp_pgnd",
@@ -1140,7 +1137,7 @@
         "x": 390,
         "y": 2400
       },
-      "text": "TrackCluster Assembly — created 2026-09-25 (Cowork). J8 pinout SoT: center-cluster-esp32-p4/PINOUT.md + docs/datasheets/waveshare-esp32-p4-xc-j8-silkscreen.png. CAN H/L is NOT drawn here: owned by st185-link-ecu-config ST185-CAN.harness (cluster drop T1). Flash center board via 'USB TO UART' port only (Enc3 on GPIO24/25). No in-pod disconnects (decision 2026-09-25): 22 AWG, generic 2.54 housings. Side-board 5V as installed.",
+      "text": "TrackCluster Assembly — created 2026-09-25 (Cowork). J8 pinout SoT: center-cluster-esp32-p4/PINOUT.md + docs/datasheets/waveshare-esp32-p4-xc-j8-silkscreen.png. CAN H/L is NOT drawn here: owned by st185-link-ecu-config ST185-CAN.harness (cluster drop T1). Flash center board via 'USB TO UART' port only (Enc3 on GPIO24/25). No in-pod disconnects (decision 2026-09-25): 22 AWG. Only connectors = Dupont-style 2.54 housings at the boards; everything else is a wire-to-wire splice. Buck (D36V50F5) is soldered direct to its VIN/VOUT/GND pads, no connector (2026-09-27). Side-board 5V as installed.",
       "width": 390
     }
   ],

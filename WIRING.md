@@ -1,6 +1,7 @@
 # TrackCluster — Wiring & Pinout (physical install)
 <!-- Revised 2026-09-25 · feature/center-cluster-harness-design · Cowork: center-cluster doc cleanup + archive · PR# n/a -->
 <!-- Revised 2026-09-27 · chore/wiring-side-sot-refs · Cowork: S3 pin table replaced with SOT-REF pointers · PR# n/a -->
+<!-- Revised 2026-09-27 · feature/center-cluster-dupont-harness · Cowork: Dupont-only, buck soldered direct · PR# n/a -->
 
 **Reference only — NOT flashed.** Lives at the center repo root so it's immediately visible.
 Everything below is GPIO/connector-validated against the ESP32-P4 / ESP32-S3
@@ -24,6 +25,7 @@ Each board regulates its own 3V3 on-board; **feed them 5 V**, never 3V3 directly
 
 - **Buck converter:** 12 V in → **5 V** out, **≥3 A** (≈2.5 A peak all-3 with backlights; size up for margin).
   Common ground with the vehicle/ECU.
+- **Connectors:** Dupont-style 2.54 housings at the boards only. Everything else is a wire-to-wire splice. Solder the buck's VIN, VOUT and GND leads straight to its pads (no connector on the buck), and give each board its own 5 V wire from the 5 V splice.
 - **Center 5 V input:** J8 **pin 2 = 5V**, **pin 39 = GND** (or the board's USB-C 5V — but use J8 for the install).
 - **J8 pin numbers:** `PINOUT.md` only. Wires land directly on J8 (no adapter).
   **Parts to buy:** `docs/harness/PURCHASE-LIST.csv`. The old harness drawing
