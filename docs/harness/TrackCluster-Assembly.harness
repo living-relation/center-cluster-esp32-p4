@@ -8,8 +8,8 @@
       "id": "j8",
       "label": "CENTER P4 J8",
       "schematicPosition": {
-        "x": 90,
-        "y": 570
+        "x": 0,
+        "y": 0
       },
       "partId": "cp_gen_254_2x20",
       "width": 270,
@@ -180,8 +180,8 @@
       "id": "l5v",
       "label": "LEFT 5V IN (as installed)",
       "schematicPosition": {
-        "x": 1170,
-        "y": 360
+        "x": 900,
+        "y": -30
       },
       "partId": "cp_gen_254_1x2",
       "width": 210,
@@ -200,8 +200,8 @@
       "id": "r5v",
       "label": "RIGHT 5V IN (as installed)",
       "schematicPosition": {
-        "x": 1170,
-        "y": 510
+        "x": 900,
+        "y": 90
       },
       "partId": "cp_gen_254_1x2",
       "width": 210,
@@ -220,8 +220,8 @@
       "id": "canb",
       "label": "CAN TRANSCEIVER (screw terminal)",
       "schematicPosition": {
-        "x": 1170,
-        "y": 660
+        "x": 900,
+        "y": 450
       },
       "partId": "cp_phx_1x4",
       "width": 210,
@@ -231,16 +231,16 @@
           "signal": "CTX"
         },
         {
+          "id": "canb_4",
+          "signal": "3V3"
+        },
+        {
           "id": "canb_2",
           "signal": "CRX"
         },
         {
           "id": "canb_3",
           "signal": "GND"
-        },
-        {
-          "id": "canb_4",
-          "signal": "3V3"
         }
       ]
     },
@@ -248,8 +248,8 @@
       "id": "luart",
       "label": "LEFT UART (S3)",
       "schematicPosition": {
-        "x": 1170,
-        "y": 870
+        "x": -610,
+        "y": 270
       },
       "partId": "cp_gen_254_1x4",
       "width": 210,
@@ -276,8 +276,8 @@
       "id": "ruart",
       "label": "RIGHT UART (S3)",
       "schematicPosition": {
-        "x": 1170,
-        "y": 1080
+        "x": 900,
+        "y": 210
       },
       "partId": "cp_gen_254_1x4",
       "width": 210,
@@ -304,15 +304,19 @@
       "id": "enc1",
       "label": "ENC1 BOOST - generic EC11 encoder",
       "schematicPosition": {
-        "x": 1170,
-        "y": 1290
+        "x": -610,
+        "y": 960
       },
       "partId": "cp_ec11",
       "width": 210,
       "cavities": [
         {
-          "id": "enc1_1",
-          "signal": "A"
+          "id": "enc1_4",
+          "signal": "SW (push)"
+        },
+        {
+          "id": "enc1_5",
+          "signal": "SW (push)"
         },
         {
           "id": "enc1_2",
@@ -323,12 +327,8 @@
           "signal": "B"
         },
         {
-          "id": "enc1_4",
-          "signal": "SW (push)"
-        },
-        {
-          "id": "enc1_5",
-          "signal": "SW (push)"
+          "id": "enc1_1",
+          "signal": "A"
         }
       ]
     },
@@ -336,23 +336,19 @@
       "id": "enc2",
       "label": "ENC2 TC SLIP - generic EC11 encoder",
       "schematicPosition": {
-        "x": 1170,
-        "y": 1530
+        "x": -600,
+        "y": 720
       },
       "partId": "cp_ec11",
       "width": 210,
       "cavities": [
         {
-          "id": "enc2_1",
-          "signal": "A"
-        },
-        {
-          "id": "enc2_2",
-          "signal": "C (common)"
-        },
-        {
           "id": "enc2_3",
           "signal": "B"
+        },
+        {
+          "id": "enc2_1",
+          "signal": "A"
         },
         {
           "id": "enc2_4",
@@ -361,6 +357,10 @@
         {
           "id": "enc2_5",
           "signal": "SW (push)"
+        },
+        {
+          "id": "enc2_2",
+          "signal": "C (common)"
         }
       ]
     },
@@ -368,24 +368,12 @@
       "id": "enc3",
       "label": "ENC3 BACKLIGHT - generic EC11 encoder",
       "schematicPosition": {
-        "x": 1170,
-        "y": 1770
+        "x": 900,
+        "y": 690
       },
       "partId": "cp_ec11",
       "width": 210,
       "cavities": [
-        {
-          "id": "enc3_1",
-          "signal": "A"
-        },
-        {
-          "id": "enc3_2",
-          "signal": "C (common)"
-        },
-        {
-          "id": "enc3_3",
-          "signal": "B"
-        },
         {
           "id": "enc3_4",
           "signal": "SW (push)"
@@ -393,6 +381,18 @@
         {
           "id": "enc3_5",
           "signal": "SW (push)"
+        },
+        {
+          "id": "enc3_2",
+          "signal": "C (common)"
+        },
+        {
+          "id": "enc3_1",
+          "signal": "A"
+        },
+        {
+          "id": "enc3_3",
+          "signal": "B"
         }
       ]
     },
@@ -400,8 +400,8 @@
       "id": "odo",
       "label": "ODO/TRIP - generic pushbutton (NO)",
       "schematicPosition": {
-        "x": 1170,
-        "y": 2010
+        "x": -610,
+        "y": 180
       },
       "partId": "cp_pb_no",
       "width": 210,
@@ -420,8 +420,8 @@
       "id": "opto",
       "label": "HEADLIGHT OPTO PC817 (screw terminal)",
       "schematicPosition": {
-        "x": 1170,
-        "y": 2160
+        "x": -600,
+        "y": 450
       },
       "partId": "cp_phx_1x4",
       "width": 210,
@@ -448,8 +448,8 @@
       "id": "buck",
       "label": "BUCK 12V>5V (screw terminal)",
       "schematicPosition": {
-        "x": 1170,
-        "y": -150
+        "x": 900,
+        "y": -180
       },
       "partId": "cp_phx_1x3",
       "width": 210,
@@ -476,8 +476,8 @@
       "partId": "tp_flying_lead",
       "signal": "+12V IGN (fused, vehicle)",
       "schematicPosition": {
-        "x": 90,
-        "y": 60
+        "x": 1440,
+        "y": -150
       },
       "width": 270
     },
@@ -487,8 +487,8 @@
       "partId": "tp_ring_m6",
       "signal": "CHASSIS GND",
       "schematicPosition": {
-        "x": 90,
-        "y": 150
+        "x": 1450,
+        "y": 180
       },
       "width": 270
     },
@@ -498,8 +498,19 @@
       "partId": "tp_flying_lead",
       "signal": "ILLUMINATION +12V (vehicle)",
       "schematicPosition": {
-        "x": 90,
-        "y": 240
+        "x": -1200,
+        "y": 450
+      },
+      "width": 270
+    },
+    {
+      "id": "t_gnd2",
+      "type": "Ring",
+      "partId": "tp_ring_m6",
+      "signal": "CHASSIS GND",
+      "schematicPosition": {
+        "x": -1200,
+        "y": 510
       },
       "width": 270
     }
@@ -508,36 +519,36 @@
     {
       "id": "sp_5v",
       "schematicPosition": {
-        "x": 750,
-        "y": 180
+        "x": 685,
+        "y": 120
       }
     },
     {
       "id": "sp_pgnd",
       "schematicPosition": {
-        "x": 750,
-        "y": 420
+        "x": 1285,
+        "y": 180
       }
     },
     {
       "id": "sp_e1",
       "schematicPosition": {
-        "x": 750,
-        "y": 1380
+        "x": -265,
+        "y": 1020
       }
     },
     {
       "id": "sp_e2",
       "schematicPosition": {
-        "x": 750,
-        "y": 1620
+        "x": -270,
+        "y": 870
       }
     },
     {
       "id": "sp_e3",
       "schematicPosition": {
-        "x": 750,
-        "y": 1860
+        "x": 685,
+        "y": 750
       }
     }
   ],
@@ -546,8 +557,8 @@
       "id": "r_ill",
       "partId": "rp_1k5",
       "schematicPosition": {
-        "x": 750,
-        "y": 2250
+        "x": -800,
+        "y": 450
       }
     }
   ],
@@ -576,7 +587,8 @@
         "handle": "Splice"
       },
       "color": "Orange",
-      "partId": "wp_orange"
+      "partId": "wp_orange",
+      "layoutPoints": []
     },
     {
       "id": "w3",
@@ -589,7 +601,8 @@
         "handle": "j8_2"
       },
       "color": "Orange",
-      "partId": "wp_orange"
+      "partId": "wp_orange",
+      "layoutPoints": []
     },
     {
       "id": "w4",
@@ -615,7 +628,8 @@
         "handle": "l5v_1"
       },
       "color": "Orange",
-      "partId": "wp_orange"
+      "partId": "wp_orange",
+      "layoutPoints": []
     },
     {
       "id": "w6",
@@ -641,7 +655,8 @@
         "handle": "Splice"
       },
       "color": "Black",
-      "partId": "wp22_blk"
+      "partId": "wp22_blk",
+      "layoutPoints": []
     },
     {
       "id": "w8",
@@ -667,7 +682,16 @@
         "handle": "j8_39"
       },
       "color": "Black",
-      "partId": "wp22_blk"
+      "partId": "wp22_blk",
+      "layoutPoints": [
+        {
+          "id": "w9_p0",
+          "schematicPosition": {
+            "x": 1290,
+            "y": 1170
+          }
+        }
+      ]
     },
     {
       "id": "w10",
@@ -680,7 +704,8 @@
         "handle": "l5v_2"
       },
       "color": "Black",
-      "partId": "wp22_blk"
+      "partId": "wp22_blk",
+      "layoutPoints": []
     },
     {
       "id": "w11",
@@ -693,7 +718,8 @@
         "handle": "r5v_2"
       },
       "color": "Black",
-      "partId": "wp22_blk"
+      "partId": "wp22_blk",
+      "layoutPoints": []
     },
     {
       "id": "w12",
@@ -745,7 +771,8 @@
         "handle": "canb_3"
       },
       "color": "Black",
-      "partId": "wp22_blk"
+      "partId": "wp22_blk",
+      "layoutPoints": []
     },
     {
       "id": "w16",
@@ -799,7 +826,8 @@
         "handle": "enc1_1"
       },
       "color": "White",
-      "partId": "wp_white"
+      "partId": "wp_white",
+      "layoutPoints": []
     },
     {
       "id": "w20",
@@ -825,7 +853,8 @@
         "handle": "enc1_4"
       },
       "color": "Blue",
-      "partId": "wp_blue"
+      "partId": "wp_blue",
+      "layoutPoints": []
     },
     {
       "id": "w22",
@@ -838,7 +867,8 @@
         "handle": "Splice"
       },
       "color": "Black",
-      "partId": "wp22_blk"
+      "partId": "wp22_blk",
+      "layoutPoints": []
     },
     {
       "id": "w23",
@@ -877,7 +907,16 @@
         "handle": "enc2_1"
       },
       "color": "White",
-      "partId": "wp_white"
+      "partId": "wp_white",
+      "layoutPoints": [
+        {
+          "id": "4FTTJf",
+          "schematicPosition": {
+            "x": -210,
+            "y": 780
+          }
+        }
+      ]
     },
     {
       "id": "w26",
@@ -890,7 +929,8 @@
         "handle": "enc2_3"
       },
       "color": "Green",
-      "partId": "wp_green"
+      "partId": "wp_green",
+      "layoutPoints": []
     },
     {
       "id": "w27",
@@ -903,7 +943,8 @@
         "handle": "enc2_4"
       },
       "color": "Blue",
-      "partId": "wp_blue"
+      "partId": "wp_blue",
+      "layoutPoints": []
     },
     {
       "id": "w28",
@@ -929,7 +970,8 @@
         "handle": "Splice"
       },
       "color": "Black",
-      "partId": "wp22_blk"
+      "partId": "wp22_blk",
+      "layoutPoints": []
     },
     {
       "id": "w30",
@@ -981,7 +1023,8 @@
         "handle": "enc3_4"
       },
       "color": "Blue",
-      "partId": "wp_blue"
+      "partId": "wp_blue",
+      "layoutPoints": []
     },
     {
       "id": "w34",
@@ -994,7 +1037,8 @@
         "handle": "Splice"
       },
       "color": "Black",
-      "partId": "wp22_blk"
+      "partId": "wp22_blk",
+      "layoutPoints": []
     },
     {
       "id": "w35",
@@ -1046,7 +1090,8 @@
         "handle": "j8_9"
       },
       "color": "Black",
-      "partId": "wp22_blk"
+      "partId": "wp22_blk",
+      "layoutPoints": []
     },
     {
       "id": "w39",
@@ -1083,11 +1128,27 @@
         "handle": "opto_2"
       },
       "target": {
-        "id": "t_gnd",
+        "id": "t_gnd2",
         "handle": "Terminal"
       },
       "color": "Black",
-      "partId": "wp22_blk"
+      "partId": "wp22_blk",
+      "layoutPoints": [
+        {
+          "id": "w41_p0",
+          "schematicPosition": {
+            "x": -690,
+            "y": 510
+          }
+        },
+        {
+          "id": "w41_p1",
+          "schematicPosition": {
+            "x": -720,
+            "y": 510
+          }
+        }
+      ]
     },
     {
       "id": "w42",
@@ -1100,7 +1161,8 @@
         "handle": "j8_14"
       },
       "color": "Black",
-      "partId": "wp22_blk"
+      "partId": "wp22_blk",
+      "layoutPoints": []
     },
     {
       "id": "w43",
@@ -1113,17 +1175,18 @@
         "handle": "j8_15"
       },
       "color": "Blue",
-      "partId": "wp_blue"
+      "partId": "wp_blue",
+      "layoutPoints": []
     }
   ],
   "schematicNotes": [
     {
       "id": "n1",
       "schematicPosition": {
-        "x": 390,
-        "y": 2400
+        "x": 480,
+        "y": 1020
       },
-      "text": "Center Cluster harness - Cowork 2026-09-27. Wires to labeled pins only, no device shapes. J8 pinout SoT: center-cluster-esp32-p4/PINOUT.md + docs/datasheets/waveshare-esp32-p4-xc-j8-silkscreen.png. CAN H/L not drawn here. Flash center board via 'USB TO UART' port only (Enc3 on GPIO24/25). Dupont 2.54 housings at the boards; encoders and ODO button are generic parts; buck, CAN transceiver and opto are Phoenix-style screw terminals; splices are plain wire-to-wire joins.",
+      "text": "Center Cluster harness - Cowork 2026-09-27. Wires to labeled pins only. J8 pinout SoT: center-cluster-esp32-p4/PINOUT.md + docs/datasheets/waveshare-esp32-p4-xc-j8-silkscreen.png. CAN H/L not drawn here. Flash center board via 'USB TO UART' port only (Enc3 on GPIO24/25). Dupont 2.54 housings at boards; encoders/ODO are generic parts; buck, CAN transceiver, opto are screw terminals; splices are plain wire-to-wire joins. Two CHASSIS GND ring terminals = same stud.",
       "width": 390
     }
   ],
