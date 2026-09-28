@@ -588,15 +588,7 @@
       },
       "color": "Orange",
       "partId": "wp_orange",
-      "layoutPoints": [
-        {
-          "id": "w2_p0",
-          "schematicPosition": {
-            "x": 700,
-            "y": -115
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w3",
@@ -610,22 +602,7 @@
       },
       "color": "Orange",
       "partId": "wp_orange",
-      "layoutPoints": [
-        {
-          "id": "w3_p0",
-          "schematicPosition": {
-            "x": 600,
-            "y": 135
-          }
-        },
-        {
-          "id": "w3_p1",
-          "schematicPosition": {
-            "x": 600,
-            "y": 75
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w4",
@@ -652,15 +629,7 @@
       },
       "color": "Orange",
       "partId": "wp_orange",
-      "layoutPoints": [
-        {
-          "id": "w5_p0",
-          "schematicPosition": {
-            "x": 700,
-            "y": 5
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w6",
@@ -687,15 +656,7 @@
       },
       "color": "Black",
       "partId": "wp22_blk",
-      "layoutPoints": [
-        {
-          "id": "w7_p0",
-          "schematicPosition": {
-            "x": 1300,
-            "y": -85
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w8",
@@ -744,15 +705,7 @@
       },
       "color": "Black",
       "partId": "wp22_blk",
-      "layoutPoints": [
-        {
-          "id": "w10_p0",
-          "schematicPosition": {
-            "x": 1300,
-            "y": 35
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w11",
@@ -766,15 +719,7 @@
       },
       "color": "Black",
       "partId": "wp22_blk",
-      "layoutPoints": [
-        {
-          "id": "w11_p0",
-          "schematicPosition": {
-            "x": 1300,
-            "y": 165
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w12",
@@ -827,22 +772,7 @@
       },
       "color": "Black",
       "partId": "wp22_blk",
-      "layoutPoints": [
-        {
-          "id": "w15_p0",
-          "schematicPosition": {
-            "x": 600,
-            "y": 615
-          }
-        },
-        {
-          "id": "w15_p1",
-          "schematicPosition": {
-            "x": 600,
-            "y": 585
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w16",
@@ -897,22 +827,7 @@
       },
       "color": "White",
       "partId": "wp_white",
-      "layoutPoints": [
-        {
-          "id": "w19_p0",
-          "schematicPosition": {
-            "x": -100,
-            "y": 1215
-          }
-        },
-        {
-          "id": "w19_p1",
-          "schematicPosition": {
-            "x": -100,
-            "y": 1125
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w20",
@@ -939,22 +854,7 @@
       },
       "color": "Blue",
       "partId": "wp_blue",
-      "layoutPoints": [
-        {
-          "id": "w21_p0",
-          "schematicPosition": {
-            "x": -200,
-            "y": 945
-          }
-        },
-        {
-          "id": "w21_p1",
-          "schematicPosition": {
-            "x": -200,
-            "y": 1005
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w22",
@@ -968,22 +868,7 @@
       },
       "color": "Black",
       "partId": "wp22_blk",
-      "layoutPoints": [
-        {
-          "id": "w22_p0",
-          "schematicPosition": {
-            "x": -320,
-            "y": 1065
-          }
-        },
-        {
-          "id": "w22_p1",
-          "schematicPosition": {
-            "x": -320,
-            "y": 1035
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w23",
@@ -1023,22 +908,7 @@
       },
       "color": "White",
       "partId": "wp_white",
-      "layoutPoints": [
-        {
-          "id": "w25_p0",
-          "schematicPosition": {
-            "x": -100,
-            "y": 795
-          }
-        },
-        {
-          "id": "w25_p1",
-          "schematicPosition": {
-            "x": -100,
-            "y": 825
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w26",
@@ -1052,22 +922,7 @@
       },
       "color": "Green",
       "partId": "wp_green",
-      "layoutPoints": [
-        {
-          "id": "w26_p0",
-          "schematicPosition": {
-            "x": -200,
-            "y": 705
-          }
-        },
-        {
-          "id": "w26_p1",
-          "schematicPosition": {
-            "x": -200,
-            "y": 795
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w27",
@@ -1081,22 +936,7 @@
       },
       "color": "Blue",
       "partId": "wp_blue",
-      "layoutPoints": [
-        {
-          "id": "w27_p0",
-          "schematicPosition": {
-            "x": -100,
-            "y": 885
-          }
-        },
-        {
-          "id": "w27_p1",
-          "schematicPosition": {
-            "x": -100,
-            "y": 855
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w28",
@@ -1123,22 +963,7 @@
       },
       "color": "Black",
       "partId": "wp22_blk",
-      "layoutPoints": [
-        {
-          "id": "w29_p0",
-          "schematicPosition": {
-            "x": -320,
-            "y": 885
-          }
-        },
-        {
-          "id": "w29_p1",
-          "schematicPosition": {
-            "x": -320,
-            "y": 915
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w30",
@@ -1191,22 +1016,7 @@
       },
       "color": "Blue",
       "partId": "wp_blue",
-      "layoutPoints": [
-        {
-          "id": "w33_p0",
-          "schematicPosition": {
-            "x": 500,
-            "y": 645
-          }
-        },
-        {
-          "id": "w33_p1",
-          "schematicPosition": {
-            "x": 500,
-            "y": 735
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w34",
@@ -1220,22 +1030,7 @@
       },
       "color": "Black",
       "partId": "wp22_blk",
-      "layoutPoints": [
-        {
-          "id": "w34_p0",
-          "schematicPosition": {
-            "x": 800,
-            "y": 795
-          }
-        },
-        {
-          "id": "w34_p1",
-          "schematicPosition": {
-            "x": 800,
-            "y": 765
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w35",
@@ -1288,22 +1083,7 @@
       },
       "color": "Black",
       "partId": "wp22_blk",
-      "layoutPoints": [
-        {
-          "id": "w38_p0",
-          "schematicPosition": {
-            "x": -100,
-            "y": 255
-          }
-        },
-        {
-          "id": "w38_p1",
-          "schematicPosition": {
-            "x": -100,
-            "y": 285
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w39",
@@ -1345,22 +1125,7 @@
       },
       "color": "Black",
       "partId": "wp22_blk",
-      "layoutPoints": [
-        {
-          "id": "w41_p0",
-          "schematicPosition": {
-            "x": -700,
-            "y": 495
-          }
-        },
-        {
-          "id": "w41_p1",
-          "schematicPosition": {
-            "x": -700,
-            "y": 525
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w42",
@@ -1374,22 +1139,7 @@
       },
       "color": "Black",
       "partId": "wp22_blk",
-      "layoutPoints": [
-        {
-          "id": "w42_p0",
-          "schematicPosition": {
-            "x": -200,
-            "y": 525
-          }
-        },
-        {
-          "id": "w42_p1",
-          "schematicPosition": {
-            "x": -200,
-            "y": 435
-          }
-        }
-      ]
+      "layoutPoints": []
     },
     {
       "id": "w43",
@@ -1403,22 +1153,7 @@
       },
       "color": "Blue",
       "partId": "wp_blue",
-      "layoutPoints": [
-        {
-          "id": "w43_p0",
-          "schematicPosition": {
-            "x": -100,
-            "y": 555
-          }
-        },
-        {
-          "id": "w43_p1",
-          "schematicPosition": {
-            "x": -100,
-            "y": 465
-          }
-        }
-      ]
+      "layoutPoints": []
     }
   ],
   "schematicNotes": [
